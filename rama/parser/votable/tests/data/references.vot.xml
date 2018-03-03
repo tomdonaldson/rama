@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<VOTABLE xmlns="http://www.ivoa.net/xml/VOTable/v1.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <VODML>
+        <MODEL>
+            <NAME>coords</NAME>
+            <URL>file:../models/STC_coords-v2.0.vo-dml.xml</URL>
+        </MODEL>
+        <MODEL>
+            <NAME>meas</NAME>
+            <URL>file:../models/STC_meas-v2.0.vo-dml.xml</URL>
+        </MODEL>
+        <MODEL>
+            <NAME>ivoa</NAME>
+            <URL>https://volute.g-vo.org/svn/trunk/projects/dm/vo-dml/models//ivoa/vo-dml/IVOA-v1.0.vo-dml.xml</URL>
+        </MODEL>
+        <GLOBALS>
+            <INSTANCE dmtype="coords:domain.spatial.SpaceFrame" ID="_SPACE_FRAME">
+                <ATTRIBUTE dmrole="coords:domain.spatial.SpaceFrame.spaceRefFrame">
+                    <LITERAL value="FK5" dmtype="coords:domain.spatial.StdRefFrame"/>
+                </ATTRIBUTE>
+            </INSTANCE>
+            <INSTANCE dmtype="meas:SkyPosition">
+                <REFERENCE dmrole="meas:CoordMeasure.coordFrame">
+                    <IDREF>_SPACE_FRAME</IDREF>
+                </REFERENCE>
+            </INSTANCE>
+            <INSTANCE dmtype="meas:SkyPosition">
+                <REFERENCE dmrole="meas:CoordMeasure.coordFrame">
+                    <IDREF>_SPACE_FRAME</IDREF>
+                </REFERENCE>
+            </INSTANCE>
+        </GLOBALS>
+    </VODML>
+</VOTABLE>

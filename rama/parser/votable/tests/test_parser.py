@@ -21,19 +21,30 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import os
 import pytest
-from rama.parser.votable import VodmlParser
+
+from rama.models.coordinates import SpaceFrame
+from rama.parser.votable import VodmlParser, Context
 from rama.models.measurements import SkyPosition
+
+
+def make_data_path(filename):
+    basedir = os.path.dirname(__file__)
+    return os.path.join(basedir, 'data', filename)
+
 
 @pytest.fixture
 def parser():
     return VodmlParser()
 
+
 @pytest.fixture
 def simple_position_file():
-    basedir = os.path.dirname(__file__)
-    filename = 'simple-position.vot.xml'
-    return os.path.join(basedir, 'data', filename)
+    return make_data_path('simple-position.vot.xml')
 
+
+@pytest.fixture
+def references_file():
+    return make_data_path('references.vot.xml')
 
 def test_parsing_coordinates(parser, simple_position_file):
     sky_positions = parser.find_instances(simple_position_file, SkyPosition)
@@ -45,3 +56,18 @@ def test_parsing_coordinates(parser, simple_position_file):
     assert "FK5" == pos.coord_frame.space_ref_frame.value
     assert "J1975" == pos.coord_frame.equinox.value
     assert "TOPOCENTER" == pos.coord_frame.ref_position.position.value
+
+
+def test_references_are_same_object(parser, references_file):
+    sky_positions = parser.find_instances(references_file, SkyPosition)
+
+    assert sky_positions[0].coord_frame is sky_positions[1].coord_frame
+
+
+def test_referred_built_only_once(parser, references_file):
+    context = Context(parser, xml=references_file)
+    frame = context.find_instances(SpaceFrame)[0]
+    sky_positions = context.find_instances(SkyPosition)
+
+    assert sky_positions[0].coord_frame is frame
+    assert sky_positions[1].coord_frame is frame

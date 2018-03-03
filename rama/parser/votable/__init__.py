@@ -19,6 +19,9 @@
 # SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+import inspect
+from weakref import WeakValueDictionary
+
 import astropy.units as u
 from lxml import etree
 from pandas import read_html
@@ -179,18 +182,13 @@ class ReferenceParser:
 
         id_ref = reference_element.xpath(f"./{_get_local_name('IDREF')}")[0].text
 
-        referred_element = reference_element.xpath(f"//{_get_local_name('INSTANCE')}[@ID='{id_ref}']")[0]
+        referred_instance = context.get_instance_by_id(id_ref)
+        if referred_instance is not None:
+            return referred_instance
 
-        # FIXME: way too simplistic: referenced instances should have their own lifecycle
-        # and be just referenced by the referrers, rather than attached to them.
-        # The problem here is that an instance referenced twice would be instantiated
-        # twice, and there would be no link between the two. Really, what should happen is that
-        # a weak value dictionary should be created so that referenced instances have a life
-        # of their own and changes to an instance should be reflected across the process.
-        # As per usual garbage collection processing, referenced instances should be
-        # garbage collected when no referring objects are to be found, hence the
-        # weak value dictionary.
-        return context.parse_instance(referred_element)
+        referred_element = reference_element.xpath(f"//{_get_local_name('INSTANCE')}[@ID='{id_ref}']")[0]
+        referred_instance = context.parse_instance(referred_element)
+        return referred_instance
 
 
 class InstanceFactory:
@@ -205,26 +203,46 @@ class InstanceFactory:
         xml_element is the xml Element serializing the instance
         parser is the VodmlParser instance passed through to provide context.
         """
-        import inspect
+        instance_id = InstanceFactory._find_id(xml_element)
+
+        instance = InstanceFactory._try_context(context, instance_id)
+        if instance is not None:
+            return instance
+
+        return InstanceFactory._new_instance(context, instance_id, xml_element, instance_class)
+
+    @staticmethod
+    def _find_id(xml_element):
+        instance_ids = xml_element.xpath('@ID')
+        if len(instance_ids):
+            return instance_ids[0]
+        return None
+
+    @staticmethod
+    def _try_context(context, instance_id):
+        if instance_id is not None:
+            return context.get_instance_by_id(instance_id)
+
+    @staticmethod
+    def _new_instance(context, instance_id, xml_element, instance_class):
+        instance = instance_class()
+        instance.__id__ = instance_id
+        context.add_instance(instance)
 
         def is_field(x):
             return inspect.isdatadescriptor(x) and isinstance(x, VodmlDescriptor)
 
         fields = inspect.getmembers(instance_class, is_field)
-
-        instance = instance_class()
-
-        for field_tuple in fields:
-            field_name, field_object = field_tuple
+        for field_name, field_object in fields:
             setattr(instance, field_name, context.parse(field_object, xml_element))
 
         return instance
 
-
 # TODO docstrings
 class Context:
-    def __init__(self, document_root, parser):
-        self.__root = document_root
+    def __init__(self, parser, xml=None):
+        self.__standalone_instances = WeakValueDictionary()
+        self.__xml = xml
         self.__parser = parser
 
     def parse(self, field, xml_element):
@@ -236,6 +254,20 @@ class Context:
     def get_type_by_id(self, type_id):
         return self.__parser.get_by_id(type_id)
 
+    def find_instances(self, cls):
+        if self.__xml is None:
+            raise AttributeError("When using the context to find instances you must provide an xml object"
+                                 " to the initializer")
+
+        return self.__parser.find_instances(self.__xml, cls, context=self)
+
+    def add_instance(self, instance):
+        if instance.__id__ is not None:
+            self.__standalone_instances[instance.__id__] = instance
+
+    def get_instance_by_id(self, instance_id):
+        return self.__standalone_instances.get(instance_id, None)
+
 
 class VodmlParser:
     """
@@ -246,12 +278,13 @@ class VodmlParser:
         self.registry = TypeRegistry.instance
         self.factory = InstanceFactory
 
-    def find_instances(self, xml_document, element_class):
+    def find_instances(self, xml_document, element_class, context=None):
         """
         Find all instances of the `element_class` class in a votable.
         """
         root = self._find_root(xml_document)
-        context = Context(document_root=root, parser=self)
+        if context is None:
+            context = Context(parser=self)
 
         type_id = element_class.vodml_id
         elements = root.xpath(_get_type_xpath_expression('INSTANCE', type_id))
