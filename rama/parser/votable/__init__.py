@@ -198,7 +198,6 @@ class InstanceFactory:
     A factory that makes instances of a class based on an `INSTANCE` xml Element.
     """
 
-    # TODO refactor?
     @staticmethod
     def make(instance_class, xml_element, context):
         """
