@@ -25,7 +25,8 @@ setup(
     name="Rama",
     version="0.1",
     packages=find_packages(),
-    install_requires=['pytest', 'pandas', 'lxml', 'astropy'],
+    install_requires=['pandas', 'lxml', 'astropy'],
+    tests_require=['pytest'],
     include_package_data=True,
     entry_points={
         'vo.dm.models': [
