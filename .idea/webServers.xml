@@ -3,7 +3,7 @@
   <component name="WebServers">
     <option name="servers">
       <webServer id="ssh://olaurino@localhost:22/home/olaurino/miniconda/envs/rama/bin/python" name="ssh://olaurino@localhost:22/home/olaurino/miniconda/envs/rama/bin/python">
-        <fileTransfer host="localhost" port="22" accessType="SFTP">
+        <fileTransfer host="localhost" port="22" rootFolder="/home/olaurino" accessType="SFTP">
           <option name="port" value="22" />
         </fileTransfer>
       </webServer>

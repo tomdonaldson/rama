@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?><VOTABLE xmlns="http://www.ivoa.net/xml/VOTable/v1.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <VODML>
+    <MODEL>
+      <NAME>coords</NAME>
+      <URL>file:../models/STC_coords-v2.0.vo-dml.xml</URL>
+    </MODEL>
+    <MODEL>
+      <NAME>meas</NAME>
+      <URL>file:../models/STC_meas-v2.0.vo-dml.xml</URL>
+    </MODEL>
+    <MODEL>
+      <NAME>ivoa</NAME>
+      <URL>https://volute.g-vo.org/svn/trunk/projects/dm/vo-dml/models//ivoa/vo-dml/IVOA-v1.0.vo-dml.xml</URL>
+    </MODEL>
+    <GLOBALS>
+      <INSTANCE dmtype="coords:domain.spatial.SpaceFrame" ID="_SPACE_FRAME">
+        <ATTRIBUTE dmrole="coords:domain.spatial.SpaceFrame.spaceRefFrame">
+          <LITERAL value="FK5" dmtype="coords:domain.spatial.StdRefFrame"/>
+        </ATTRIBUTE>
+        <ATTRIBUTE dmrole="coords:domain.spatial.SpaceFrame.equinox">
+          <LITERAL value="J1975" dmtype="coords:domain.spatial.Epoch"/>
+        </ATTRIBUTE>
+        <ATTRIBUTE dmrole="coords:domain.spatial.SpaceFrame.refPosition">
+          <INSTANCE dmtype="coords:domain.spatial.StdRefLocation">
+            <ATTRIBUTE dmrole="coords:domain.spatial.StdRefLocation.position">
+              <LITERAL value="TOPOCENTER" dmtype="coords:domain.spatial.StdRefPosition"/>
+            </ATTRIBUTE>
+          </INSTANCE>
+        </ATTRIBUTE>
+      </INSTANCE>
+      <INSTANCE dmtype="meas:SkyPosition">
+        <ATTRIBUTE dmrole="meas:CoordMeasure.coord">
+          <INSTANCE dmtype="coords:domain.spatial.CelestialCoord">
+            <ATTRIBUTE dmrole="coords:domain.spatial.CelestialCoord.ra">
+              <LITERAL value="10.34209135" dmtype="ivoa:RealQuantity" unit="deg"/>
+            </ATTRIBUTE>
+            <ATTRIBUTE dmrole="coords:domain.spatial.CelestialCoord.dec">
+              <LITERAL value="41.13232112" dmtype="ivoa:RealQuantity" unit="deg"/>
+            </ATTRIBUTE>
+          </INSTANCE>
+        </ATTRIBUTE>
+        <REFERENCE dmrole="meas:CoordMeasure.coordFrame">
+          <IDREF>_SPACE_FRAME</IDREF>
+        </REFERENCE>
+      </INSTANCE>
+    </GLOBALS>
+  </VODML>
+</VOTABLE>
