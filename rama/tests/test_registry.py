@@ -23,19 +23,30 @@ import pytest
 
 from rama.registry import TypeRegistry, VO
 
+@pytest.fixture
+def registry(request):
+    type_registry = TypeRegistry.instance
 
-def test_type_registry():
+    def fin():
+        type_registry.clean()
+
+    request.addfinalizer(fin)
+
+    return type_registry
+
+
+def test_type_registry(registry):
     @VO("foo:bar")
     class Foo:
         pass
-    registry = TypeRegistry.instance
+
     assert Foo == registry.get_by_id("foo:bar")
 
 
-def test_type_registry_singleton():
+def test_type_registry_singleton(registry):
     with pytest.raises(TypeError) as exc:
         TypeRegistry()
 
     assert 'Singletons must be accessed through `instance`.' in str(exc)
 
-    assert TypeRegistry.instance is TypeRegistry.instance
+    assert TypeRegistry.instance is registry

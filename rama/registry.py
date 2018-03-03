@@ -24,6 +24,7 @@ import inspect
 from rama.utils import Singleton
 
 
+# TODO type hints
 @Singleton
 class TypeRegistry:
     """

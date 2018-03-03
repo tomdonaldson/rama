@@ -63,10 +63,10 @@ class AttributeListParser(AbstractParser):
     Parser for attribute lists, i.e. attributes of any multiplicity greater than 1.
     """
 
-    def parse(self, vodml_parser, xml_element):
-        return self._parse_attributes(vodml_parser, xml_element)
+    def parse(self, context, xml_element):
+        return self._parse_attributes(context, xml_element)
 
-    def _parse_attributes(self, vodml_parser, xml_element):
+    def _parse_attributes(self, context, xml_element):
         role_id = self.vodml_id
         attribute_elements = xml_element.xpath(_get_role_xpath_expression('ATTRIBUTE', role_id))
 
@@ -81,24 +81,24 @@ class AttributeListParser(AbstractParser):
             column_elements = _get_children(attribute_element, "COLUMN")
 
             if len(instance_elements):
-                attributes.append(vodml_parser.parse_instance(instance_elements[0]))
+                attributes.append(context.parse_instance(instance_elements[0]))
 
             elif len(literal_elements):
-                attributes.append(self._parse_literal(vodml_parser, literal_elements[0]))
+                attributes.append(self._parse_literal(context, literal_elements[0]))
 
             elif len(column_elements):
-                attributes.append(self._parse_column(vodml_parser, column_elements[0]))
+                attributes.append(self._parse_column(context, column_elements[0]))
 
         return tuple(attributes)
 
-    def _parse_literal(self, vodml_parser, xml_element):
+    def _parse_literal(self, context, xml_element):
         value = xml_element.xpath("@value")[0]
         value_type = xml_element.xpath("@dmtype")[0]
         units = xml_element.xpath("@unit")
         unit = units[0] if len(units) else None
-        return vodml_parser.get_by_id(value_type)(value, unit)
+        return context.get_type_by_id(value_type)(value, unit)
 
-    def _parse_column(self, vodml_parser, xml_element):
+    def _parse_column(self, context, xml_element):
         table = self._parse_table(xml_element)
 
         column_ref = xml_element.xpath("@ref")[0]
@@ -139,11 +139,11 @@ class AttributeParser(AttributeListParser):
     a single instance rather than a tuple.
     """
 
-    def parse(self, vodml_parser, xml_element):
-        return self._parse_attribute(vodml_parser, xml_element)
+    def parse(self, context, xml_element):
+        return self._parse_attribute(context, xml_element)
 
-    def _parse_attribute(self, vodml_parser, xml_element):
-        attributes = self._parse_attributes(vodml_parser, xml_element)
+    def _parse_attribute(self, context, xml_element):
+        attributes = self._parse_attributes(context, xml_element)
         if len(attributes):
             return attributes[0]
         return None
@@ -154,11 +154,11 @@ class CompositionParser(AbstractParser):
     Parser for composition relationships.
     """
 
-    def parse(self, vodml_parser, xml_element):
+    def parse(self, context, xml_element):
         role_id = self.vodml_id
         elements = xml_element.xpath(f"./{_get_local_name('COMPOSITION')}[@dmrole='{role_id}']/child::"
                                      f"{_get_local_name('INSTANCE')}")
-        return [vodml_parser.parse_instance(element) for element in elements]
+        return [context.parse_instance(element) for element in elements]
 
 
 class ReferenceParser:
@@ -169,7 +169,7 @@ class ReferenceParser:
     def __init__(self, descriptor):
         self.vodml_id = descriptor.vodml_id
 
-    def parse(self, vodml_parser, xml_element):
+    def parse(self, context, xml_element):
         role_id = self.vodml_id
         reference_elements = xml_element.xpath(f"./{_get_local_name('REFERENCE')}[@dmrole='{role_id}']")
         if not len(reference_elements):
@@ -190,7 +190,7 @@ class ReferenceParser:
         # As per usual garbage collection processing, referenced instances should be
         # garbage collected when no referring objects are to be found, hence the
         # weak value dictionary.
-        return vodml_parser.parse_instance(referred_element)
+        return context.parse_instance(referred_element)
 
 
 class InstanceFactory:
@@ -200,7 +200,7 @@ class InstanceFactory:
 
     # TODO refactor?
     @staticmethod
-    def make(instance_class, xml_element, parser):
+    def make(instance_class, xml_element, context):
         """
         instance_class is the class to be instantiated
         xml_element is the xml Element serializing the instance
@@ -217,9 +217,25 @@ class InstanceFactory:
 
         for field_tuple in fields:
             field_name, field_object = field_tuple
-            setattr(instance, field_name, parser.parse(field_object, xml_element))
+            setattr(instance, field_name, context.parse(field_object, xml_element))
 
         return instance
+
+
+# TODO docstrings
+class Context:
+    def __init__(self, document_root, parser):
+        self.root = document_root
+        self.parser = parser
+
+    def parse(self, field, xml_element):
+        return self.parser.parse(field, xml_element, self)
+
+    def parse_instance(self, xml_element):
+        return self.parser.parse_instance(xml_element, self)
+
+    def get_type_by_id(self, type_id):
+        return self.parser.get_by_id(type_id)
 
 
 class VodmlParser:
@@ -227,33 +243,35 @@ class VodmlParser:
     Root Parser.
     """
 
-    def __init__(self, xml_document):
-        self.root = self._find_root(xml_document)
+    def __init__(self):
         self.registry = TypeRegistry.instance
         self.factory = InstanceFactory
 
-    def find_instances(self, element_class):
+    def find_instances(self, xml_document, element_class):
         """
         Find all instances of the `element_class` class in a votable.
         """
-        type_id = element_class.vodml_id
-        elements = self.root.xpath(_get_type_xpath_expression('INSTANCE', type_id))
-        return [self.parse_instance(element) for element in elements]
+        root = self._find_root(xml_document)
+        context = Context(document_root=root, parser=self)
 
-    def parse_instance(self, xml_element):
+        type_id = element_class.vodml_id
+        elements = root.xpath(_get_type_xpath_expression('INSTANCE', type_id))
+        return [self.parse_instance(element, context) for element in elements]
+
+    def parse_instance(self, xml_element, context):
         """
         Parse an `INSTANCE` represented by the `xml_element`
         """
         element_class = self._resolve_type(xml_element)
-        return self.factory.make(element_class, xml_element, self)
+        return self.factory.make(element_class, xml_element, context)
 
     def get_by_id(self, vodml_id):
         "Resolve a vodml_id to the corresponding class"
         return self.registry.get_by_id(vodml_id)
 
-    def parse(self, field, xml_element):
+    def parse(self, field, xml_element, context):
         field_parser = self._get_parser(field)
-        return field_parser.parse(self, xml_element)
+        return field_parser.parse(context, xml_element)
 
     @staticmethod
     def _get_parser(field):

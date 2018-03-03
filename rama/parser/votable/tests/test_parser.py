@@ -25,15 +25,19 @@ from rama.parser.votable import VodmlParser
 from rama.models.measurements import SkyPosition
 
 @pytest.fixture
-def simple_position_parser():
+def parser():
+    return VodmlParser()
+
+@pytest.fixture
+def simple_position_file():
     # TODO separate parser from context
     basedir = os.path.dirname(__file__)
     filename = 'simple-position.vot.xml'
-    return VodmlParser(os.path.join(basedir, 'data', filename))
+    return os.path.join(basedir, 'data', filename)
 
 
-def test_parsing_coordinates(simple_position_parser):
-    sky_positions = simple_position_parser.find_instances(SkyPosition)
+def test_parsing_coordinates(parser, simple_position_file):
+    sky_positions = parser.find_instances(simple_position_file, SkyPosition)
     pos = sky_positions[0]
 
     assert 1 == len(sky_positions)
