@@ -30,7 +30,6 @@ def parser():
 
 @pytest.fixture
 def simple_position_file():
-    # TODO separate parser from context
     basedir = os.path.dirname(__file__)
     filename = 'simple-position.vot.xml'
     return os.path.join(basedir, 'data', filename)

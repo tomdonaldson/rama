@@ -225,17 +225,17 @@ class InstanceFactory:
 # TODO docstrings
 class Context:
     def __init__(self, document_root, parser):
-        self.root = document_root
-        self.parser = parser
+        self.__root = document_root
+        self.__parser = parser
 
     def parse(self, field, xml_element):
-        return self.parser.parse(field, xml_element, self)
+        return self.__parser.parse(field, xml_element, self)
 
     def parse_instance(self, xml_element):
-        return self.parser.parse_instance(xml_element, self)
+        return self.__parser.parse_instance(xml_element, self)
 
     def get_type_by_id(self, type_id):
-        return self.parser.get_by_id(type_id)
+        return self.__parser.get_by_id(type_id)
 
 
 class VodmlParser:
