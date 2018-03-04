@@ -126,19 +126,13 @@ class AttributeListParser(AbstractParser):
         units = column_element.xpath("@unit")
         unit = units[0] if len(units) else None
 
-        quantity = True  # whether this is an astropy quantity.
-        if unit is not None:
-            # FIXME unit might not be recognized
+        try:
             column = column * u.Unit(unit, parse_strict='warn')
-        else:
-            try:  # any (numerical) column astropy can handle
-                column = u.Quantity(column)
-            except:
-                quantity = False
+        except ValueError:
+            column = column * u.dimensionless_unscaled
 
-        if quantity:
-            name = column_element.xpath("@name")[0]
-            column.name = name
+        name = column_element.xpath("@name")[0]
+        column.name = name
 
         return column
 

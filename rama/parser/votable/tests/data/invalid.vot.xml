@@ -52,7 +52,7 @@
             <FIELD name="ra" ID="_RA" unit="deg" datatype="float">
                 <DESCRIPTION>right ascension (J2000 decimal deg)</DESCRIPTION>
             </FIELD>
-            <FIELD name="dec" ID="_DEC" unit="deg" datatype="float">
+            <FIELD name="dec" ID="_DEC" unit="foo" datatype="float">
                 <DESCRIPTION>declination (J2000 decimal deg)</DESCRIPTION>
             </FIELD>
             <DATA>
