@@ -19,112 +19,311 @@
 # SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-from rama.framework import Attribute, Reference
+from rama.framework import Attribute, Reference, Composition
 from rama.models.ivoa import StringQuantity
 from rama.registry import VO
 
 
-@VO("coords:domain.spatial.RefLocation")
-class RefLocation:
-  pass
-
-
-@VO("coords:domain.spatial.StdRefLocation")
-class StdRefLocation:
-    position = Attribute("coords:domain.spatial.StdRefLocation.position")
-
-
-@VO("coords:domain.spatial.SkyCoord")
-class SkyCoord:
-     pass
-
-
-@VO("coords:domain.spatial.CelestialCoord")
-class CelestialCoord(SkyCoord):
-    ra = Attribute("coords:domain.spatial.CelestialCoord.ra")
-    dec = Attribute("coords:domain.spatial.CelestialCoord.dec")
-
-
-@VO("coords:CoordFrame")
-class CoordFrame:
-     pass
-
-
-@VO("coords:domain.temporal.TimeFrame")
-class TimeFrame(CoordFrame):
-    ref_position = Attribute("coords:domain.temporal.TimeFrame.refPosition")
-    timescale = Attribute("coords:domain.temporal.TimeFrame.timescale")
-
-
-@VO("coords:domain.spatial.SpaceFrame")
-class SpaceFrame(CoordFrame):
-    ref_position = Attribute("coords:domain.spatial.SpaceFrame.refPosition")
-    space_ref_frame = Attribute("coords:domain.spatial.SpaceFrame.spaceRefFrame")
-    equinox = Attribute("coords:domain.spatial.SpaceFrame.equinox")
-
-
-@VO("coords:domain.temporal.TimeStamp")
-class TimeStamp:
-     pass
-
-
-@VO("coords:domain.temporal.ISOTime")
-class ISOTime:
-    date = Attribute("coords:domain.temporal.ISOTime.date")
-
-
-@VO("coords:domain.temporal.JD")
-class JD:
-    date = Attribute("coords:domain.temporal.JD.date")
-
-
-@VO("coords:domain.temporal.TimeScale")
-class TimeScale(StringQuantity):
-    """
-    For simplicity, assume this is just a string, which is fine for this notebook.
-    """
+@VO("coords:domain.spatial.Epoch")
+class Epoch(StringQuantity):
     pass
 
 
-@VO("coords:Coordinate")
+@VO('coords:Handedness')
+class Handedness(StringQuantity):
+    pass
+
+
+@VO('coords:Coordinate')
 class Coordinate:
     pass
 
 
-@VO("coords:CoordValue")
+@VO('coords:CoordValue')
 class CoordValue(Coordinate):
-    axis = Reference("coords:CoordValue.axis")
+    axis = Reference('coords:CoordValue.axis', min=1, max=1)
 
 
-@VO("coords:PhysicalCoordValue")
+@VO('coords:CompositeCoordinate')
+class CompositeCoordinate(Coordinate):
+    cmpt = Attribute('coords:CompositeCoordinate.cmpt', min=1, max=-1)
+
+
+@VO('coords:PhysicalCoordValue')
 class PhysicalCoordValue(CoordValue):
-    cval = Attribute("coords:PhysicalCoordValue.cval")
+    cval = Attribute('coords:PhysicalCoordValue.cval', min=1, max=1)
 
 
-@VO("coords:GenericCoordValue")
+@VO('coords:BinnedCoordValue')
+class BinnedCoordValue(CoordValue):
+    cval = Attribute('coords:BinnedCoordValue.cval', min=1, max=1)
+
+
+@VO('coords:GenericCoordValue')
 class GenericCoordValue(PhysicalCoordValue):
     pass
 
 
-@VO("coords:domain.spatial.Epoch")
-class Epoch(StringQuantity):
-    """
-    For simplicity, assume this is just a string, which is fine for this notebook.
-    """
+@VO('coords:CoordFrame')
+class CoordFrame:
     pass
 
 
-@VO("coords:domain.spatial.StdRefPosition")
+@VO('coords:CoordSys')
+class CoordSys:
+    pass
+
+
+@VO('coords:AstroCoordSystem')
+class AstroCoordSystem(CoordSys):
+    planetary_ephem = Attribute('coords:AstroCoordSystem.planetaryEphem', min=1, max=1)
+    coord_space = Composition('coords:AstroCoordSystem.coordSpace', min=1, max=-1)
+
+
+@VO('coords:AxisGroup')
+class AxisGroup:
+    axis = Composition('coords:AxisGroup.axis', min=1, max=-1)
+
+
+@VO('coords:Axis')
+class Axis:
+    name = Attribute('coords:Axis.name', min=0, max=1)
+
+
+@VO('coords:ContinuousAxis')
+class ContinuousAxis(Axis):
+    domain_min = Attribute('coords:ContinuousAxis.domainMin', min=0, max=1)
+    domain_max = Attribute('coords:ContinuousAxis.domainMax', min=0, max=1)
+    cyclic = Attribute('coords:ContinuousAxis.cyclic', min=0, max=1)
+
+
+@VO('coords:BinnedAxis')
+class BinnedAxis(Axis):
+    length = Attribute('coords:BinnedAxis.length', min=1, max=1)
+
+
+@VO('coords:DiscreteSetAxis')
+class DiscreteSetAxis(Axis):
+    pass
+
+
+@VO('coords:CoordSpace')
+class CoordSpace:
+    frame = Reference('coords:CoordSpace.frame', min=1, max=1)
+    axis_group = Reference('coords:CoordSpace.axisGroup', min=1, max=1)
+
+
+@VO('coords:DataSpace')
+class DataSpace(CoordSpace):
+    pass
+
+
+@VO('coords:GenericCoordFrame')
+class GenericCoordFrame(CoordFrame):
+    ref_position = Attribute('coords:GenericCoordFrame.refPosition', min=1, max=1)
+
+
+@VO('coords:domain.pixel.PixelIndex')
+class PixelIndex(BinnedCoordValue):
+    pass
+
+
+@VO('coords:domain.pixel.PixelAxes')
+class PixelAxes(AxisGroup):
+    handedness = Attribute('coords:domain.pixel.PixelAxes.handedness', min=0, max=1)
+
+
+@VO('coords:domain.pixel.PixelCoordSystem')
+class PixelCoordSystem(CoordSys):
+    pixel_space = Composition('coords:domain.pixel.PixelCoordSystem.pixelSpace', min=0, max=1)
+
+
+@VO('coords:domain.pixel.PixelSpace')
+class PixelSpace(CoordSpace):
+    pass
+
+
+@VO('coords:domain.spatial.StdRefPosition')
 class StdRefPosition(StringQuantity):
-    """
-    For simplicity, assume this is just a string, which is fine for this notebook.
-    """
     pass
 
 
-@VO("coords:domain.spatial.StdRefFrame")
+@VO('coords:domain.spatial.StdRefFrame')
 class StdRefFrame(StringQuantity):
-    """
-    For simplicity, assume this is just a string, which is fine for this notebook.
-    """
     pass
+
+
+@VO('coords:domain.spatial.SpatialCoordValue')
+class SpatialCoordValue(PhysicalCoordValue):
+    pass
+
+
+@VO('coords:domain.spatial.RefLocation')
+class RefLocation:
+    pass
+
+
+@VO('coords:domain.spatial.StdRefLocation')
+class StdRefLocation(RefLocation):
+    position = Attribute('coords:domain.spatial.StdRefLocation.position', min=1, max=1)
+
+
+@VO('coords:domain.spatial.CustomRefLocation')
+class CustomRefLocation(RefLocation):
+    epoch = Attribute('coords:domain.spatial.CustomRefLocation.epoch', min=0, max=1)
+    position = Attribute('coords:domain.spatial.CustomRefLocation.position', min=1, max=1)
+    velocity = Attribute('coords:domain.spatial.CustomRefLocation.velocity', min=0, max=1)
+
+
+@VO('coords:domain.spatial.SpatialCoord')
+class SpatialCoord(CompositeCoordinate):
+    pass
+
+
+@VO('coords:domain.spatial.SpatialCoord1D')
+class SpatialCoord1D(SpatialCoord):
+    pass
+
+
+@VO('coords:domain.spatial.SpatialCoord2D')
+class SpatialCoord2D(SpatialCoord):
+    pass
+
+
+@VO('coords:domain.spatial.SpatialCoord3D')
+class SpatialCoord3D(SpatialCoord):
+    pass
+
+
+@VO('coords:domain.spatial.SkyCoord')
+class SkyCoord(Coordinate):
+    pass
+
+
+@VO('coords:domain.spatial.CelestialCoord')
+class CelestialCoord(SkyCoord):
+    ra = Attribute('coords:domain.spatial.CelestialCoord.ra', min=1, max=1)
+    dec = Attribute('coords:domain.spatial.CelestialCoord.dec', min=1, max=1)
+
+
+@VO('coords:domain.spatial.GalacticCoord')
+class GalacticCoord(SkyCoord):
+    l = Attribute('coords:domain.spatial.GalacticCoord.l', min=1, max=1)
+    b = Attribute('coords:domain.spatial.GalacticCoord.b', min=1, max=1)
+
+
+@VO('coords:domain.spatial.SpaceFrame')
+class SpaceFrame(CoordFrame):
+    ref_position = Attribute('coords:domain.spatial.SpaceFrame.refPosition', min=1, max=1)
+    space_ref_frame = Attribute('coords:domain.spatial.SpaceFrame.spaceRefFrame', min=1, max=1)
+    equinox = Attribute('coords:domain.spatial.SpaceFrame.equinox', min=0, max=1)
+
+
+@VO('coords:domain.spectral.SpectralValue')
+class SpectralValue(PhysicalCoordValue):
+    pass
+
+
+@VO('coords:domain.spectral.Wavelength')
+class Wavelength(SpectralValue):
+    pass
+
+
+@VO('coords:domain.spectral.Frequency')
+class Frequency(SpectralValue):
+    pass
+
+
+@VO('coords:domain.spectral.Energy')
+class Energy(SpectralValue):
+    pass
+
+
+@VO('coords:domain.temporal.TimeScale')
+class TimeScale(StringQuantity):
+    pass
+
+
+@VO('coords:domain.temporal.TimeOffset')
+class TimeOffset(PhysicalCoordValue):
+    pass
+
+
+@VO('coords:domain.temporal.TimeStamp')
+class TimeStamp(Coordinate):
+    pass
+
+
+@VO('coords:domain.temporal.ISOTime')
+class ISOTime(TimeStamp):
+    date = Attribute('coords:domain.temporal.ISOTime.date', min=1, max=1)
+
+
+@VO('coords:domain.temporal.JD')
+class JD(TimeStamp):
+    date = Attribute('coords:domain.temporal.JD.date', min=1, max=1)
+
+
+@VO('coords:domain.temporal.MJD')
+class MJD(TimeStamp):
+    date = Attribute('coords:domain.temporal.MJD.date', min=1, max=1)
+
+
+@VO('coords:domain.temporal.MET')
+class MET(TimeStamp):
+    time = Attribute('coords:domain.temporal.MET.time', min=1, max=1)
+    time0 = Attribute('coords:domain.temporal.MET.time0', min=1, max=1)
+
+
+@VO('coords:domain.temporal.TimeFrame')
+class TimeFrame(CoordFrame):
+    ref_position = Attribute('coords:domain.temporal.TimeFrame.refPosition', min=1, max=1)
+    timescale = Attribute('coords:domain.temporal.TimeFrame.timescale', min=1, max=1)
+    ref_direction = Attribute('coords:domain.temporal.TimeFrame.refDirection', min=0, max=1)
+    time0 = Attribute('coords:domain.temporal.TimeFrame.time0', min=0, max=1)
+
+
+@VO('coords:domain.polarization.PolStokesEnum')
+class PolStokesEnum(StringQuantity):
+    pass
+
+
+@VO('coords:domain.polarization.PolCircularEnum')
+class PolCircularEnum(StringQuantity):
+    pass
+
+
+@VO('coords:domain.polarization.PolLinearEnum')
+class PolLinearEnum(StringQuantity):
+    pass
+
+
+@VO('coords:domain.polarization.PolVectorEnum')
+class PolVectorEnum(StringQuantity):
+    pass
+
+
+@VO('coords:domain.polarization.PolCoordValue')
+class PolCoordValue(CoordValue):
+    pass
+
+
+@VO('coords:domain.polarization.PolLinear')
+class PolLinear(PolCoordValue):
+    cval = Attribute('coords:domain.polarization.PolLinear.cval', min=1, max=1)
+
+
+@VO('coords:domain.polarization.PolVector')
+class PolVector(PolCoordValue):
+    cval = Attribute('coords:domain.polarization.PolVector.cval', min=1, max=1)
+
+
+@VO('coords:domain.polarization.PolStokes')
+class PolStokes(PolCoordValue):
+    cval = Attribute('coords:domain.polarization.PolStokes.cval', min=1, max=1)
+
+
+@VO('coords:domain.polarization.PolCircular')
+class PolCircular(PolCoordValue):
+    cval = Attribute('coords:domain.polarization.PolCircular.cval', min=1, max=1)
+

@@ -23,7 +23,7 @@ import inspect
 import logging
 from weakref import WeakValueDictionary
 
-from rama.framework import VodmlDescriptor, AttributeList, Attribute, Reference, Composition
+from rama.framework import VodmlDescriptor, Attribute, Reference, Composition
 from rama.reader.votable import parser
 from rama.registry import TypeRegistry
 
@@ -38,10 +38,14 @@ class AbstractFieldReader:
     field_type = None
 
     def __init__(self, descriptor):
-        self.vodml_id = descriptor.vodml_id
+        self.descriptor = descriptor
 
     def read(self, context, xml_element):
         raise NotImplementedError()
+
+    @property
+    def vodml_id(self):
+        return self.descriptor.vodml_id
 
     #TODO this could be done more cleanly with a decorator
     @staticmethod
@@ -52,11 +56,12 @@ class AbstractFieldReader:
 
         raise AttributeError(f"Cannot find a suitable reader for field: {field}")
 
-class AttributeListFieldReader(AbstractFieldReader):
+
+class AttributeFieldReader(AbstractFieldReader):
     """
     Parser for attribute lists, i.e. attributes of any multiplicity greater than 1.
     """
-    field_type = AttributeList
+    field_type = Attribute
 
     def read(self, context, xml_element):
         attribute_elements = parser.parse_attributes(xml_element, self.vodml_id, context)
@@ -67,22 +72,17 @@ class AttributeListFieldReader(AbstractFieldReader):
             attributes.extend(attribute_element.constants)
             attributes.extend(attribute_element.columns)
 
-        return attributes
+        return self._select_return_value(attributes)
 
-
-class AttributeReader(AbstractFieldReader):
-    """
-    Parser for attributes of multiplicity = 1. This parser is basically an AttributeListFieldReader that returns
-    a single instance rather than a tuple.
-    """
-    field_type = Attribute
-
-    def read(self, context, xml_element):
-        # TODO this hack will be solved when we handle multiplicities
-        attributes = AttributeListFieldReader.read(self, context, xml_element)
-        if len(attributes):
+    def _select_return_value(self, attributes):
+        max_occurs = self.descriptor.max
+        if max_occurs == 1 and len(attributes) == 1:
             return attributes[0]
-        return None
+
+        if max_occurs == 1 and len(attributes) == 0:
+            return None
+
+        return attributes
 
 
 class CompositionFieldReader(AbstractFieldReader):

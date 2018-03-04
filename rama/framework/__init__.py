@@ -29,9 +29,11 @@ class VodmlDescriptor:
     in a class and call the `read` method to instantiate its fields.
     """
 
-    def __init__(self, vodml_id):
+    def __init__(self, vodml_id, min=0, max=1):
         self.vodml_id = vodml_id
         self.default = None
+        self.min = min
+        self.max = max
 
     def __get__(self, instance, owner):
         if instance is None:
@@ -49,10 +51,7 @@ class Composition(VodmlDescriptor):
     pass
 
 
-class AttributeList(VodmlDescriptor):
-    pass
-
-class Attribute(AttributeList):
+class Attribute(VodmlDescriptor):
     pass
 
 
