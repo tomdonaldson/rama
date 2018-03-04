@@ -51,8 +51,14 @@ def simple_position_columns_file():
 
 
 @pytest.fixture
+def invalid_file():
+    return make_data_path('invalid.vot.xml')
+
+
+@pytest.fixture
 def references_file():
     return make_data_path('references.vot.xml')
+
 
 def test_parsing_coordinates(parser, simple_position_file):
     sky_positions = parser.find_instances(simple_position_file, SkyPosition)
@@ -101,9 +107,19 @@ def test_parsing_columns(parser, simple_position_columns_file):
     numpy.testing.assert_array_equal(expected_dec, position.coord.dec)
 
 
-# TODO
-# def test_parsing_columns_non_existent_reference(parser, simple_position_columns_file):
-#     context = Context(parser, xml=simple_position_columns_file)
-#     sky_positions = context.find_instances(SkyPosition)
-#
-#     assert 1 == len(sky_positions)
+def test_parsing_columns_non_existent_reference(parser, invalid_file):
+    context = Context(parser, xml=invalid_file)
+
+    with pytest.warns(UserWarning) as record:
+        sky_positions = context.find_instances(SkyPosition)
+
+    assert len(record) == 1
+    assert "ID foo" in str(record[0].message)
+
+    position = sky_positions[0]
+
+    assert 1 == len(sky_positions)
+    expected_ra = numpy.array([numpy.NaN, numpy.NaN])
+    expected_dec = numpy.array([11.0, 21.0]) * u.deg
+    numpy.testing.assert_array_equal(expected_ra, position.coord.ra)
+    numpy.testing.assert_array_equal(expected_dec, position.coord.dec)

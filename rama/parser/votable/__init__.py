@@ -20,14 +20,20 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import inspect
+import logging
+import warnings
 from weakref import WeakValueDictionary
 
 import astropy.units as u
+import numpy
 from lxml import etree
 from pandas import read_html
 
 from rama.framework import VodmlDescriptor, AttributeList, Attribute, Reference, Composition
 from rama.registry import TypeRegistry
+
+
+LOG = logging.getLogger(__name__)
 
 
 def _get_type_xpath_expression(tag_name, type_id):
@@ -107,7 +113,14 @@ class AttributeListParser(AbstractParser):
         column_ref = xml_element.xpath("@ref")[0]
         find_column_xpath = f"//{_get_local_name('FIELD')}[@ID='{column_ref}']"
         find_index_xpath = f"count({find_column_xpath}/preceding-sibling::{_get_local_name('FIELD')})"
-        column_element = xml_element.xpath(find_column_xpath)[0]
+        column_elements = xml_element.xpath(find_column_xpath)
+        if not len(column_elements):
+            msg = f"Can't find column with ID {column_ref}. Setting values to NaN"
+            LOG.warning(msg)
+            warnings.warn(msg, UserWarning)
+            return numpy.full(table.shape[0], numpy.NaN)
+
+        column_element = column_elements[0]
         column_index = int(xml_element.xpath(find_index_xpath))
         column = table[:, column_index]
 
