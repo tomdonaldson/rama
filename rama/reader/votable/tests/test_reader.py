@@ -27,7 +27,7 @@ from astropy import units as u
 
 from rama.models.coordinates import SpaceFrame
 from rama.models.measurements import SkyPosition
-from rama.parser.votable import VodmlParser, Context
+from rama.reader.votable import VodmlReader, Context
 
 
 def make_data_path(filename):
@@ -36,8 +36,8 @@ def make_data_path(filename):
 
 
 @pytest.fixture
-def parser():
-    return VodmlParser()
+def reader():
+    return VodmlReader()
 
 
 @pytest.fixture
@@ -60,8 +60,8 @@ def references_file():
     return make_data_path('references.vot.xml')
 
 
-def test_parsing_coordinates(parser, simple_position_file):
-    sky_positions = parser.find_instances(simple_position_file, SkyPosition)
+def test_parsing_coordinates(reader, simple_position_file):
+    sky_positions = reader.find_instances(simple_position_file, SkyPosition)
     pos = sky_positions[0]
 
     assert 1 == len(sky_positions)
@@ -72,14 +72,14 @@ def test_parsing_coordinates(parser, simple_position_file):
     assert "TOPOCENTER" == pos.coord_frame.ref_position.position.value
 
 
-def test_references_are_same_object(parser, references_file):
-    sky_positions = parser.find_instances(references_file, SkyPosition)
+def test_references_are_same_object(reader, references_file):
+    sky_positions = reader.find_instances(references_file, SkyPosition)
 
     assert sky_positions[0].coord_frame is sky_positions[1].coord_frame
 
 
-def test_referred_built_only_once(parser, references_file):
-    context = Context(parser, xml=references_file)
+def test_referred_built_only_once(reader, references_file):
+    context = Context(reader, xml=references_file)
     frame = context.find_instances(SpaceFrame)[0]
     frame2 = context.find_instances(SpaceFrame)[0]
     sky_positions = context.find_instances(SkyPosition)
@@ -89,14 +89,14 @@ def test_referred_built_only_once(parser, references_file):
     assert sky_positions[1].coord_frame is frame
 
 
-def test_context_without_filaname(parser):
-    context = Context(parser)
+def test_context_without_filaname(reader):
+    context = Context(reader)
     with pytest.raises(AttributeError):
         context.find_instances(SpaceFrame)
 
 
-def test_parsing_columns(parser, simple_position_columns_file):
-    context = Context(parser, xml=simple_position_columns_file)
+def test_parsing_columns(reader, simple_position_columns_file):
+    context = Context(reader, xml=simple_position_columns_file)
     sky_positions = context.find_instances(SkyPosition)
     position = sky_positions[0]
 
@@ -107,8 +107,8 @@ def test_parsing_columns(parser, simple_position_columns_file):
     numpy.testing.assert_array_equal(expected_dec, position.coord.dec)
 
 
-def test_invalid_file(parser, invalid_file):
-    context = Context(parser, xml=invalid_file)
+def test_invalid_file(reader, invalid_file):
+    context = Context(reader, xml=invalid_file)
 
     with pytest.warns(UserWarning) as record:
         sky_positions = context.find_instances(SkyPosition)

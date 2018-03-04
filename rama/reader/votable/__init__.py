@@ -19,42 +19,4 @@
 # SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-
-class VodmlDescriptor:
-    """
-    An abstract class implementing the Descriptor Protocol as a basis for describing VODML models
-    in Python. Other than the regular descriptor methods, the class also provides a read method
-    that provides an API for parsing data fields of model classes. A parser can find all descriptors
-    in a class and call the `read` method to instantiate its fields.
-    """
-
-    def __init__(self, vodml_id):
-        self.vodml_id = vodml_id
-        self.default = None
-
-    def __get__(self, instance, owner):
-        if instance is None:
-            return self
-        return instance.__dict__.get(self.name, self.default)
-
-    def __set__(self, instance, value):
-        instance.__dict__[self.name] = value
-
-    def __set_name__(self, owner, name):
-        self.name = name
-
-
-class Composition(VodmlDescriptor):
-    pass
-
-
-class AttributeList(VodmlDescriptor):
-    pass
-
-class Attribute(AttributeList):
-    pass
-
-
-class Reference(VodmlDescriptor):
-    pass
+from .reader import VodmlReader, Context
