@@ -1,0 +1,3 @@
+recursive-include rama test_*.py
+recursive-include rama tests/data/*
+include tox.ini

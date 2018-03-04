@@ -83,11 +83,6 @@ def resolve_id(xml_element):
     return None
 
 
-def _find_root(xml_document):
-    parser = etree.XMLParser(ns_clean=True)
-    tree = etree.parse(xml_document, parser)
-    return tree.getroot()
-
 class AttributeElement:
     def __init__(self, xml_element, role_id, context):
         self.xml = xml_element
@@ -169,6 +164,11 @@ class AttributeElement:
 
         return table
 
+
+def _find_root(xml_document):
+    parser = etree.XMLParser(ns_clean=True)
+    tree = etree.parse(xml_document, parser)
+    return tree.getroot()
 
 
 def _get_type_xpath_expression(tag_name, type_id):
