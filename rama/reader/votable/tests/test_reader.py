@@ -101,8 +101,8 @@ def test_parsing_columns(reader, simple_position_columns_file):
     position = sky_positions[0]
 
     assert 1 == len(sky_positions)
-    expected_ra = numpy.array([10.0, 20.0]) * u.deg
-    expected_dec = numpy.array([11.0, 21.0]) * u.deg
+    expected_ra = numpy.array([10.0, 20.0], dtype='float32') * u.deg
+    expected_dec = numpy.array([11.0, 21.0], dtype='float32') * u.deg
     numpy.testing.assert_array_equal(expected_ra, position.coord.ra)
     numpy.testing.assert_array_equal(expected_dec, position.coord.dec)
 
@@ -110,12 +110,9 @@ def test_parsing_columns(reader, simple_position_columns_file):
 def test_invalid_file(reader, invalid_file):
     context = Context(reader, xml=invalid_file)
 
-    with pytest.warns(UserWarning) as record:
+    with pytest.warns(SyntaxWarning) as record:
         sky_positions = context.find_instances(SkyPosition)
-
-    assert len(record) == 2
-    assert "ID foo" in str(record[1].message)
-    assert "'foo' did not parse as unit" in str(record[0].message)
+        assert "ID foo" in str(record[-1].message)
 
     position = sky_positions[0]
 

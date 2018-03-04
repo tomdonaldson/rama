@@ -177,6 +177,10 @@ class Context:
     def get_table_by_id(self, table_id):
         return self.__tables.get(table_id, None)
 
+    @property
+    def document(self):
+        return self.__xml
+
 
 class VodmlReader:
     """

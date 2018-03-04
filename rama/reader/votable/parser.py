@@ -21,12 +21,11 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import logging
 import warnings
+
+from astropy.io import votable
 from lxml import etree
 
 import numpy
-
-from astropy import units as u
-from pandas import read_html
 
 LOG = logging.getLogger(__name__)
 
@@ -97,21 +96,21 @@ class AttributeElement:
     @property
     def constants(self):
         elements = _get_children(self.xml, "LITERAL")
-        return [self._read_literal(element) for element in elements]
+        return [self._parse_literal(element) for element in elements]
 
     @property
     def columns(self):
         elements = _get_children(self.xml, "COLUMN")
-        return [self._read_column(element) for element in elements]
+        return [self._parse_column(element) for element in elements]
 
-    def _read_literal(self, xml_element):
+    def _parse_literal(self, xml_element):
         value = xml_element.xpath("@value")[0]
         value_type = xml_element.xpath("@dmtype")[0]
         units = xml_element.xpath("@unit")
         unit = units[0] if len(units) else None
         return self.context.get_type_by_id(value_type)(value, unit)
 
-    def _read_column(self, xml_element):
+    def _parse_column(self, xml_element):
         column_ref = xml_element.xpath("@ref")[0]
         find_column_xpath = f"//{_get_local_name('FIELD')}[@ID='{column_ref}']"
         find_index_xpath = f"count({find_column_xpath}/preceding-sibling::{_get_local_name('FIELD')})"
@@ -119,46 +118,43 @@ class AttributeElement:
         if not len(column_elements):
             msg = f"Can't find column with ID {column_ref}. Setting values to NaN"
             LOG.warning(msg)
-            warnings.warn(msg, UserWarning)
+            warnings.warn(msg, SyntaxWarning)
             return numpy.NaN
 
         column_element = column_elements[0]
-        table = self._read_table(column_element)
+        table = self._parse_table(column_element)
         column_index = int(xml_element.xpath(find_index_xpath))
-        column = table[:, column_index]
-
-        units = column_element.xpath("@unit")
-        unit = units[0] if len(units) else None
-
-        try:
-            column = column * u.Unit(unit, parse_strict='warn')
-        except ValueError:
-            column = column * u.dimensionless_unscaled
+        column = table.columns[column_index]
 
         name = column_element.xpath("@name")[0]
         column.name = name
 
         return column
 
-    def _read_table(self, column_element):
+    def _parse_table(self, column_element):
 
-        # TODO indexing unsafe here, there might be no result (FIELD not in a TABLE)
-        table_element = column_element.xpath(f"parent::{_get_local_name('TABLE')}")[0]
+        table_elements = column_element.xpath(f"parent::{_get_local_name('TABLE')}")
+        if not len(table_elements):
+            raise RuntimeError("COLUMN points to FIELD that does not have a TABLE parent")
+        table_element = table_elements[0]
 
+        table_id_index = False
         table_ids = table_element.xpath('@ID')
-        table_id = None
         if len(table_ids):
             table_id = table_ids[0]
             table = self.context.get_table_by_id(table_id)
             if table is not None:
                 return table
+        else:
+            table_id_index = True
+            table_id = int(table_element.xpath(f"count(preceding-sibling::{_get_local_name('TABLE')})"))
 
-        table_html = etree.tostring(table_element.xpath(f".//{_get_local_name('TABLEDATA')}")[0])
-        table = read_html(f"<table>{table_html}</table>")[0].as_matrix()
-
-        if table_id is None:
+        if table_id_index:
+            table = votable.parse_single_table(self.context.document, table_number=table_id).to_table()
             table_id = id(table)
             table_element.attrib["ID"] = str(table_id)
+        else:
+            table = votable.parse_single_table(self.context.document, table_id=table_id).to_table()
 
         self.context.add_table(table_id, table)
 
