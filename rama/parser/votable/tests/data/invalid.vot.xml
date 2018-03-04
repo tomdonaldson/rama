@@ -48,7 +48,7 @@
     </VODML>
     <RESOURCE ID="table_objects">
 
-        <TABLE ID="_table1">
+        <TABLE>
             <FIELD name="ra" ID="_RA" unit="deg" datatype="float">
                 <DESCRIPTION>right ascension (J2000 decimal deg)</DESCRIPTION>
             </FIELD>

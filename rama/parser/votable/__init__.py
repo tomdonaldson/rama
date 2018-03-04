@@ -108,8 +108,6 @@ class AttributeListParser(AbstractParser):
         return context.get_type_by_id(value_type)(value, unit)
 
     def _parse_column(self, context, xml_element):
-        table = self._parse_table(xml_element)
-
         column_ref = xml_element.xpath("@ref")[0]
         find_column_xpath = f"//{_get_local_name('FIELD')}[@ID='{column_ref}']"
         find_index_xpath = f"count({find_column_xpath}/preceding-sibling::{_get_local_name('FIELD')})"
@@ -118,9 +116,10 @@ class AttributeListParser(AbstractParser):
             msg = f"Can't find column with ID {column_ref}. Setting values to NaN"
             LOG.warning(msg)
             warnings.warn(msg, UserWarning)
-            return numpy.full(table.shape[0], numpy.NaN)
+            return numpy.NaN
 
         column_element = column_elements[0]
+        table = self._parse_table(column_element, context)
         column_index = int(xml_element.xpath(find_index_xpath))
         column = table[:, column_index]
 
@@ -143,9 +142,29 @@ class AttributeListParser(AbstractParser):
 
         return column
 
-    def _parse_table(self, xml_element):
-        table_html = etree.tostring(xml_element.xpath(f"//{_get_local_name('TABLEDATA')}")[0])
-        return read_html(f"<table>{table_html}</table>")[0].as_matrix()
+    def _parse_table(self, column_element, context):
+
+        # TODO indexing unsafe here, there might be no result (FIELD not in a TABLE)
+        table_element = column_element.xpath(f"parent::{_get_local_name('TABLE')}")[0]
+
+        table_ids = table_element.xpath('@ID')
+        table_id = None
+        if len(table_ids):
+            table_id = table_ids[0]
+            table = context.get_table_by_id(table_id)
+            if table is not None:
+                return table
+
+        table_html = etree.tostring(table_element.xpath(f".//{_get_local_name('TABLEDATA')}")[0])
+        table = read_html(f"<table>{table_html}</table>")[0].as_matrix()
+
+        if table_id is None:
+            table_id = id(table)
+            table_element.attrib["ID"] = str(table_id)
+
+        context.add_table(table_id, table)
+
+        return table
 
 
 class AttributeParser(AttributeListParser):
@@ -254,6 +273,7 @@ class InstanceFactory:
 class Context:
     def __init__(self, parser, xml=None):
         self.__standalone_instances = WeakValueDictionary()
+        self.__tables = {}
         self.__xml = xml
         self.__parser = parser
 
@@ -279,6 +299,12 @@ class Context:
 
     def get_instance_by_id(self, instance_id):
         return self.__standalone_instances.get(instance_id, None)
+
+    def add_table(self, table_id, table):
+        self.__tables[table_id] = table
+
+    def get_table_by_id(self, table_id):
+        return self.__tables.get(table_id, None)
 
 
 class VodmlParser:
