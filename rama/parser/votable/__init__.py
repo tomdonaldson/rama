@@ -105,9 +105,8 @@ class AttributeListParser(AbstractParser):
         table = self._parse_table(xml_element)
 
         column_ref = xml_element.xpath("@ref")[0]
-        value_type = xml_element.xpath("@dmtype")[0]
         find_column_xpath = f"//{_get_local_name('FIELD')}[@ID='{column_ref}']"
-        find_index_xpath = f"count({find_column_xpath}/preceding-sibling::def:FIELD)"
+        find_index_xpath = f"count({find_column_xpath}/preceding-sibling::{_get_local_name('FIELD')})"
         column_element = xml_element.xpath(find_column_xpath)[0]
         column_index = int(xml_element.xpath(find_index_xpath))
         column = table[:, column_index]

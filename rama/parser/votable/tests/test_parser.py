@@ -20,11 +20,14 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import os
+
+import numpy
 import pytest
+from astropy import units as u
 
 from rama.models.coordinates import SpaceFrame
-from rama.parser.votable import VodmlParser, Context
 from rama.models.measurements import SkyPosition
+from rama.parser.votable import VodmlParser, Context
 
 
 def make_data_path(filename):
@@ -40,6 +43,11 @@ def parser():
 @pytest.fixture
 def simple_position_file():
     return make_data_path('simple-position.vot.xml')
+
+
+@pytest.fixture
+def simple_position_columns_file():
+    return make_data_path('simple-position-columns.vot.xml')
 
 
 @pytest.fixture
@@ -79,3 +87,23 @@ def test_context_without_filaname(parser):
     context = Context(parser)
     with pytest.raises(AttributeError):
         context.find_instances(SpaceFrame)
+
+
+def test_parsing_columns(parser, simple_position_columns_file):
+    context = Context(parser, xml=simple_position_columns_file)
+    sky_positions = context.find_instances(SkyPosition)
+    position = sky_positions[0]
+
+    assert 1 == len(sky_positions)
+    expected_ra = numpy.array([10.0, 20.0]) * u.deg
+    expected_dec = numpy.array([11.0, 21.0]) * u.deg
+    numpy.testing.assert_array_equal(expected_ra, position.coord.ra)
+    numpy.testing.assert_array_equal(expected_dec, position.coord.dec)
+
+
+# TODO
+# def test_parsing_columns_non_existent_reference(parser, simple_position_columns_file):
+#     context = Context(parser, xml=simple_position_columns_file)
+#     sky_positions = context.find_instances(SkyPosition)
+#
+#     assert 1 == len(sky_positions)

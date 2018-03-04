@@ -25,7 +25,7 @@ setup(
     name="Rama",
     version="0.1",
     packages=find_packages(),
-    install_requires=['pandas', 'lxml', 'astropy'],
+    install_requires=['pandas', 'lxml', 'astropy', 'beautifulsoup4', 'html5lib'],
     tests_require=['pytest'],
     include_package_data=True,
     entry_points={
