@@ -24,6 +24,7 @@ import os
 import numpy
 import pytest
 from astropy import units as u
+from astropy.io.votable import VOWarning
 
 from rama.models.coordinates import SpaceFrame
 from rama.models.measurements import SkyPosition
@@ -95,7 +96,7 @@ def test_context_without_filaname(reader):
         context.find_instances(SpaceFrame)
 
 
-def test_parsing_columns(reader, simple_position_columns_file):
+def test_parsing_columns(reader, simple_position_columns_file, recwarn):
     context = Context(reader, xml=simple_position_columns_file)
     sky_positions = context.find_instances(SkyPosition)
     position = sky_positions[0]
@@ -106,6 +107,11 @@ def test_parsing_columns(reader, simple_position_columns_file):
     numpy.testing.assert_array_equal(expected_ra, position.coord.ra)
     numpy.testing.assert_array_equal(expected_dec, position.coord.dec)
 
+    assert "W20" in str(recwarn[0].message)
+    assert "W41" in str(recwarn[1].message)
+    for i in range(2, 12):
+        assert "W10" in str(recwarn[i].message)
+
 
 def test_invalid_file(reader, invalid_file):
     context = Context(reader, xml=invalid_file)
@@ -113,6 +119,7 @@ def test_invalid_file(reader, invalid_file):
     with pytest.warns(SyntaxWarning) as record:
         sky_positions = context.find_instances(SkyPosition)
         assert "ID foo" in str(record[-1].message)
+        assert "W50" in str(record[12].message)
 
     position = sky_positions[0]
 
