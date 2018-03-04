@@ -67,7 +67,15 @@ def test_references_are_same_object(parser, references_file):
 def test_referred_built_only_once(parser, references_file):
     context = Context(parser, xml=references_file)
     frame = context.find_instances(SpaceFrame)[0]
+    frame2 = context.find_instances(SpaceFrame)[0]
     sky_positions = context.find_instances(SkyPosition)
 
+    assert frame is frame2
     assert sky_positions[0].coord_frame is frame
     assert sky_positions[1].coord_frame is frame
+
+
+def test_context_without_filaname(parser):
+    context = Context(parser)
+    with pytest.raises(AttributeError):
+        context.find_instances(SpaceFrame)
