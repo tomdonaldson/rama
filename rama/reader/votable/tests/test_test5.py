@@ -31,6 +31,7 @@ from rama.reader.votable import Context
 def context_test5(make_data_path, reader):
     return Context(reader, xml=make_data_path("test5.vot.xml"))
 
+
 def test_coordinate_frame(context_test5):
     frames = context_test5.find_instances(SkyCoordinateFrame)
 
@@ -42,12 +43,12 @@ def test_filters(context_test5):
     filters = context_test5.find_instances(PhotometryFilter)
 
     assert len(filters) == 6
-    assert filters[0].name.value == "2mass:H"
-    assert filters[1].name.value == "2mass:J"
-    assert filters[2].name.value == "2mass:K"
-    assert filters[3].name.value == "sdss:g"
-    assert filters[4].name.value == "sdss:r"
-    assert filters[5].name.value == "sdss:u"
+    assert filters[0].name == "2mass:H"
+    assert filters[1].name == "2mass:J"
+    assert filters[2].name == "2mass:K"
+    assert filters[3].name == "sdss:g"
+    assert filters[4].name == "sdss:r"
+    assert filters[5].name == "sdss:u"
 
 
 def test_source(context_test5, recwarn):

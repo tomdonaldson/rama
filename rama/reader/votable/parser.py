@@ -113,7 +113,6 @@ class AttributeElement:
     def _parse_column(self, xml_element):
         column_ref = xml_element.xpath("@ref")[0]
         find_column_xpath = f"//{_get_local_name('FIELD')}[@ID='{column_ref}']"
-        find_index_xpath = f"count({find_column_xpath}/preceding-sibling::{_get_local_name('FIELD')})"
         column_elements = xml_element.xpath(find_column_xpath)
         if not len(column_elements):
             msg = f"Can't find column with ID {column_ref}. Setting values to NaN"
@@ -123,8 +122,8 @@ class AttributeElement:
 
         column_element = column_elements[0]
         table = self._parse_table(column_element)
-        column_index = int(xml_element.xpath(find_index_xpath))
-        column = table.columns[column_index]
+
+        column = table[column_ref]
 
         name = column_element.xpath("@name")[0]
         column.name = name

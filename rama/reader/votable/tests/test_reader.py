@@ -53,11 +53,11 @@ def test_parsing_coordinates(reader, simple_position_file):
     pos = sky_positions[0]
 
     assert 1 == len(sky_positions)
-    assert 10.34209135 == pos.coord.ra.value
-    assert 41.13232112 == pos.coord.dec.value
-    assert "FK5" == pos.coord_frame.space_ref_frame.value
-    assert "J1975" == pos.coord_frame.equinox.value
-    assert "TOPOCENTER" == pos.coord_frame.ref_position.position.value
+    assert 10.34209135 * u.deg == pos.coord.ra
+    assert 41.13232112 * u.deg == pos.coord.dec
+    assert "FK5" == pos.coord_frame.space_ref_frame
+    assert "J1975" == pos.coord_frame.equinox
+    assert "TOPOCENTER" == pos.coord_frame.ref_position.position
 
 
 def test_references_are_same_object(reader, references_file):

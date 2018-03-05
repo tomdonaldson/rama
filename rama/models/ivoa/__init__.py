@@ -20,52 +20,54 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 from rama.registry import VO
+from astropy import units as u
 
 
 @VO("ivoa:RealQuantity")
 class RealQuantity:
-    """
-    Represents ivoa:RealQuantity
-    """
 
     def __init__(self, value, unit):
-        self.value = float(value)
-        self.unit = unit
+        value = float(value)
+        try:
+            quantity = value * u.Unit(unit)
+        except (ValueError, TypeError):
+            quantity = value * u.dimensionless_unscaled
+        super().__setattr__('quantity', quantity)
 
+    def __getattr__(self, attr):
+        return getattr(self.quantity, attr)
 
-@VO("ivoa:real")
-class Real(RealQuantity):
-    """
-    Represents ivoa:real, just makes it the same as RealQuantity
-    """
-    pass
+    def __setattr__(self, attr, value):
+        setattr(self.quantity, attr, value)
+
+    def __str__(self):
+        return self.quantity.__str__()
+
+    def __repr__(self):
+        return self.quantity.__repr__()
+
+    def __eq__(self, other):
+        return self.quantity.__eq__(other)
 
 
 @VO("ivoa:string")
 class StringQuantity:
-    """
-    Represents all ivoa:* quantities that can be represented with a string in Python.
-    In this simple implementation that does not provide validation, enumerations are
-    also treated as simple strings.
-    """
-    vodml_id = "ivoa:string"
 
     def __init__(self, value, unit):
-        self.value = str(value)
-        self.unit = unit
+        value = str(value)
+        super().__setattr__('value', value)
 
+    def __getattr__(self, attr):
+        return getattr(self.value, attr)
 
-@VO("ivoa:boolean")
-class BooleanQuantity:
-    """
-    Represents ivoa:boolean
-    """
+    def __setattr__(self, attr, value):
+        setattr(self.value, attr, value)
 
-    def __init__(self, value, unit):
-        self.value = value.lower() == 'true'
-        self.unit = unit
+    def __str__(self):
+        return self.value.__str__()
 
+    def __repr__(self):
+        return self.value.__repr__()
 
-@VO("ivoa:anyURI")
-class Uri(StringQuantity):
-    pass
+    def __eq__(self, other):
+        return self.value.__eq__(other)
