@@ -32,9 +32,6 @@ LOG = logging.getLogger(__name__)
 
 
 class AbstractFieldReader:
-    """
-    Concrete parser must extend this class and provide a method read(self, context, xml_element)
-    """
     field_type = None
 
     def __init__(self, descriptor):
@@ -58,9 +55,6 @@ class AbstractFieldReader:
 
 
 class AttributeFieldReader(AbstractFieldReader):
-    """
-    Parser for attribute lists, i.e. attributes of any multiplicity greater than 1.
-    """
     field_type = Attribute
 
     def read(self, context, xml_element):
@@ -86,9 +80,6 @@ class AttributeFieldReader(AbstractFieldReader):
 
 
 class CompositionFieldReader(AbstractFieldReader):
-    """
-    Parser for composition relationships.
-    """
     field_type = Composition
 
     def read(self, context, xml_element):
@@ -96,9 +87,6 @@ class CompositionFieldReader(AbstractFieldReader):
 
 
 class ReferenceReader(AbstractFieldReader):
-    """
-    Parser for references.
-    """
     field_type = Reference
 
     def read(self, context, xml_element):
@@ -106,17 +94,8 @@ class ReferenceReader(AbstractFieldReader):
 
 
 class InstanceFactory:
-    """
-    A factory that makes instances of a class based on an `INSTANCE` xml Element.
-    """
-
     @staticmethod
     def make(instance_class, xml_element, context):
-        """
-        instance_class is the class to be instantiated
-        xml_element is the xml Element serializing the instance
-        parser is the VodmlReader instance passed through to provide context.
-        """
         instance_id = parser.resolve_id(xml_element)
 
         instance = context.get_instance_by_id(instance_id)
@@ -183,32 +162,21 @@ class Context:
 
 
 class VodmlReader:
-    """
-    Root Parser.
-    """
-
     def __init__(self):
         self.registry = TypeRegistry.instance
         self.factory = InstanceFactory
 
     def find_instances(self, xml_document, element_class, context=None):
-        """
-        Find all instances of the `element_class` class in a votable.
-        """
         if context is None:
             context = Context(reader=self)
         return [self.read_instance(element, context) for element in parser.find(xml_document, element_class)]
 
     def read_instance(self, xml_element, context):
-        """
-        Parse an `INSTANCE` represented by the `xml_element`
-        """
         type_id = parser.resolve_type(xml_element)
         element_class = self.registry.get_by_id(type_id)
         return self.factory.make(element_class, xml_element, context)
 
     def get_by_id(self, vodml_id):
-        "Resolve a vodml_id to the corresponding class"
         return self.registry.get_by_id(vodml_id)
 
     def read(self, field, xml_element, context):

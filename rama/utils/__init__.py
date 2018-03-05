@@ -30,7 +30,7 @@ class Singleton:
     inherited from. Other than that, there are no restrictions that apply
     to the decorated class.
 
-    To get the singleton instance, use the `Instance` method. Trying
+    To get the singleton instance, use the instance property. Trying
     to use `__call__` will result in a `TypeError` being raised.
 
     """
@@ -45,7 +45,6 @@ class Singleton:
         Returns the singleton instance. Upon its first call, it creates a
         new instance of the decorated class and calls its `__init__` method.
         On all subsequent calls, the already created instance is returned.
-
         """
         if self._instance is None:
             self._instance = self._decorated()

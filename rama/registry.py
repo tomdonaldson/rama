@@ -27,12 +27,6 @@ from rama.utils import Singleton
 # TODO type hints
 @Singleton
 class TypeRegistry:
-    """
-    This class provides a registry to resolve types from their vodml_ids. In this simple
-    implementation the types are found among all the classes in the global namespace
-    (see `find_globals` method).
-    """
-
     def __init__(self):
         self._type_map = {}
 
@@ -52,10 +46,6 @@ class TypeRegistry:
 
 
 class VO:
-    """
-    TODO docstring
-    """
-
     def __init__(self, vodml_id):
         self.vodml_id = vodml_id
 

@@ -22,13 +22,6 @@
 
 
 class VodmlDescriptor:
-    """
-    An abstract class implementing the Descriptor Protocol as a basis for describing VODML models
-    in Python. Other than the regular descriptor methods, the class also provides a read method
-    that provides an API for parsing data fields of model classes. A parser can find all descriptors
-    in a class and call the `read` method to instantiate its fields.
-    """
-
     def __init__(self, vodml_id, min=0, max=1):
         self.vodml_id = vodml_id
         self.default = None
