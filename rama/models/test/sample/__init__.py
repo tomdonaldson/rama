@@ -19,7 +19,7 @@
 # SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-from rama.framework import Attribute, Reference
+from rama.framework import Attribute, Reference, Composition
 from rama.models.ivoa import StringQuantity
 
 from rama.registry import VO
@@ -77,6 +77,7 @@ class AbstractSource(AstroObject):
     position = Attribute('sample:catalog.AbstractSource.position', min=1, max=1)
     position_error = Attribute('sample:catalog.AbstractSource.positionError', min=0, max=1)
     classification = Attribute('sample:catalog.AbstractSource.classification', min=1, max=1)
+    luminosity = Composition('sample:catalog.AbstractSource.luminosity', min=0, max=-1)
 
 
 @VO('sample:catalog.LuminosityMeasurement')

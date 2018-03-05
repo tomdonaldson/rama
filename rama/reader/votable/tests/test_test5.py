@@ -19,7 +19,9 @@
 # SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+import numpy as np
 import pytest
+from astropy.table import MaskedColumn
 from numpy.testing import assert_array_equal
 
 from rama.models.test.filter import PhotometryFilter
@@ -57,11 +59,50 @@ def test_source(context_test5, recwarn):
     assert len(sources) == 1
     source = sources[0]
     assert_array_equal(source.name, [b'08120809-0206132', b'08115683-0205428', b'08115826-0205336'])
+    assert_array_equal(source.position.longitude, MaskedColumn([123.033734, 122.986794, 122.992773],
+                                                               dtype='float32', unit='deg'))
+    assert_array_equal(source.position.latitude, MaskedColumn([-2.103671, -2.095231, -2.092676],
+                                                              dtype='float32', unit='deg'))
+
+    frame = context_test5.find_instances(SkyCoordinateFrame)[0]
+    filters = context_test5.find_instances(PhotometryFilter)
+    h_filter = filters[0]
+    j_filter = filters[1]
+    k_filter = filters[2]
+
+    assert source.position.frame is frame
+
+    assert len(source.luminosity) == 3
+
+    h_mag = source.luminosity[0]
+    assert h_mag.type == 'magnitude'
+    assert h_mag.filter is h_filter
+    assert_array_equal(h_mag.value, MaskedColumn([13.681, 15.103, 15.718],
+                                                               dtype='float32', unit='mag'))
+    assert_array_equal(h_mag.error, MaskedColumn([0.027, 0.077, 0.112],
+                                                 dtype='float32', unit='mag'))
+    j_mag = source.luminosity[1]
+    assert j_mag.type == 'magnitude'
+    assert j_mag.filter is j_filter
+    assert_array_equal(j_mag.value, MaskedColumn([14.161, 15.86 , 16.273],
+                                                 dtype='float32', unit='mag'))
+    assert_array_equal(j_mag.error, MaskedColumn([0.025, 0.06 , 0.096],
+                                                 dtype='float32', unit='mag'))
+
+    k_mag = source.luminosity[2]
+    assert k_mag.type == 'magnitude'
+    assert k_mag.filter is k_filter
+    assert_array_equal(k_mag.value, MaskedColumn([13.675, 14.847, 15.46 ],
+                                                 dtype='float32', unit='mag'))
+    assert_array_equal(k_mag.error, MaskedColumn([0.048, 0.127, 0.212],
+                                                 dtype='float32', unit='mag'))
 
     assert "W20" in str(recwarn[0].message)
     assert "W41" in str(recwarn[1].message)
     for i in range(2, 12):
         assert "W10" in str(recwarn[i].message)
+
+    # TODO MISSING multi-table relationship
 
 
 
