@@ -19,19 +19,23 @@
 # SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-from setuptools import setup, find_packages
+from rama.framework import Attribute
+from rama.registry import VO
 
-setup(
-    name="rama",
-    version="0.1",
-    packages=find_packages(),
-    install_requires=['lxml', 'astropy', 'numpy'],
-    tests_require=['pytest'],
-    include_package_data=True,
-    entry_points={
-        'vo.dm.models': [
-            'coords = rama.models.coordinates',
-            'meas = rama.models.measurements',
-        ]
-    }
-)
+
+@VO('filter:PhotometricSystem')
+class PhotometricSystem:
+    description = Attribute('filter:PhotometricSystem.description', min=0, max=1)
+    detector_type = Attribute('filter:PhotometricSystem.detectorType', min=1, max=1)
+
+
+@VO('filter:PhotometryFilter')
+class PhotometryFilter:
+    fps_identifier = Attribute('filter:PhotometryFilter.fpsIdentifier', min=1, max=1)
+    identifier = Attribute('filter:PhotometryFilter.identifier', min=1, max=1)
+    name = Attribute('filter:PhotometryFilter.name', min=1, max=1)
+    description = Attribute('filter:PhotometryFilter.description', min=1, max=1)
+    band_name = Attribute('filter:PhotometryFilter.bandName', min=1, max=1)
+    data_validity_from = Attribute('filter:PhotometryFilter.dataValidityFrom', min=1, max=1)
+    data_validity_to = Attribute('filter:PhotometryFilter.dataValidityTo', min=1, max=1)
+    spectral_location = Attribute('filter:PhotometryFilter.spectralLocation', min=1, max=1)

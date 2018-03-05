@@ -19,45 +19,32 @@
 # SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-import os
-
 import numpy
 import pytest
 from astropy import units as u
-from astropy.io.votable import VOWarning
 
 from rama.models.coordinates import SpaceFrame
 from rama.models.measurements import SkyPosition
-from rama.reader.votable import VodmlReader, Context
-
-
-def make_data_path(filename):
-    basedir = os.path.dirname(__file__)
-    return os.path.join(basedir, 'data', filename)
+from rama.reader.votable import Context
 
 
 @pytest.fixture
-def reader():
-    return VodmlReader()
-
-
-@pytest.fixture
-def simple_position_file():
+def simple_position_file(make_data_path):
     return make_data_path('simple-position.vot.xml')
 
 
 @pytest.fixture
-def simple_position_columns_file():
+def simple_position_columns_file(make_data_path):
     return make_data_path('simple-position-columns.vot.xml')
 
 
 @pytest.fixture
-def invalid_file():
+def invalid_file(make_data_path):
     return make_data_path('invalid.vot.xml')
 
 
 @pytest.fixture
-def references_file():
+def references_file(make_data_path):
     return make_data_path('references.vot.xml')
 
 

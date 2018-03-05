@@ -19,19 +19,49 @@
 # SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-from setuptools import setup, find_packages
+import pytest
+from numpy.testing import assert_array_equal
 
-setup(
-    name="rama",
-    version="0.1",
-    packages=find_packages(),
-    install_requires=['lxml', 'astropy', 'numpy'],
-    tests_require=['pytest'],
-    include_package_data=True,
-    entry_points={
-        'vo.dm.models': [
-            'coords = rama.models.coordinates',
-            'meas = rama.models.measurements',
-        ]
-    }
-)
+from rama.models.test.filter import PhotometryFilter
+from rama.models.test.sample import SkyCoordinateFrame, Source
+from rama.reader.votable import Context
+
+
+@pytest.fixture
+def context_test5(make_data_path, reader):
+    return Context(reader, xml=make_data_path("test5.vot.xml"))
+
+def test_coordinate_frame(context_test5):
+    frames = context_test5.find_instances(SkyCoordinateFrame)
+
+    assert len(frames) == 1
+    assert frames[0].name.value == "ICRS"
+
+
+def test_filters(context_test5):
+    filters = context_test5.find_instances(PhotometryFilter)
+
+    assert len(filters) == 6
+    assert filters[0].name.value == "2mass:H"
+    assert filters[1].name.value == "2mass:J"
+    assert filters[2].name.value == "2mass:K"
+    assert filters[3].name.value == "sdss:g"
+    assert filters[4].name.value == "sdss:r"
+    assert filters[5].name.value == "sdss:u"
+
+
+def test_source(context_test5, recwarn):
+    sources = context_test5.find_instances(Source)
+
+    assert len(sources) == 1
+    source = sources[0]
+    assert_array_equal(source.name, [b'08120809-0206132', b'08115683-0205428', b'08115826-0205336'])
+
+    assert "W20" in str(recwarn[0].message)
+    assert "W41" in str(recwarn[1].message)
+    for i in range(2, 12):
+        assert "W10" in str(recwarn[i].message)
+
+
+
+

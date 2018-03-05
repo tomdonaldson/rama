@@ -174,7 +174,7 @@ def _get_type_xpath_expression(tag_name, type_id):
 
 def _get_role_xpath_expression(tag_name, role_id):
     tag_selector = _get_local_name(tag_name)
-    return f"//{tag_selector}[@dmrole='{role_id}']"
+    return f".//{tag_selector}[@dmrole='{role_id}']"
 
 
 def _get_local_name(tag_name):
