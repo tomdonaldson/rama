@@ -19,9 +19,8 @@
 # SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-from rama.framework import Attribute, Reference, Composition
+from rama.framework import Attribute, Composition
 from rama.registry import VO
-
 
 
 @VO('meas:Uncertainty')
@@ -143,13 +142,6 @@ class CovarianceMatrix3D(Uncertainty3D):
     matrix = Attribute('meas:CovarianceMatrix3D.matrix', min=1, max=1)
 
 
-@VO('meas:CoordMeasure')
-class CoordMeasure:
-    coord = Attribute('meas:CoordMeasure.coord', min=1, max=1)
-    error = Composition('meas:CoordMeasure.error', min=0, max=1)
-    coord_frame = Reference('meas:CoordMeasure.coordFrame', min=0, max=1)
-
-
 @VO('meas:Error')
 class Error:
     pass
@@ -157,38 +149,34 @@ class Error:
 
 @VO('meas:Error1D')
 class Error1D(Error):
-    pass
+    stat_error = Attribute('meas:Error1D.statError', min=0, max=1)
+    sys_error = Attribute('meas:Error1D.sysError', min=0, max=1)
+    ran_error = Attribute('meas:Error1D.ranError', min=0, max=1)
 
 
 @VO('meas:Error2D')
 class Error2D(Error):
-    pass
+    stat_error = Attribute('meas:Error2D.statError', min=0, max=1)
+    sys_error = Attribute('meas:Error2D.sysError', min=0, max=1)
+    ran_error = Attribute('meas:Error2D.ranError', min=0, max=1)
 
 
 @VO('meas:Error3D')
 class Error3D(Error):
+    stat_error = Attribute('meas:Error3D.statError', min=0, max=1)
+    sys_error = Attribute('meas:Error3D.sysError', min=0, max=1)
+    ran_error = Attribute('meas:Error3D.ranError', min=0, max=1)
+
+
+@VO('meas:Measure')
+class Measure:
     pass
 
 
-@VO('meas:BasicError1D')
-class BasicError1D(Error1D):
-    stat_error = Attribute('meas:BasicError1D.statError', min=0, max=1)
-    sys_error = Attribute('meas:BasicError1D.sysError', min=0, max=1)
-    ran_error = Attribute('meas:BasicError1D.ranError', min=0, max=1)
-
-
-@VO('meas:BasicError2D')
-class BasicError2D(Error2D):
-    stat_error = Attribute('meas:BasicError2D.statError', min=0, max=1)
-    sys_error = Attribute('meas:BasicError2D.sysError', min=0, max=1)
-    ran_error = Attribute('meas:BasicError2D.ranError', min=0, max=1)
-
-
-@VO('meas:BasicError3D')
-class BasicError3D(Error3D):
-    stat_error = Attribute('meas:BasicError3D.statError', min=0, max=1)
-    sys_error = Attribute('meas:BasicError3D.sysError', min=0, max=1)
-    ran_error = Attribute('meas:BasicError3D.ranError', min=0, max=1)
+@VO('meas:CoordMeasure')
+class CoordMeasure(Measure):
+    coord = Attribute('meas:CoordMeasure.coord', min=1, max=1)
+    error = Composition('meas:CoordMeasure.error', min=0, max=1)
 
 
 @VO('meas:GenericCoordMeasure')
@@ -227,7 +215,7 @@ class TimeMeasure(CoordMeasure):
 
 
 @VO('meas:Polarization')
-class Polarization:
+class Polarization(Measure):
     coord = Attribute('meas:Polarization.coord', min=1, max=1)
 
 
@@ -236,13 +224,8 @@ class RedshiftCoordMeasure(CoordMeasure):
     pass
 
 
-@VO('meas:GenPosition2D')
-class GenPosition2D(Position2D):
-    pass
-
-
 @VO('meas:SkyPosition')
-class SkyPosition(Position2D):
+class SkyPosition(Position):
     pass
 
 
@@ -254,4 +237,3 @@ class GenTimeMeasure(TimeMeasure):
 @VO('meas:StdTimeMeasure')
 class StdTimeMeasure(TimeMeasure):
     pass
-

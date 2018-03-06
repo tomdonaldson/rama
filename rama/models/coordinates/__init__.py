@@ -24,7 +24,7 @@ from rama.models.ivoa import StringQuantity
 from rama.registry import VO
 
 
-@VO("coords:domain.spatial.Epoch")
+@VO('coords:domain.space.Epoch')
 class Epoch(StringQuantity):
     pass
 
@@ -36,7 +36,7 @@ class Handedness(StringQuantity):
 
 @VO('coords:Coordinate')
 class Coordinate:
-    pass
+    frame = Reference('coords:Coordinate.frame', min=0, max=1)
 
 
 @VO('coords:CoordValue')
@@ -76,13 +76,12 @@ class CoordSys:
 
 @VO('coords:AstroCoordSystem')
 class AstroCoordSystem(CoordSys):
-    planetary_ephem = Attribute('coords:AstroCoordSystem.planetaryEphem', min=1, max=1)
-    coord_space = Composition('coords:AstroCoordSystem.coordSpace', min=1, max=-1)
+    coord_frame = Reference('coords:AstroCoordSystem.coordFrame', min=0, max=-1)
 
 
-@VO('coords:AxisGroup')
-class AxisGroup:
-    axis = Composition('coords:AxisGroup.axis', min=1, max=-1)
+@VO('coords:CoordSpace')
+class CoordSpace:
+    axis = Composition('coords:CoordSpace.axis', min=1, max=-1)
 
 
 @VO('coords:Axis')
@@ -107,20 +106,10 @@ class DiscreteSetAxis(Axis):
     pass
 
 
-@VO('coords:CoordSpace')
-class CoordSpace:
-    frame = Reference('coords:CoordSpace.frame', min=1, max=1)
-    axis_group = Reference('coords:CoordSpace.axisGroup', min=1, max=1)
-
-
-@VO('coords:DataSpace')
-class DataSpace(CoordSpace):
-    pass
-
-
 @VO('coords:GenericCoordFrame')
 class GenericCoordFrame(CoordFrame):
     ref_position = Attribute('coords:GenericCoordFrame.refPosition', min=1, max=1)
+    planetary_ephem = Attribute('coords:GenericCoordFrame.planetaryEphem', min=0, max=1)
 
 
 @VO('coords:domain.pixel.PixelIndex')
@@ -128,95 +117,121 @@ class PixelIndex(BinnedCoordValue):
     pass
 
 
-@VO('coords:domain.pixel.PixelAxes')
-class PixelAxes(AxisGroup):
-    handedness = Attribute('coords:domain.pixel.PixelAxes.handedness', min=0, max=1)
-
-
 @VO('coords:domain.pixel.PixelCoordSystem')
 class PixelCoordSystem(CoordSys):
-    pixel_space = Composition('coords:domain.pixel.PixelCoordSystem.pixelSpace', min=0, max=1)
+    pixel_space = Composition('coords:domain.pixel.PixelCoordSystem.pixelSpace', min=1, max=1)
 
 
 @VO('coords:domain.pixel.PixelSpace')
 class PixelSpace(CoordSpace):
-    pass
+    handedness = Attribute('coords:domain.pixel.PixelSpace.handedness', min=0, max=1)
 
 
-@VO('coords:domain.spatial.StdRefPosition')
+@VO('coords:domain.space.StdRefPosition')
 class StdRefPosition(StringQuantity):
     pass
 
 
-@VO('coords:domain.spatial.StdRefFrame')
+@VO('coords:domain.space.StdRefFrame')
 class StdRefFrame(StringQuantity):
     pass
 
 
-@VO('coords:domain.spatial.SpatialCoordValue')
+@VO('coords:domain.space.SpatialCoordValue')
 class SpatialCoordValue(PhysicalCoordValue):
     pass
 
 
-@VO('coords:domain.spatial.RefLocation')
+@VO('coords:domain.space.RefLocation')
 class RefLocation:
     pass
 
 
-@VO('coords:domain.spatial.StdRefLocation')
+@VO('coords:domain.space.StdRefLocation')
 class StdRefLocation(RefLocation):
-    position = Attribute('coords:domain.spatial.StdRefLocation.position', min=1, max=1)
+    position = Attribute('coords:domain.space.StdRefLocation.position', min=1, max=1)
 
 
-@VO('coords:domain.spatial.CustomRefLocation')
+@VO('coords:domain.space.CustomRefLocation')
 class CustomRefLocation(RefLocation):
-    epoch = Attribute('coords:domain.spatial.CustomRefLocation.epoch', min=0, max=1)
-    position = Attribute('coords:domain.spatial.CustomRefLocation.position', min=1, max=1)
-    velocity = Attribute('coords:domain.spatial.CustomRefLocation.velocity', min=0, max=1)
+    epoch = Attribute('coords:domain.space.CustomRefLocation.epoch', min=0, max=1)
+    position = Attribute('coords:domain.space.CustomRefLocation.position', min=1, max=1)
+    velocity = Attribute('coords:domain.space.CustomRefLocation.velocity', min=0, max=1)
 
 
-@VO('coords:domain.spatial.SpatialCoord')
+@VO('coords:domain.space.SpatialCoord')
 class SpatialCoord(CompositeCoordinate):
     pass
 
 
-@VO('coords:domain.spatial.SpatialCoord1D')
+@VO('coords:domain.space.SpatialCoord1D')
 class SpatialCoord1D(SpatialCoord):
     pass
 
 
-@VO('coords:domain.spatial.SpatialCoord2D')
+@VO('coords:domain.space.SpatialCoord2D')
 class SpatialCoord2D(SpatialCoord):
     pass
 
 
-@VO('coords:domain.spatial.SpatialCoord3D')
+@VO('coords:domain.space.SpatialCoord3D')
 class SpatialCoord3D(SpatialCoord):
     pass
 
 
-@VO('coords:domain.spatial.SkyCoord')
+@VO('coords:domain.space.SkyCoord')
 class SkyCoord(Coordinate):
     pass
 
 
-@VO('coords:domain.spatial.CelestialCoord')
-class CelestialCoord(SkyCoord):
-    ra = Attribute('coords:domain.spatial.CelestialCoord.ra', min=1, max=1)
-    dec = Attribute('coords:domain.spatial.CelestialCoord.dec', min=1, max=1)
+@VO('coords:domain.space.EquatorialCoord')
+class EquatorialCoord(SkyCoord):
+    ra = Attribute('coords:domain.space.EquatorialCoord.ra', min=0, max=1)
+    dec = Attribute('coords:domain.space.EquatorialCoord.dec', min=0, max=1)
+    r = Attribute('coords:domain.space.EquatorialCoord.r', min=0, max=1)
 
 
-@VO('coords:domain.spatial.GalacticCoord')
+@VO('coords:domain.space.GalacticCoord')
 class GalacticCoord(SkyCoord):
-    l = Attribute('coords:domain.spatial.GalacticCoord.l', min=1, max=1)
-    b = Attribute('coords:domain.spatial.GalacticCoord.b', min=1, max=1)
+    l = Attribute('coords:domain.space.GalacticCoord.l', min=0, max=1)
+    b = Attribute('coords:domain.space.GalacticCoord.b', min=0, max=1)
+    r = Attribute('coords:domain.space.GalacticCoord.r', min=0, max=1)
 
 
-@VO('coords:domain.spatial.SpaceFrame')
+@VO('coords:domain.space.EclipticCoord')
+class EclipticCoord(SkyCoord):
+    elong = Attribute('coords:domain.space.EclipticCoord.elong', min=0, max=1)
+    elat = Attribute('coords:domain.space.EclipticCoord.elat', min=0, max=1)
+    r = Attribute('coords:domain.space.EclipticCoord.r', min=0, max=1)
+
+
+@VO('coords:domain.space.CartesianCoord')
+class CartesianCoord(SkyCoord):
+    x = Attribute('coords:domain.space.CartesianCoord.x', min=0, max=1)
+    y = Attribute('coords:domain.space.CartesianCoord.y', min=0, max=1)
+    z = Attribute('coords:domain.space.CartesianCoord.z', min=0, max=1)
+
+
+@VO('coords:domain.space.LongLatCoord')
+class LongLatCoord(SkyCoord):
+    long = Attribute('coords:domain.space.LongLatCoord.long', min=0, max=1)
+    lat = Attribute('coords:domain.space.LongLatCoord.lat', min=0, max=1)
+    r = Attribute('coords:domain.space.LongLatCoord.r', min=0, max=1)
+
+
+@VO('coords:domain.space.UnitSphereCoord')
+class UnitSphereCoord(SkyCoord):
+    dircosx = Attribute('coords:domain.space.UnitSphereCoord.dircosx', min=0, max=1)
+    dircosy = Attribute('coords:domain.space.UnitSphereCoord.dircosy', min=0, max=1)
+    dircosz = Attribute('coords:domain.space.UnitSphereCoord.dircosz', min=0, max=1)
+
+
+@VO('coords:domain.space.SpaceFrame')
 class SpaceFrame(CoordFrame):
-    ref_position = Attribute('coords:domain.spatial.SpaceFrame.refPosition', min=1, max=1)
-    space_ref_frame = Attribute('coords:domain.spatial.SpaceFrame.spaceRefFrame', min=1, max=1)
-    equinox = Attribute('coords:domain.spatial.SpaceFrame.equinox', min=0, max=1)
+    ref_position = Attribute('coords:domain.space.SpaceFrame.refPosition', min=1, max=1)
+    space_ref_frame = Attribute('coords:domain.space.SpaceFrame.spaceRefFrame', min=1, max=1)
+    equinox = Attribute('coords:domain.space.SpaceFrame.equinox', min=0, max=1)
+    planetary_ephem = Attribute('coords:domain.space.SpaceFrame.planetaryEphem', min=1, max=1)
 
 
 @VO('coords:domain.spectral.SpectralValue')
@@ -239,48 +254,68 @@ class Energy(SpectralValue):
     pass
 
 
-@VO('coords:domain.temporal.TimeScale')
+@VO('coords:domain.time.TimeScale')
 class TimeScale(StringQuantity):
     pass
 
 
-@VO('coords:domain.temporal.TimeOffset')
+@VO('coords:domain.time.TimeOffset')
 class TimeOffset(PhysicalCoordValue):
     pass
 
 
-@VO('coords:domain.temporal.TimeStamp')
+@VO('coords:domain.time.TimeStamp')
 class TimeStamp(Coordinate):
     pass
 
 
-@VO('coords:domain.temporal.ISOTime')
+@VO('coords:domain.time.ISOTime')
 class ISOTime(TimeStamp):
-    date = Attribute('coords:domain.temporal.ISOTime.date', min=1, max=1)
+    date = Attribute('coords:domain.time.ISOTime.date', min=1, max=1)
 
 
-@VO('coords:domain.temporal.JD')
+@VO('coords:domain.time.JD')
 class JD(TimeStamp):
-    date = Attribute('coords:domain.temporal.JD.date', min=1, max=1)
+    date = Attribute('coords:domain.time.JD.date', min=1, max=1)
 
 
-@VO('coords:domain.temporal.MJD')
+@VO('coords:domain.time.MJD')
 class MJD(TimeStamp):
-    date = Attribute('coords:domain.temporal.MJD.date', min=1, max=1)
+    date = Attribute('coords:domain.time.MJD.date', min=1, max=1)
 
 
-@VO('coords:domain.temporal.MET')
+@VO('coords:domain.time.MET')
 class MET(TimeStamp):
-    time = Attribute('coords:domain.temporal.MET.time', min=1, max=1)
-    time0 = Attribute('coords:domain.temporal.MET.time0', min=1, max=1)
+    time = Attribute('coords:domain.time.MET.time', min=1, max=1)
+    time0 = Attribute('coords:domain.time.MET.time0', min=1, max=1)
 
 
-@VO('coords:domain.temporal.TimeFrame')
+@VO('coords:domain.time.TimeFrame')
 class TimeFrame(CoordFrame):
-    ref_position = Attribute('coords:domain.temporal.TimeFrame.refPosition', min=1, max=1)
-    timescale = Attribute('coords:domain.temporal.TimeFrame.timescale', min=1, max=1)
-    ref_direction = Attribute('coords:domain.temporal.TimeFrame.refDirection', min=0, max=1)
-    time0 = Attribute('coords:domain.temporal.TimeFrame.time0', min=0, max=1)
+    ref_position = Attribute('coords:domain.time.TimeFrame.refPosition', min=1, max=1)
+    timescale = Attribute('coords:domain.time.TimeFrame.timescale', min=1, max=1)
+    ref_direction = Attribute('coords:domain.time.TimeFrame.refDirection', min=0, max=1)
+    time0 = Attribute('coords:domain.time.TimeFrame.time0', min=0, max=1)
+
+
+@VO('coords:domain.redshift.DopplerDefinition')
+class DopplerDefinition(StringQuantity):
+    pass
+
+
+@VO('coords:domain.redshift.RedshiftValue')
+class RedshiftValue(PhysicalCoordValue):
+    pass
+
+
+@VO('coords:domain.redshift.Redshift')
+class Redshift(RedshiftValue):
+    pass
+
+
+@VO('coords:domain.redshift.DopplerVelocity')
+class DopplerVelocity(RedshiftValue):
+    doppler_definition = Attribute('coords:domain.redshift.DopplerVelocity.dopplerDefinition', min=1, max=1)
 
 
 @VO('coords:domain.polarization.PolStokesEnum')
@@ -326,4 +361,3 @@ class PolStokes(PolCoordValue):
 @VO('coords:domain.polarization.PolCircular')
 class PolCircular(PolCoordValue):
     cval = Attribute('coords:domain.polarization.PolCircular.cval', min=1, max=1)
-

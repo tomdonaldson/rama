@@ -55,15 +55,15 @@ def test_parsing_coordinates(reader, simple_position_file):
     assert 1 == len(sky_positions)
     assert 10.34209135 * u.deg == pos.coord.ra
     assert 41.13232112 * u.deg == pos.coord.dec
-    assert "FK5" == pos.coord_frame.space_ref_frame
-    assert "J1975" == pos.coord_frame.equinox
-    assert "TOPOCENTER" == pos.coord_frame.ref_position.position
+    assert "FK5" == pos.coord.frame.space_ref_frame
+    assert "J1975" == pos.coord.frame.equinox
+    assert "TOPOCENTER" == pos.coord.frame.ref_position.position
 
 
 def test_references_are_same_object(reader, references_file):
     sky_positions = reader.find_instances(references_file, SkyPosition)
 
-    assert sky_positions[0].coord_frame is sky_positions[1].coord_frame
+    assert sky_positions[0].coord.frame is sky_positions[1].coord.frame
 
 
 def test_referred_built_only_once(reader, references_file):
@@ -73,8 +73,8 @@ def test_referred_built_only_once(reader, references_file):
     sky_positions = context.find_instances(SkyPosition)
 
     assert frame is frame2
-    assert sky_positions[0].coord_frame is frame
-    assert sky_positions[1].coord_frame is frame
+    assert sky_positions[0].coord.frame is frame
+    assert sky_positions[1].coord.frame is frame
 
 
 def test_context_without_filaname(reader):

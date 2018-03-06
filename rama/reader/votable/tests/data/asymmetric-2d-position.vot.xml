@@ -16,22 +16,22 @@
         <GLOBALS>
             <INSTANCE dmtype="meas:SkyPosition">
                 <ATTRIBUTE dmrole="meas:CoordMeasure.coord">
-                    <INSTANCE dmtype="coords:domain.spatial.CelestialCoord">
-                        <ATTRIBUTE dmrole="coords:domain.spatial.CelestialCoord.ra">
+                    <INSTANCE dmtype="coords:domain.space.EquatorialCoord">
+                        <ATTRIBUTE dmrole="coords:domain.space.EquatorialCoord.ra">
                             <LITERAL value="12.9768538031" dmtype="ivoa:RealQuantity" unit="deg"/>
                         </ATTRIBUTE>
-                        <ATTRIBUTE dmrole="coords:domain.spatial.CelestialCoord.dec">
+                        <ATTRIBUTE dmrole="coords:domain.space.EquatorialCoord.dec">
                             <LITERAL value="-72.9580158133" dmtype="ivoa:RealQuantity" unit="deg"/>
                         </ATTRIBUTE>
+                        <!-- Note reference is dangling! -->
+                        <REFERENCE dmrole="coords:Coordinate.frame">
+                            <IDREF>_SPACE_FRAME</IDREF>
+                        </REFERENCE>
                     </INSTANCE>
                 </ATTRIBUTE>
-                <!-- Note reference is dangling! -->
-                <REFERENCE dmrole="meas:CoordMeasure.coordFrame">
-                    <IDREF>_SPACE_FRAME</IDREF>
-                </REFERENCE>
                 <COMPOSITION dmrole="meas:CoordMeasure.error">
-                    <INSTANCE dmtype="meas:BasicError2D">
-                        <ATTRIBUTE dmrole="meas:BasicError2D.statError">
+                    <INSTANCE dmtype="meas:Error2D">
+                        <ATTRIBUTE dmrole="meas:Error2D.statError">
                             <INSTANCE dmtype="meas:Asymmetrical2D">
                                 <ATTRIBUTE dmrole="meas:Asymmetrical2D.plus">
                                     <LITERAL value="0.01" dmtype="ivoa:RealQuantity" unit="deg"/>
