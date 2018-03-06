@@ -53,30 +53,23 @@ class AbstractFieldReader:
 
         raise AttributeError(f"Cannot find a suitable reader for field: {field}")
 
+    def select_return_value(self, values):
+        max_occurs = self.descriptor.max
+        if max_occurs == 1 and len(values) == 1:
+            return values[0]
+
+        if max_occurs == 1 and len(values) == 0:
+            return None
+
+        return values
+
 
 class AttributeFieldReader(AbstractFieldReader):
     field_type = Attribute
 
     def read(self, context, xml_element):
-        attribute_elements = parser.parse_attributes(xml_element, self.vodml_id, context)
-
-        attributes = []
-        for attribute_element in attribute_elements:
-            attributes.extend(attribute_element.structured_instances)
-            attributes.extend(attribute_element.constants)
-            attributes.extend(attribute_element.columns)
-
-        return self._select_return_value(attributes)
-
-    def _select_return_value(self, attributes):
-        max_occurs = self.descriptor.max
-        if max_occurs == 1 and len(attributes) == 1:
-            return attributes[0]
-
-        if max_occurs == 1 and len(attributes) == 0:
-            return None
-
-        return attributes
+        attributes = parser.parse_attributes(xml_element, self.vodml_id, context)
+        return self.select_return_value(attributes)
 
 
 class CompositionFieldReader(AbstractFieldReader):
@@ -90,7 +83,8 @@ class ReferenceReader(AbstractFieldReader):
     field_type = Reference
 
     def read(self, context, xml_element):
-        return parser.parse_references(xml_element, self.vodml_id, context)
+        references = parser.parse_references(xml_element, self.vodml_id, context)
+        return self.select_return_value(references)
 
 
 class InstanceFactory:
@@ -118,6 +112,7 @@ class InstanceFactory:
             setattr(instance, field_name, context.read(field_object, xml_element))
 
         return instance
+
 
 # TODO docstrings
 class Context:

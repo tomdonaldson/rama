@@ -32,7 +32,11 @@ LOG = logging.getLogger(__name__)
 
 def parse_attributes(xml_element, role_id, context):
     attributes_xml = xml_element.xpath(_get_role_xpath_expression('ATTRIBUTE', role_id))
-    return [AttributeElement(xml, role_id, context) for xml in attributes_xml]
+    if len(attributes_xml):
+        # TOOO Add warnings if there's more than one attribute with the same role
+        return AttributeElement(attributes_xml[0], role_id, context).all
+    else:
+        return []
 
 
 def parse_composed_instances(xml_element, role_id, context):
@@ -51,14 +55,19 @@ def parse_references(xml_element, role_id, context):
 
         referred_instance = context.get_instance_by_id(id_ref)
         if referred_instance is not None:
-            return referred_instance
+            references.append(referred_instance)
+            continue
 
-        referred_element = reference_element.xpath(f"//{_get_local_name('INSTANCE')}[@ID='{id_ref}']")[0]
-        references.append(context.read_instance(referred_element))
+        referred_elements = reference_element.xpath(f"//{_get_local_name('INSTANCE')}[@ID='{id_ref}']")
 
-    # FIXME We really need to properly treat multiplicities!
-    if len(references) == 1:
-        return references[0]
+        if not len(referred_elements):
+            # TODO make a single call?
+            msg = f"Dangling reference {id_ref}"
+            warnings.warn(msg, SyntaxWarning)
+            LOG.warning(msg)
+        else:
+            referred_element = referred_elements[0]
+            references.append(context.read_instance(referred_element))
 
     return references
 
@@ -102,6 +111,10 @@ class AttributeElement:
     def columns(self):
         elements = _get_children(self.xml, "COLUMN")
         return [self._parse_column(element) for element in elements]
+
+    @property
+    def all(self):
+        return self.structured_instances + self.constants + self.columns
 
     def _parse_literal(self, xml_element):
         value = xml_element.xpath("@value")[0]

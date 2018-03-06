@@ -25,7 +25,7 @@ from astropy import units as u
 
 from rama.models.coordinates import SpaceFrame
 from rama.models.measurements import SkyPosition
-from rama.reader.votable import Context
+from rama.reader.votable import Context, VodmlReader
 
 
 @pytest.fixture
@@ -98,6 +98,19 @@ def test_parsing_columns(reader, simple_position_columns_file, recwarn):
     assert "W41" in str(recwarn[1].message)
     for i in range(2, 12):
         assert "W10" in str(recwarn[i].message)
+
+
+def test_attribute_multiplicity(reader, make_data_path, recwarn):
+    context = Context(reader, xml=make_data_path("asymmetric-2d-position.vot.xml"))
+    position = context.find_instances(SkyPosition)[0]
+
+    plus = position.error[0].stat_error.plus
+    assert len(plus) == 2
+
+    minus = position.error[0].stat_error.minus
+    assert len(minus) == 2
+
+    assert "Dangling reference" in str(recwarn[0].message)
 
 
 def test_invalid_file(reader, invalid_file):
