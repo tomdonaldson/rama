@@ -71,3 +71,9 @@ class StringQuantity:
 
     def __eq__(self, other):
         return self.value.__eq__(other)
+
+
+@VO("ivoa:boolean")
+class VOBool:
+    def __new__(cls, value, *args, **kwargs):
+        return bool(value)

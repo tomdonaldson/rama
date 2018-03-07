@@ -19,24 +19,34 @@
 # SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-import pytest
-
-from rama.models.cube import SparseCube
-from rama.reader.votable import Context
+from lxml import etree
 
 
-@pytest.fixture
-def context_cube(make_data_path, reader):
-    return Context(reader, xml=make_data_path("cube.vot.xml"))
+def resolve_id(xml_element):
+    ids = xml_element.xpath('@ID')
+    if len(ids):
+        return ids[0]
+    return None
 
 
-# def test_ext_instances(context_cube, recwarn):
-#     cube = context_cube.find_instances(SparseCube)[0]
-#
-#     assert len(cube.data) == 1
-#     assert len(cube.data[0].axis) == 4
-#
-#     assert "W20" in str(recwarn[0].message)
-#     assert "W41" in str(recwarn[1].message)
-#     for i in range(2, 12):
-#         assert "W10" in str(recwarn[i].message)
+def get_type_xpath_expression(tag_name, type_id):
+    tag_selector = get_local_name(tag_name)
+    return f"//{tag_selector}[@dmtype='{type_id}']"
+
+
+def get_role_xpath_expression(tag_name, role_id):
+    tag_selector = get_local_name(tag_name)
+    return f".//{tag_selector}[@dmrole='{role_id}']"
+
+
+def get_local_name(tag_name):
+    return f"*[local-name() = '{tag_name}']"
+
+
+def get_child_selector(tag_name):
+    tag_selector = get_local_name(tag_name)
+    return f"child::{tag_selector}"
+
+
+def get_children(element, child_tag_name):
+    return element.xpath(get_child_selector(child_tag_name))

@@ -22,7 +22,7 @@
 import os
 import pytest
 
-from rama.reader.votable import VodmlReader
+from rama.reader.votable import Votable, Context
 
 
 @pytest.fixture
@@ -32,8 +32,3 @@ def make_data_path(request):
         return os.path.join(basedir, 'data', filename)
 
     return make_data_path
-
-
-@pytest.fixture
-def reader():
-    return VodmlReader()

@@ -80,16 +80,6 @@
                     <LITERAL value="sdss:r" dmtype="ivoa:string"/>
                 </ATTRIBUTE>
             </INSTANCE>
-            <INSTANCE dmtype="filter:PhotometryFilter">
-                <PRIMARYKEY>
-                    <PKFIELD>
-                        <LITERAL value="sdss:u" dmtype="ivoa:string"/>
-                    </PKFIELD>
-                </PRIMARYKEY>
-                <ATTRIBUTE dmrole="filter:PhotometryFilter.name">
-                    <LITERAL value="sdss:u" dmtype="ivoa:string"/>
-                </ATTRIBUTE>
-            </INSTANCE>
 
         </GLOBALS>
 
@@ -187,13 +177,7 @@
                 </ATTRIBUTE>
                 <!-- Following is example of OR-like reference, but not to another table but to a singleton object -->
                 <REFERENCE dmrole="sample:catalog.LuminosityMeasurement.filter">
-                    <FOREIGNKEY>
-                        <PKFIELD>
-                            <COLUMN ref="_filter" dmtype="ivoa:string"/>
-                        </PKFIELD>
-                        <TARGETID>_SDSS_FILTERS</TARGETID>
-                    </FOREIGNKEY>
-
+                    <IDREF></IDREF>
                 </REFERENCE>
             </INSTANCE>
 
@@ -399,8 +383,10 @@
 
         <TABLE ID="_sdss_mags">
             <FIELD ID="_container" name="parentId" datatype="char" arraysize="*"/>
-            <FIELD ID="_mag" name="mag" datatype="float"/>
-            <FIELD ID="_eMag" name="eMag" datatype="float"/>
+            <FIELD ID="_gMag" name="gmag" datatype="float"/>
+            <FIELD ID="_e_GMag" name="e_gmag" datatype="float"/>
+            <FIELD ID="_rMag" name="rmag" datatype="float"/>
+            <FIELD ID="_e_RMag" name="e_rmag" datatype="float"/>
             <FIELD ID="_filter" name="filter" datatype="char" arraysize="*"/>
             <DATA>
                 <TABLEDATA>
@@ -408,13 +394,8 @@
                         <TD>08120809-0206132</TD>
                         <TD>23.2</TD>
                         <TD>.04</TD>
-                        <TD>sdss:g</TD>
-                    </TR>
-                    <TR>
-                        <TD>08120809-0206132</TD>
                         <TD>23.0</TD>
                         <TD>.03</TD>
-                        <TD>sdss:r</TD>
                     </TR>
                 </TABLEDATA>
             </DATA>

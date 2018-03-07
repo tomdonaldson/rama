@@ -19,102 +19,216 @@
 # SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+import inspect
 import logging
 import warnings
-
-from astropy.io import votable
 from lxml import etree
 
+from astropy.io import votable
+
 import numpy
+
+from rama.framework import Attribute, Reference, Composition, VodmlDescriptor
+from rama.reader.votable.utils import get_role_xpath_expression, get_children, get_local_name,\
+    get_type_xpath_expression, resolve_id
 
 LOG = logging.getLogger(__name__)
 
 
-def parse_attributes(xml_element, role_id, context):
-    attributes_xml = xml_element.xpath(_get_role_xpath_expression('ATTRIBUTE', role_id))
-    if len(attributes_xml):
-        # TOOO Add warnings if there's more than one attribute with the same role
-        return AttributeElement(attributes_xml[0], role_id, context).all
-    else:
-        return []
+class Votable:
+    def __init__(self, xml):
+        self.file = xml
+        self.parser = Parser(self)
+        self.document = None
+        self.open_document(xml)
+
+    def open_document(self, xml_document):
+        # TBD Maybe I should remove TABLEDATA to reduce the size of the tree. TABLEDATA will be parsed by astropy.
+        parser = etree.XMLParser(ns_clean=True)
+        tree = etree.parse(xml_document, parser)
+        self.document = tree.getroot()
+
+    def find_instances(self, element_class, context):
+        return self.parser.find_instances(element_class, context)
 
 
-def parse_composed_instances(xml_element, role_id, context):
-        elements = xml_element.xpath(f"./{_get_local_name('COMPOSITION')}[@dmrole='{role_id}']/child::"
-                                     f"{_get_local_name('INSTANCE')}")
-        return [context.read_instance(element) for element in elements]
+class Parser:
+    def __init__(self, votable):
+        self.votable = votable
+        self.field_readers = {
+            Attribute: self.parse_attributes,
+            Reference: self.parse_references,
+            Composition: self.parse_composed_instances
+        }
+
+    def find_instances(self, element_class, context):
+        return [self.read_instance(element, context) for element in self.find(element_class)]
+
+    def read_instance(self, xml_element, context):
+        type_id = self.resolve_type(xml_element)
+        element_class = context.get_type_by_id(type_id)
+        return self.make(element_class, xml_element, context)
+
+    def parse_attributes(self, xml_element, field_object, context):
+        return AttributeElement(xml_element, field_object, context, self).all
+
+    def parse_composed_instances(self, xml_element, field_object, context):
+        return CompositionElement(xml_element, field_object, context, self).all
+
+    def parse_references(self, xml_element, field_object, context):
+        return ReferenceElement(xml_element, field_object, context, self).all
+
+    def resolve_type(self, xml_element):
+        element_type = xml_element.xpath("@dmtype")[0]
+        return element_type
+
+    def find(self, element_class):
+        type_id = element_class.vodml_id
+        elements = self.votable.document.xpath(get_type_xpath_expression('INSTANCE', type_id))
+        return elements
+
+    def make(self, instance_class, xml_element, context):
+        instance_id = resolve_id(xml_element)
+
+        instance = context.get_instance_by_id(instance_id)
+        if instance is not None:
+            return instance
+
+        instance = instance_class()
+        instance.__id__ = instance_id
+        context.add_instance(instance)
+
+        def is_field(x):
+            return inspect.isdatadescriptor(x) and isinstance(x, VodmlDescriptor)
+
+        fields = inspect.getmembers(instance_class, is_field)
+        for field_name, field_object in fields:
+            field_reader = self.field_readers[field_object.__class__]
+            setattr(instance, field_name, field_reader(xml_element, field_object, context))
+
+        return instance
+
+    def find_element_for_role(self, xml_element, tag_name, role_id):
+        elements = xml_element.xpath(get_role_xpath_expression(tag_name, role_id))
+        n_elements = len(elements)
+
+        if n_elements > 1:
+            warnings.warn(SyntaxWarning, f"Too many elements with dmrole = {role_id}")
+
+        if n_elements:
+            return elements[0]
+        else:
+            return None
 
 
-def parse_references(xml_element, role_id, context):
-    reference_elements = xml_element.xpath(f"./{_get_local_name('REFERENCE')}[@dmrole='{role_id}']")
+class Element:
+    TAG_NAME = None
 
-    references = []
+    def __init__(self, xml_element, field_object, context, parser):
+        self.field_object = field_object
+        self.role_id = role_id = field_object.vodml_id
+        self.xml = parser.find_element_for_role(xml_element, self.TAG_NAME, role_id)
+        self.context = context
+        self.parser = parser
 
-    for reference_element in reference_elements:
-        id_ref = reference_element.xpath(f"./{_get_local_name('IDREF')}")[0].text
+    def select_return_value(self, values):
+        max_occurs = self.field_object.max
+        if max_occurs == 1 and len(values) == 1:
+            return values[0]
 
-        referred_instance = context.get_instance_by_id(id_ref)
+        if max_occurs == 1 and len(values) == 0:
+            return None
+
+        return values
+
+
+class ElementWithInstances(Element):
+    @property
+    def structured_instances(self):
+        elements = get_children(self.xml, "INSTANCE")
+        return [self.parser.read_instance(element, self.context) for element in elements]
+
+
+class ReferenceElement(Element):
+    TAG_NAME = 'REFERENCE'
+
+    @property
+    def idref_instances(self):
+        elements = get_children(self.xml, "IDREF")
+        return [self._parse_idref(element) for element in elements]
+
+    @property
+    def all(self):
+        if self.xml is not None:
+            return self.select_return_value(self.idref_instances)
+
+    def _parse_idref(self, xml_element):
+        ref = xml_element.text
+
+        referred_instance = self.context.get_instance_by_id(ref)
         if referred_instance is not None:
-            references.append(referred_instance)
-            continue
+            return referred_instance
 
-        referred_elements = reference_element.xpath(f"//{_get_local_name('INSTANCE')}[@ID='{id_ref}']")
+        referred_elements = xml_element.xpath(f"//{get_local_name('INSTANCE')}[@ID='{ref}']")
 
         if not len(referred_elements):
             # TODO make a single call?
-            msg = f"Dangling reference {id_ref}"
+            msg = f"Dangling reference {ref}"
             warnings.warn(msg, SyntaxWarning)
             LOG.warning(msg)
         else:
             referred_element = referred_elements[0]
-            references.append(context.read_instance(referred_element))
-
-    return references
+            return self.parser.read_instance(referred_element, self.context)
 
 
-def find(xml_document, element_class):
-    root = _find_root(xml_document)
-    type_id = element_class.vodml_id
-    elements = root.xpath(_get_type_xpath_expression('INSTANCE', type_id))
-    return elements
+class CompositionElement(ElementWithInstances):
+    TAG_NAME = 'COMPOSITION'
 
-
-def resolve_type(xml_element):
-    element_type = xml_element.xpath("@dmtype")[0]
-    return element_type
-
-
-def resolve_id(xml_element):
-    ids = xml_element.xpath('@ID')
-    if len(ids):
-        return ids[0]
-    return None
-
-
-class AttributeElement:
-    def __init__(self, xml_element, role_id, context):
-        self.xml = xml_element
-        self.role_id = role_id
-        self.context = context
+    # @property
+    # def external_instances(self):
+    #     elements = _get_children(self.xml, "EXTINSTANCES")
+    #     return [self._parse_externals(element) for element in elements]
 
     @property
-    def structured_instances(self):
-        elements = _get_children(self.xml, "INSTANCE")
-        return [self.context.read_instance(element) for element in elements]
+    def all(self):
+        if self.xml is not None:
+            return self.select_return_value(self.structured_instances)
+
+    # def _parse_externals(self, xml_element):
+    #     ref = xml_element.text
+    #
+    #     referred_instance = self.context.get_instance_by_id(ref)
+    #     if referred_instance is not None:
+    #         return referred_instance
+    #
+    #     referred_elements = xml_element.xpath(f"//{get_local_name('INSTANCE')}[@ID='{ref}']")
+    #     if not len(referred_elements):
+    #         # TODO make a single call?
+    #         msg = f"Dangling reference {ref}"
+    #         warnings.warn(msg, SyntaxWarning)
+    #         LOG.warning(msg)
+    #     else:
+    #         referred_element = referred_elements[0]
+    #         return self.context.read_instance(referred_element)
+
+
+class AttributeElement(ElementWithInstances):
+    TAG_NAME = "ATTRIBUTE"
 
     @property
     def constants(self):
-        elements = _get_children(self.xml, "LITERAL")
+        elements = get_children(self.xml, "LITERAL")
         return [self._parse_literal(element) for element in elements]
 
     @property
     def columns(self):
-        elements = _get_children(self.xml, "COLUMN")
+        elements = get_children(self.xml, "COLUMN")
         return [self._parse_column(element) for element in elements]
 
     @property
     def all(self):
-        return self.structured_instances + self.constants + self.columns
+        if self.xml is not None:
+            return self.select_return_value(self.structured_instances + self.constants + self.columns)
 
     def _parse_literal(self, xml_element):
         value = xml_element.xpath("@value")[0]
@@ -125,7 +239,7 @@ class AttributeElement:
 
     def _parse_column(self, xml_element):
         column_ref = xml_element.xpath("@ref")[0]
-        find_column_xpath = f"//{_get_local_name('FIELD')}[@ID='{column_ref}']"
+        find_column_xpath = f"//{get_local_name('FIELD')}[@ID='{column_ref}']"
         column_elements = xml_element.xpath(find_column_xpath)
         if not len(column_elements):
             msg = f"Can't find column with ID {column_ref}. Setting values to NaN"
@@ -145,58 +259,29 @@ class AttributeElement:
 
     def _parse_table(self, column_element):
 
-        table_elements = column_element.xpath(f"parent::{_get_local_name('TABLE')}")
+        table_elements = column_element.xpath(f"parent::{get_local_name('TABLE')}")
         if not len(table_elements):
             raise RuntimeError("COLUMN points to FIELD that does not have a TABLE parent")
         table_element = table_elements[0]
+        table_index = int(table_element.xpath(f"count(preceding-sibling::{get_local_name('TABLE')})"))
 
-        table_id_index = False
         table_ids = table_element.xpath('@ID')
         if len(table_ids):
+            no_id = False
             table_id = table_ids[0]
             table = self.context.get_table_by_id(table_id)
             if table is not None:
                 return table
         else:
-            table_id_index = True
-            table_id = int(table_element.xpath(f"count(preceding-sibling::{_get_local_name('TABLE')})"))
+            no_id = True
+            table_id = f"_GENERATED_ID_{table_index}"
 
-        if table_id_index:
-            table = votable.parse_single_table(self.context.document, table_number=table_id).to_table()
+        table = votable.parse_single_table(self.context.file, table_number=table_index).to_table()
+
+        if no_id:
             table_id = id(table)
-            table_element.attrib["ID"] = str(table_id)
-        else:
-            table = votable.parse_single_table(self.context.document, table_id=table_id).to_table()
+            table_element.attrib["ID"] = str(table_id)  # We set the attribute so we have an handle if we parse it again
 
         self.context.add_table(table_id, table)
 
         return table
-
-
-def _find_root(xml_document):
-    parser = etree.XMLParser(ns_clean=True)
-    tree = etree.parse(xml_document, parser)
-    return tree.getroot()
-
-
-def _get_type_xpath_expression(tag_name, type_id):
-    tag_selector = _get_local_name(tag_name)
-    return f"//{tag_selector}[@dmtype='{type_id}']"
-
-
-def _get_role_xpath_expression(tag_name, role_id):
-    tag_selector = _get_local_name(tag_name)
-    return f".//{tag_selector}[@dmrole='{role_id}']"
-
-
-def _get_local_name(tag_name):
-    return f"*[local-name() = '{tag_name}']"
-
-
-def _get_child_selector(tag_name):
-    tag_selector = _get_local_name(tag_name)
-    return f"child::{tag_selector}"
-
-def _get_children(element, child_tag_name):
-    return element.xpath(_get_child_selector(child_tag_name))
-

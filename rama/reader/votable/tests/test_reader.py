@@ -25,31 +25,32 @@ from astropy import units as u
 
 from rama.models.coordinates import SpaceFrame
 from rama.models.measurements import SkyPosition
-from rama.reader.votable import Context, VodmlReader
+from rama.reader.votable import Context, Votable
 
 
 @pytest.fixture
 def simple_position_file(make_data_path):
-    return make_data_path('simple-position.vot.xml')
+    return Votable(make_data_path('simple-position.vot.xml'))
 
 
 @pytest.fixture
 def simple_position_columns_file(make_data_path):
-    return make_data_path('simple-position-columns.vot.xml')
+    return Votable(make_data_path('simple-position-columns.vot.xml'))
 
 
 @pytest.fixture
 def invalid_file(make_data_path):
-    return make_data_path('invalid.vot.xml')
+    return Votable(make_data_path('invalid.vot.xml'))
 
 
 @pytest.fixture
 def references_file(make_data_path):
-    return make_data_path('references.vot.xml')
+    return Votable(make_data_path('references.vot.xml'))
 
 
-def test_parsing_coordinates(reader, simple_position_file):
-    sky_positions = reader.find_instances(simple_position_file, SkyPosition)
+def test_parsing_coordinates(simple_position_file):
+    context = Context(simple_position_file)
+    sky_positions = context.find_instances(SkyPosition)
     pos = sky_positions[0]
 
     assert 1 == len(sky_positions)
@@ -60,14 +61,15 @@ def test_parsing_coordinates(reader, simple_position_file):
     assert "TOPOCENTER" == pos.coord.frame.ref_position.position
 
 
-def test_references_are_same_object(reader, references_file):
-    sky_positions = reader.find_instances(references_file, SkyPosition)
+def test_references_are_same_object(references_file):
+    context = Context(references_file)
+    sky_positions = context.find_instances(SkyPosition)
 
     assert sky_positions[0].coord.frame is sky_positions[1].coord.frame
 
 
-def test_referred_built_only_once(reader, references_file):
-    context = Context(reader, xml=references_file)
+def test_referred_built_only_once(references_file):
+    context = Context(references_file)
     frame = context.find_instances(SpaceFrame)[0]
     frame2 = context.find_instances(SpaceFrame)[0]
     sky_positions = context.find_instances(SkyPosition)
@@ -77,14 +79,8 @@ def test_referred_built_only_once(reader, references_file):
     assert sky_positions[1].coord.frame is frame
 
 
-def test_context_without_filaname(reader):
-    context = Context(reader)
-    with pytest.raises(AttributeError):
-        context.find_instances(SpaceFrame)
-
-
-def test_parsing_columns(reader, simple_position_columns_file, recwarn):
-    context = Context(reader, xml=simple_position_columns_file)
+def test_parsing_columns(simple_position_columns_file, recwarn):
+    context = Context(simple_position_columns_file)
     sky_positions = context.find_instances(SkyPosition)
     position = sky_positions[0]
 
@@ -100,21 +96,22 @@ def test_parsing_columns(reader, simple_position_columns_file, recwarn):
         assert "W10" in str(recwarn[i].message)
 
 
-def test_attribute_multiplicity(reader, make_data_path, recwarn):
-    context = Context(reader, xml=make_data_path("asymmetric-2d-position.vot.xml"))
+def test_attribute_multiplicity(make_data_path, recwarn):
+    votable = Votable(make_data_path("asymmetric-2d-position.vot.xml"))
+    context = Context(votable)
     position = context.find_instances(SkyPosition)[0]
 
-    plus = position.error[0].stat_error.plus
+    plus = position.error.stat_error.plus
     assert len(plus) == 2
 
-    minus = position.error[0].stat_error.minus
+    minus = position.error.stat_error.minus
     assert len(minus) == 2
 
     assert "Dangling reference" in str(recwarn[0].message)
 
 
-def test_invalid_file(reader, invalid_file):
-    context = Context(reader, xml=invalid_file)
+def test_invalid_file(invalid_file):
+    context = Context(invalid_file)
 
     with pytest.warns(SyntaxWarning) as record:
         sky_positions = context.find_instances(SkyPosition)
