@@ -21,7 +21,6 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import pytest
 from astropy import units as u
-from astropy.tests.helper import assert_quantity_allclose
 from astropy.time import Time
 from numpy.testing import assert_array_equal
 

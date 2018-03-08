@@ -60,4 +60,4 @@ class StringQuantity:
 @VO("ivoa:boolean")
 class VOBool:
     def __new__(cls, value, *args, **kwargs):
-        return bool(value)
+        return value.lower() == 'true'

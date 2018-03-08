@@ -173,13 +173,13 @@
   </VODML>
   <RESOURCE>
     <TABLE ID="_DATA_TABLE">
-      <FIELD datatype="char" arraysize="20" ID="_col_TIME" name="_col_TIME" xtype="iso8601"/>
-      <FIELD datatype="float" arraysize="1" ID="_col_RAJ2000" unit="deg" name="_col_RAJ2000"/>
-      <FIELD datatype="float" arraysize="1" ID="_col_DECJ2000" unit="deg" name="_col_DECJ2000"/>
-      <FIELD datatype="float" arraysize="1" ID="_col_FLUX" name="_col_FLUX"/>
-      <FIELD datatype="float" arraysize="1" ID="_col_FLUX_ERROR" name="_col_FLUX_ERROR"/>
-      <FIELD datatype="float" arraysize="1" ID="_col_MAG" name="_col_MAG"/>
-      <FIELD datatype="float" arraysize="1" ID="_col_MAG_ERROR" name="_col_MAG_ERROR"/>
+      <FIELD datatype="char" arraysize="20" ID="_col_TIME" name="time" />
+      <FIELD datatype="float" ID="_col_RAJ2000" unit="deg" name="ra"/>
+      <FIELD datatype="float" ID="_col_DECJ2000" unit="deg" name="dec"/>
+      <FIELD datatype="float" ID="_col_FLUX" name="flux"/>
+      <FIELD datatype="float" ID="_col_FLUX_ERROR" name="flux_error"/>
+      <FIELD datatype="float" ID="_col_MAG" name="mag"/>
+      <FIELD datatype="float" ID="_col_MAG_ERROR" name="mag_error"/>
       <DATA>
         <TABLEDATA>
           <TR>

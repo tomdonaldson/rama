@@ -78,6 +78,7 @@ class TimeDecorator:
             else:
                 time = nan_to_num(time)
             time = Time(time, scale=scale, format=t_format)
+            time.name = stc_time_coord.date.name
             return time
         except:
             return stc_time_coord

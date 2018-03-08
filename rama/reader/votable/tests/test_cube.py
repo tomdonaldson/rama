@@ -22,7 +22,9 @@
 import pytest
 from astropy.coordinates import SkyCoord
 from astropy.time import Time
+from numpy.testing import assert_array_equal
 
+from rama.models.coordinates import GenericCoordValue
 from rama.models.cube import NDPoint
 from rama.reader import Reader
 from rama.reader.votable import Votable
@@ -39,8 +41,12 @@ def test_ndpoint(context_cube, recwarn):
 
     assert len(ndpoints) == 1
 
-    assert isinstance(ndpoint.axis[1].measurement.coord, SkyCoord)
-    assert isinstance(ndpoint.axis[0].measurement.coord, Time)
+    assert_array_equal(ndpoint.dependent, ['flux', 'mag'])
+    assert_array_equal(ndpoint.independent, ['time', 'position'])
+    assert isinstance(ndpoint['position'].measurement.coord, SkyCoord)
+    assert isinstance(ndpoint['time'].measurement.coord, Time)
+    assert isinstance(ndpoint['mag'].measurement.coord, GenericCoordValue)
+    assert isinstance(ndpoint['flux'].measurement.coord, GenericCoordValue)
 
     assert "W20" in str(recwarn[0].message)
     assert "W41" in str(recwarn[1].message)
