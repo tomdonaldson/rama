@@ -11,6 +11,7 @@
 .idea/**/deployment.xml
 .idea/**/misc.xml
 .idea/**/webServers.xml
+.idea/*.iml
 .idea/dictionaries
 
 # Sensitive or high-churn files:
