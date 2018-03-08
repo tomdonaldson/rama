@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VOTABLE xmlns="http://www.ivoa.net/xml/VOTable/v1.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <VODML>
+        <GLOBALS>
+            <INSTANCE dmtype="coords:domain.time.TimeFrame" ID="_TT_FRAME">
+                <ATTRIBUTE dmrole="coords:domain.time.TimeFrame.refPosition">
+                    <INSTANCE dmtype="coords:domain.space.StdRefLocation">
+                        <ATTRIBUTE dmrole="coords:domain.space.StdRefLocation.position">
+                            <LITERAL value="BARYCENTER" dmtype="coords:domain.space.StdRefPosition"/>
+                        </ATTRIBUTE>
+                    </INSTANCE>
+                </ATTRIBUTE>
+                <ATTRIBUTE dmrole="coords:domain.time.TimeFrame.timescale">
+                    <LITERAL value="TT" dmtype="coords:domain.time.TimeScale"/>
+                </ATTRIBUTE>
+            </INSTANCE>
+        </GLOBALS>
+        <TEMPLATES tableref="_DATA_TABLE">
+            <INSTANCE dmtype="meas:StdTimeMeasure">
+                <ATTRIBUTE dmrole="meas:CoordMeasure.coord">
+                    <INSTANCE dmtype="coords:domain.time.JD">
+                        <REFERENCE dmrole="coords:Coordinate.frame">
+                            <IDREF>_TT_FRAME</IDREF>
+                        </REFERENCE>
+                        <ATTRIBUTE dmrole="coords:domain.time.JD.date">
+                            <COLUMN dmtype="ivoa:real" ref="_col_H_TIME"/>
+                        </ATTRIBUTE>
+                    </INSTANCE>
+                </ATTRIBUTE>
+            </INSTANCE>
+        </TEMPLATES>
+    </VODML>
+    <RESOURCE>
+        <TABLE ID="_DATA_TABLE">
+            <FIELD datatype="char" arraysize="8" ID="_TARGET_NAME" name="_TARGET_NAME"/>
+            <FIELD datatype="float" ID="_col_H_TIME" name="h_time" unit="d"/>
+            <DATA>
+                <TABLEDATA>
+                    <TR>
+                        <TD>beta Lyr</TD>
+                        <TD>2453486.5</TD>
+                    </TR>
+                    <TR>
+                        <TD>beta Lyr</TD>
+                        <TD></TD>
+                    </TR>
+                </TABLEDATA>
+            </DATA>
+        </TABLE>
+    </RESOURCE>
+</VOTABLE>
