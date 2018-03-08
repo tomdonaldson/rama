@@ -25,7 +25,8 @@ from numpy.testing import assert_array_equal
 
 from rama.models.test.filter import PhotometryFilter
 from rama.models.test.sample import SkyCoordinateFrame, Source
-from rama.reader.votable import Context, Votable
+from rama.reader import Context
+from rama.reader.votable import Votable
 
 
 @pytest.fixture

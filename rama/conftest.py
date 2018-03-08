@@ -22,8 +22,6 @@
 import os
 import pytest
 
-from rama.reader.votable import Votable, Context
-
 
 @pytest.fixture
 def make_data_path(request):

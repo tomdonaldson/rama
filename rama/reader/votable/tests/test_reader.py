@@ -25,7 +25,8 @@ from astropy import units as u
 
 from rama.models.coordinates import SpaceFrame
 from rama.models.measurements import SkyPosition
-from rama.reader.votable import Context, Votable
+from rama.reader import Context
+from rama.reader.votable import Votable
 
 
 @pytest.fixture
