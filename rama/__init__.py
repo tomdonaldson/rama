@@ -23,6 +23,8 @@ import logging
 
 from pkg_resources import iter_entry_points
 
+from rama.reader import Reader
+from rama.reader.votable import Votable
 
 LOG = logging.getLogger(__name__)
 
@@ -32,3 +34,14 @@ for entry_point in iter_entry_points(group='vo.dm.models', name=None):
         LOG.info(f"Successfully imported vodml model package {entry_point.name}")
     except ImportError:
         LOG.warn(f"Cannot import vodml model package {entry_point.name}")
+
+
+def read(filename, format='votable'):
+    formats = {
+        'votable': Votable,
+    }
+
+    if format not in formats:
+        raise AttributeError(f"No such format: {format}. Available formats: {formats.keys()}")
+
+    return Reader(formats[format](filename))

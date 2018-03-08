@@ -22,12 +22,13 @@
 import pytest
 
 from rama.models.cube import SparseCube
-from rama.reader import Context, Votable
+from rama.reader import Reader
+from rama.reader.votable import Votable
 
 
 @pytest.fixture
 def context_cube(make_data_path):
-    return Context(Votable(make_data_path("cube.vot.xml")))
+    return Reader(Votable(make_data_path("cube.vot.xml")))
 
 
 # def test_ext_instances(context_cube, recwarn):

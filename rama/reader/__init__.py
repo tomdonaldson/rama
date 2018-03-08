@@ -20,17 +20,27 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import logging
+from abc import abstractmethod, ABCMeta
 from weakref import WeakValueDictionary
 
-from rama.reader.votable.parser import Votable
+
 from rama.registry import TypeRegistry
 
 
 LOG = logging.getLogger(__name__)
 
 
-class Context:
-    def __init__(self, document:Votable):
+class Document(metaclass=ABCMeta):
+    def __init__(self, file):
+        self.file = file
+
+    @abstractmethod
+    def find_instances(self, element_class, context):
+        pass
+
+
+class Reader:
+    def __init__(self, document:Document):
         self.standalone_instances = WeakValueDictionary()
         self.tables = {}
         self.registry = TypeRegistry.instance

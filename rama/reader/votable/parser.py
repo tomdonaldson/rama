@@ -29,20 +29,21 @@ from astropy.io import votable
 import numpy
 
 from rama.framework import Attribute, Reference, Composition, VodmlDescriptor
+from rama.reader import Document
 from rama.reader.votable.utils import get_role_xpath_expression, get_children, get_local_name,\
     get_type_xpath_expression, resolve_id
 
 LOG = logging.getLogger(__name__)
 
 
-class Votable:
+class Votable(Document):
     def __init__(self, xml):
-        self.file = xml
+        super().__init__(xml)
         self.parser = Parser(self)
         self.document = None
-        self.open_document(xml)
+        self._open_document(xml)
 
-    def open_document(self, xml_document):
+    def _open_document(self, xml_document):
         # TBD Maybe I should remove TABLEDATA to reduce the size of the tree. TABLEDATA will be parsed by astropy.
         parser = etree.XMLParser(ns_clean=True)
         tree = etree.parse(xml_document, parser)

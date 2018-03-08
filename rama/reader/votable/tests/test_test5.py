@@ -25,13 +25,13 @@ from numpy.testing import assert_array_equal
 
 from rama.models.test.filter import PhotometryFilter
 from rama.models.test.sample import SkyCoordinateFrame, Source
-from rama.reader import Context
+from rama.reader import Reader
 from rama.reader.votable import Votable
 
 
 @pytest.fixture
 def context_test5(make_data_path):
-    return Context(Votable(make_data_path("test5.vot.xml")))
+    return Reader(Votable(make_data_path("test5.vot.xml")))
 
 
 def test_coordinate_frame(context_test5):
