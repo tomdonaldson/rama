@@ -21,33 +21,18 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 from rama.registry import VO
 from astropy import units as u
+from dateutil import parser
 
 
 @VO("ivoa:RealQuantity")
 class RealQuantity:
-
-    def __init__(self, value, unit):
+    def __new__(self, value, unit):
         value = float(value)
         try:
             quantity = value * u.Unit(unit)
         except (ValueError, TypeError):
             quantity = value * u.dimensionless_unscaled
-        super().__setattr__('quantity', quantity)
-
-    def __getattr__(self, attr):
-        return getattr(self.quantity, attr)
-
-    def __setattr__(self, attr, value):
-        setattr(self.quantity, attr, value)
-
-    def __str__(self):
-        return self.quantity.__str__()
-
-    def __repr__(self):
-        return self.quantity.__repr__()
-
-    def __eq__(self, other):
-        return self.quantity.__eq__(other)
+        return quantity
 
 
 @VO("ivoa:string")
@@ -61,3 +46,15 @@ class StringQuantity:
 class VOBool:
     def __new__(cls, value, *args, **kwargs):
         return value.lower() == 'true'
+
+
+@VO("ivoa:integer")
+class VOInteger:
+    def __new__(cls, value, *args, **kwargs):
+        return int(value)
+
+
+@VO("ivoa:datetime")
+class VODateTime:
+    def __new__(cls, value, *args, **kwargs):
+        return parser.parse(value)

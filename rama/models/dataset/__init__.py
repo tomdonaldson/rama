@@ -81,7 +81,7 @@ class Dataset:
     data_product_type = Attribute('ds:dataset.Dataset.dataProductType', min=1, max=1)
     data_product_subtype = Attribute('ds:dataset.Dataset.dataProductSubtype', min=0, max=1)
     curation = Composition('ds:dataset.Dataset.curation', min=1, max=1)
-    data_i_d = Composition('ds:dataset.Dataset.dataID', min=1, max=1)
+    data_id = Composition('ds:dataset.Dataset.dataID', min=1, max=1)
 
 
 @VO('ds:experiment.ObsDataset')

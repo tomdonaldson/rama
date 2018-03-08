@@ -22,7 +22,9 @@
 import pytest
 from astropy.coordinates import SkyCoord
 from astropy.time import Time
+from dateutil.parser import parse
 from numpy.testing import assert_array_equal
+from rama.models.dataset import ObsDataset
 
 from rama.models.coordinates import GenericCoordValue
 from rama.models.cube import NDPoint
@@ -52,6 +54,16 @@ def test_ndpoint(context_cube, recwarn):
     assert "W41" in str(recwarn[1].message)
     for i in range(2, 12):
         assert "W10" in str(recwarn[i].message)
+
+
+def test_dataset(context_cube, recwarn):
+    datasets = context_cube.find_instances(ObsDataset)
+    dataset = datasets[0]
+
+    assert len(datasets) == 1
+    assert dataset.data_product_type == 'TIMESERIES'
+    assert dataset.calib_level == 3
+    assert dataset.data_id.date == parse("2017-03-27T15:35:56")
 
 # def test_ext_instances(context_cube, recwarn):
 #     cube = context_cube.find_instances(SparseCube)[0]
