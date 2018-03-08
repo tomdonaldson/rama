@@ -53,3 +53,12 @@ class Singleton:
 
     def __call__(self):
         raise TypeError('Singletons must be accessed through `instance`.')
+
+
+class Delegate:
+    def __init__(self, delegate):
+        self.delegate = delegate
+
+    def __call__(self, wrapped):
+        wrapped.__delegate__ = self.delegate
+        return wrapped

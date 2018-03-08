@@ -19,52 +19,27 @@
 # SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-import logging
-from abc import abstractmethod, ABCMeta
-from weakref import WeakValueDictionary
+from astropy.coordinates import SkyCoord
 
+class SkyCoordDecorator:
+    """
+    A drop-in replacement for astropy's SkyCoord. The initializer takes a basic SkyPosition
+    instance and builds an astropy.coordinates.SkyCoord object that it then uses as a delegate for all calls
+    and assignments.
+    """
 
-from rama.registry import TypeRegistry
+    def __new__(self, stc_position):
+        try:
+            frame = stc_position.coord.frame.space_ref_frame.lower()
+            equinox = stc_position.coord.frame.equinox
+        except AttributeError:
+            frame = "ICRS"
+            equinox = None
 
-
-LOG = logging.getLogger(__name__)
-
-
-class Document(metaclass=ABCMeta):
-    def __init__(self, file):
-        self.file = file
-
-    @abstractmethod
-    def find_instances(self, element_class, context):
-        pass
-
-
-class Reader:
-    def __init__(self, document:Document):
-        self.standalone_instances = WeakValueDictionary()
-        self.tables = {}
-        self.registry = TypeRegistry.instance
-        self.document = document
-
-    @property
-    def file(self):
-        return self.document.file
-
-    def get_type_by_id(self, type_id):
-        return self.registry.get_by_id(type_id)
-
-    def find_instances(self, cls):
-        return self.document.find_instances(cls, context=self)
-
-    def add_instance(self, instance):
-        if instance.__vo_id__ is not None:
-            self.standalone_instances[instance.__vo_id__] = instance
-
-    def get_instance_by_id(self, instance_id):
-        return self.standalone_instances.get(instance_id, None)
-
-    def add_table(self, table_id, table):
-        self.tables[table_id] = table
-
-    def get_table_by_id(self, table_id):
-        return self.tables.get(table_id, None)
+        try:
+            ra = stc_position.coord.ra
+            dec = stc_position.coord.dec
+            sky_coord = SkyCoord(frame=frame, equinox=equinox, ra=ra, dec=dec)
+            return sky_coord
+        except:
+            return stc_position

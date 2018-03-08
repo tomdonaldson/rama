@@ -53,24 +53,8 @@ class RealQuantity:
 @VO("ivoa:string")
 class StringQuantity:
 
-    def __init__(self, value, unit):
-        value = str(value)
-        super().__setattr__('value', value)
-
-    def __getattr__(self, attr):
-        return getattr(self.value, attr)
-
-    def __setattr__(self, attr, value):
-        setattr(self.value, attr, value)
-
-    def __str__(self):
-        return self.value.__str__()
-
-    def __repr__(self):
-        return self.value.__repr__()
-
-    def __eq__(self, other):
-        return self.value.__eq__(other)
+    def __new__(self, value, unit):
+        return str(value)
 
 
 @VO("ivoa:boolean")

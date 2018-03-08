@@ -38,7 +38,7 @@ def test_coordinate_frame(context_test5):
     frames = context_test5.find_instances(SkyCoordinateFrame)
 
     assert len(frames) == 1
-    assert frames[0].name.value == "ICRS"
+    assert frames[0].name == "ICRS"
 
 
 def test_filters(context_test5):

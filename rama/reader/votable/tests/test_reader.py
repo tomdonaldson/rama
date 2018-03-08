@@ -22,10 +22,11 @@
 import numpy
 import pytest
 from astropy import units as u
+from astropy.coordinates import SkyCoord, FK5
+from astropy.time import Time
 
 from rama.models.coordinates import SpaceFrame
 from rama.models.measurements import SkyPosition
-from rama.reader import Reader
 from rama import read
 
 
@@ -58,11 +59,13 @@ def test_parsing_coordinates(simple_position_file):
     pos = sky_positions[0]
 
     assert 1 == len(sky_positions)
-    assert 10.34209135 * u.deg == pos.coord.ra
-    assert 41.13232112 * u.deg == pos.coord.dec
-    assert "FK5" == pos.coord.frame.space_ref_frame
-    assert "J1975" == pos.coord.frame.equinox
-    assert "TOPOCENTER" == pos.coord.frame.ref_position.position
+    assert isinstance(pos, SkyCoord)
+    assert pos.ra == 10.34209135 * u.Unit('deg')
+    assert pos.dec == 41.13232112 * u.Unit('deg')
+    assert isinstance(pos.frame, FK5)
+    assert pos.equinox == Time("J1975")
+    #FIXME How to set the reference position in astropy?
+    # assert "TOPOCENTER" == pos.coord.frame.ref_position.position
 
 
 def test_references_are_same_object(references_file):
@@ -88,8 +91,8 @@ def test_parsing_columns(simple_position_columns_file, recwarn):
     assert 1 == len(sky_positions)
     expected_ra = numpy.array([10.0, 20.0], dtype='float32') * u.deg
     expected_dec = numpy.array([11.0, 21.0], dtype='float32') * u.deg
-    numpy.testing.assert_array_equal(expected_ra, position.coord.ra)
-    numpy.testing.assert_array_equal(expected_dec, position.coord.dec)
+    numpy.testing.assert_array_equal(expected_ra, position.ra)
+    numpy.testing.assert_array_equal(expected_dec, position.dec)
 
     assert "W20" in str(recwarn[0].message)
     assert "W41" in str(recwarn[1].message)

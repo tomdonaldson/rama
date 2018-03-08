@@ -96,8 +96,6 @@ class Parser:
             return instance
 
         instance = instance_class()
-        instance.__id__ = instance_id
-        context.add_instance(instance)
 
         def is_field(x):
             return inspect.isdatadescriptor(x) and isinstance(x, VodmlDescriptor)
@@ -106,6 +104,11 @@ class Parser:
         for field_name, field_object in fields:
             field_reader = self.field_readers[field_object.__class__]
             setattr(instance, field_name, field_reader(xml_element, field_object, context))
+
+        if hasattr(instance_class, '__delegate__'):
+            instance = instance_class.__delegate__(instance)
+        instance.__vo_id__ = instance_id
+        context.add_instance(instance)
 
         return instance
 
