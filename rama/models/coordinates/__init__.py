@@ -19,9 +19,11 @@
 # SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+from rama.astropy import SkyCoordDecorator, TimeDecorator
 from rama.framework import Attribute, Reference, Composition
 from rama.models.ivoa import StringQuantity
 from rama.registry import VO
+from rama.utils import Delegate
 
 
 @VO('coords:domain.space.Epoch')
@@ -180,6 +182,7 @@ class SpatialCoord3D(SpatialCoord):
 
 
 @VO('coords:domain.space.SkyCoord')
+@Delegate(SkyCoordDecorator)
 class SkyCoord(Coordinate):
     pass
 
@@ -265,6 +268,7 @@ class TimeOffset(PhysicalCoordValue):
 
 
 @VO('coords:domain.time.TimeStamp')
+@Delegate(TimeDecorator)
 class TimeStamp(Coordinate):
     pass
 

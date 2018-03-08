@@ -20,8 +20,10 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import pytest
+from astropy.coordinates import SkyCoord
+from astropy.time import Time
 
-from rama.models.cube import SparseCube
+from rama.models.cube import NDPoint
 from rama.reader import Reader
 from rama.reader.votable import Votable
 
@@ -30,6 +32,20 @@ from rama.reader.votable import Votable
 def context_cube(make_data_path):
     return Reader(Votable(make_data_path("cube.vot.xml")))
 
+
+def test_ndpoint(context_cube, recwarn):
+    ndpoints = context_cube.find_instances(NDPoint)
+    ndpoint = ndpoints[0]
+
+    assert len(ndpoints) == 1
+
+    assert isinstance(ndpoint.axis[1].measurement.coord, SkyCoord)
+    assert isinstance(ndpoint.axis[0].measurement.coord, Time)
+
+    assert "W20" in str(recwarn[0].message)
+    assert "W41" in str(recwarn[1].message)
+    for i in range(2, 12):
+        assert "W10" in str(recwarn[i].message)
 
 # def test_ext_instances(context_cube, recwarn):
 #     cube = context_cube.find_instances(SparseCube)[0]

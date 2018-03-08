@@ -173,9 +173,9 @@
   </VODML>
   <RESOURCE>
     <TABLE ID="_DATA_TABLE">
-      <FIELD datatype="char" arraysize="17" ID="_col_TIME" name="_col_TIME"/>
-      <FIELD datatype="float" arraysize="1" ID="_col_RAJ2000" name="_col_RAJ2000"/>
-      <FIELD datatype="float" arraysize="1" ID="_col_DECJ2000" name="_col_DECJ2000"/>
+      <FIELD datatype="char" arraysize="20" ID="_col_TIME" name="_col_TIME" xtype="iso8601"/>
+      <FIELD datatype="float" arraysize="1" ID="_col_RAJ2000" unit="deg" name="_col_RAJ2000"/>
+      <FIELD datatype="float" arraysize="1" ID="_col_DECJ2000" unit="deg" name="_col_DECJ2000"/>
       <FIELD datatype="float" arraysize="1" ID="_col_FLUX" name="_col_FLUX"/>
       <FIELD datatype="float" arraysize="1" ID="_col_FLUX_ERROR" name="_col_FLUX_ERROR"/>
       <FIELD datatype="float" arraysize="1" ID="_col_MAG" name="_col_MAG"/>
@@ -183,7 +183,7 @@
       <DATA>
         <TABLEDATA>
           <TR>
-            <TD>20170201T11:36:53</TD>
+            <TD>2017-02-01T11:36:53</TD>
             <TD>20.0</TD>
             <TD>20.1</TD>
             <TD>200.0</TD>
@@ -192,7 +192,7 @@
             <TD>1.2</TD>
           </TR>
           <TR>
-            <TD>20170201T11:36:52</TD>
+            <TD>2017-02-01T11:36:52</TD>
             <TD>10.0</TD>
             <TD>10.1</TD>
             <TD>100.0</TD>

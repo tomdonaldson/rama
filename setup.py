@@ -30,8 +30,11 @@ setup(
     include_package_data=True,
     entry_points={
         'vo.dm.models': [
+            'ivoa = rama.models.ivoa',
             'coords = rama.models.coordinates',
             'meas = rama.models.measurements',
+            'cube = rama.models.cube',
+            'ds = rama.models.dataset',
         ]
     }
 )

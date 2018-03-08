@@ -23,7 +23,9 @@ import numpy
 import pytest
 from astropy import units as u
 from astropy.coordinates import SkyCoord, FK5
+from astropy.tests.helper import assert_quantity_allclose
 from astropy.time import Time
+from astropy.units import Quantity
 
 from rama.models.coordinates import SpaceFrame
 from rama.models.measurements import SkyPosition
@@ -59,11 +61,11 @@ def test_parsing_coordinates(simple_position_file):
     pos = sky_positions[0]
 
     assert 1 == len(sky_positions)
-    assert isinstance(pos, SkyCoord)
-    assert pos.ra == 10.34209135 * u.Unit('deg')
-    assert pos.dec == 41.13232112 * u.Unit('deg')
-    assert isinstance(pos.frame, FK5)
-    assert pos.equinox == Time("J1975")
+    assert isinstance(pos.coord, SkyCoord)
+    assert pos.coord.ra == 10.34209135 * u.Unit('deg')
+    assert pos.coord.dec == 41.13232112 * u.Unit('deg')
+    assert isinstance(pos.coord.frame, FK5)
+    assert pos.coord.equinox == Time("J1975")
     #FIXME How to set the reference position in astropy?
     # assert "TOPOCENTER" == pos.coord.frame.ref_position.position
 
@@ -89,10 +91,10 @@ def test_parsing_columns(simple_position_columns_file, recwarn):
     position = sky_positions[0]
 
     assert 1 == len(sky_positions)
-    expected_ra = numpy.array([10.0, 20.0], dtype='float32') * u.deg
-    expected_dec = numpy.array([11.0, 21.0], dtype='float32') * u.deg
-    numpy.testing.assert_array_equal(expected_ra, position.ra)
-    numpy.testing.assert_array_equal(expected_dec, position.dec)
+    expected_ra = numpy.array([10.0, 20.0], dtype='float32') * u.Unit('deg')
+    expected_dec = numpy.array([11.0, 21.0], dtype='float32') * u.Unit('deg')
+    numpy.testing.assert_array_equal(expected_ra, position.coord.ra)
+    numpy.testing.assert_array_equal(expected_dec, position.coord.dec)
 
     assert "W20" in str(recwarn[0].message)
     assert "W41" in str(recwarn[1].message)
@@ -123,6 +125,7 @@ def test_invalid_file(invalid_file):
 
     assert 1 == len(sky_positions)
     expected_ra = numpy.array([numpy.NaN, numpy.NaN])
-    expected_dec = numpy.array([11.0, 21.0]) * u.dimensionless_unscaled
+    expected_dec = u.Quantity(numpy.array([11.0, 21.0]))
     numpy.testing.assert_array_equal(expected_ra, position.coord.ra)
-    numpy.testing.assert_array_equal(expected_dec, position.coord.dec)
+    # The unit is bogus, so we can't really test for equality
+    numpy.testing.assert_array_equal(expected_dec.value, position.coord.dec.value)

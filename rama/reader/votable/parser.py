@@ -22,6 +22,8 @@
 import inspect
 import logging
 import warnings
+
+from astropy.table import QTable
 from lxml import etree
 
 from astropy.io import votable
@@ -280,7 +282,7 @@ class AttributeElement(ElementWithInstances):
             no_id = True
             table_id = f"_GENERATED_ID_{table_index}"
 
-        table = votable.parse_single_table(self.context.file, table_number=table_index).to_table()
+        table = QTable(votable.parse_single_table(self.context.file, table_number=table_index).to_table())
 
         if no_id:
             table_id = id(table)
