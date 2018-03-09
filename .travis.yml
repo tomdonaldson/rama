@@ -18,7 +18,3 @@ script: tox
 after_script:
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./cc-test-reporter after-build --exit-code
   $TRAVIS_TEST_RESULT; fi
-
-env:
-  global:
-    secure: p0Ra3++P2WKncCYwY0ICmfNci5omZC1pIaYyr74lWRuHOlpOWXxKAHAE71ftso5BdyV5ungQrj+LiTtlVU/bb2yTeVCAVt9fBRhIB6vMh8J438XybCJ9SCtSvh5zgwGxzlSOOy3Lj4/jA46GR+n9bvOs6rmF1nNpiY3kXT6qo8r21G8oFOhhPc2dzMWUb6ogbXCs/zD4U3swqSG2aUviZEgxGsWJvQzAaYm8Oa7Te1gm5Zq3zx1qXZv+RDG7a6urWwmqYQmP36/DVYTZPHeqJsQ3sEFxgG8lnoD9d/wtw+e3gzfeeKMqZ9o0yrRlxpnr/4A9TuVrJakDYeKjij3GBkzEAudy3GwvgeMGZAnn4R7Kiy4oy4jQp+Jz5IPOtofcT+BS7bOeE1fu7tUjQB/N2MZwVUWQz2/rb8kPtouJOqArM6mnnKb46ZSrW2PAeV4KJypUTAdrhddR/rl9gfmwt20Si/x+RNAw7afIwJEVAFULBs4pmnmQ0IguppFHCbKNMo2/VOSmX+kUT54gb1r/Wvr6SV1R+BnrxguPrgTLgbi3JDccf6mBvho8aQ3pTxbKCCjOctLkayFa+jTeQG2kkhaYNTDCtmEIebb7rAdeo7ESSNAUUxdp8p4ffxPe4cXxtHCNJmQv1M2+y9OmArk7EHbaNrA88yXGg5Q8Ur25y8w=
