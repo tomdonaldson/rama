@@ -19,14 +19,51 @@
 # SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+"""
+Data model concepts, i.e. types and roles, are represented by portable strings that are globally
+unique. Such identifiers can be used in different serialization formats to map data and metadata
+to the data model elements they represent.
+
+VO-DML types are mapped to Python classes.
+
+This module contains a :py:class:`~TypeRegistry` class that can be used to map VO-DML
+type identifiers to the corresponding Python class. This class is a singleton, which ensures that
+types are registered for the entire process life cycle.
+
+The module also defines a :py:class:`~VO` class decorator that can be used to map
+Python classes to the VO-DML type they represent. When classes with the decorator are imported
+they are registered by the ID passed to the decorator.
+
+Example::
+
+    >>> from rama.registry import VO, TypeRegistry
+    >>> @VO('foo:bar')
+    ... class MyClass:
+    ...   pass
+    ...
+    >>> TypeRegistry.instance.get_by_id('foo:bar')
+    <class '....MyClass'>
+
+Note that trying to instantiate the registry results in an exception:
+
+    >>> from rama.registry import TypeRegistry
+    >>> TypeRegistry()
+    Traceback (most recent call last):
+      ...
+    TypeError: Singletons must be accessed through `instance`.
+
+
+"""
+
 import inspect
 
 from rama.utils import Singleton
 
-
-# TODO type hints
 @Singleton
 class TypeRegistry:
+    """
+    A registry for VO-DML types
+    """
     instance = None
 
     def __init__(self):
@@ -48,6 +85,9 @@ class TypeRegistry:
 
 
 class VO:
+    """
+    A class decorator to register Python classes
+    """
     def __init__(self, vodml_id):
         self.vodml_id = vodml_id
 

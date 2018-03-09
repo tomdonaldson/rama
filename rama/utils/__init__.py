@@ -38,6 +38,10 @@ class Singleton:
     def __init__(self, decorated):
         self._decorated = decorated
         self._instance = None
+        self.__doc__ = decorated.__doc__
+        self.__name__ = decorated.__name__
+        self.__bases__ = decorated.__bases__
+        self.__module__ = decorated.__module__
 
     @property
     def instance(self):
