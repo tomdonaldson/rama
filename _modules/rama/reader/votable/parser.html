@@ -1,0 +1,501 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>rama.reader.votable.parser &mdash; Rama 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../../search.html"/>
+    <link rel="top" title="Rama 0.1 documentation" href="../../../../index.html"/>
+        <link rel="up" title="rama.reader" href="../../reader.html"/> 
+
+  
+  <script src="../../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Rama
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Rama</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../../rama.html">rama</a> &raquo;</li>
+        
+          <li><a href="../../reader.html">rama.reader</a> &raquo;</li>
+        
+      <li>rama.reader.votable.parser</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for rama.reader.votable.parser</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright 2018 Smithsonian Astrophysical Observatory</span>
+<span class="c1">#</span>
+<span class="c1"># Redistribution and use in source and binary forms, with or without modification, are permitted provided that the</span>
+<span class="c1"># following conditions are met:</span>
+<span class="c1">#</span>
+<span class="c1"># 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following</span>
+<span class="c1"># disclaimer.</span>
+<span class="c1">#</span>
+<span class="c1"># 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following</span>
+<span class="c1"># disclaimer in the documentation and/or other materials provided with the distribution.</span>
+<span class="c1">#</span>
+<span class="c1"># 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote</span>
+<span class="c1"># products derived from this software without specific prior written permission.</span>
+<span class="c1">#</span>
+<span class="c1"># THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES,</span>
+<span class="c1"># INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE</span>
+<span class="c1"># DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,</span>
+<span class="c1"># SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR</span>
+<span class="c1"># SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,</span>
+<span class="c1"># WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE</span>
+<span class="c1"># OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">from</span> <span class="nn">lxml</span> <span class="k">import</span> <span class="n">etree</span>
+
+<span class="kn">from</span> <span class="nn">astropy.table</span> <span class="k">import</span> <span class="n">QTable</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="k">import</span> <span class="n">votable</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span>
+
+<span class="kn">from</span> <span class="nn">rama.framework</span> <span class="k">import</span> <span class="n">Attribute</span><span class="p">,</span> <span class="n">Reference</span><span class="p">,</span> <span class="n">Composition</span><span class="p">,</span> <span class="n">VodmlDescriptor</span>
+<span class="kn">from</span> <span class="nn">rama.reader</span> <span class="k">import</span> <span class="n">Document</span>
+<span class="kn">from</span> <span class="nn">rama.reader.votable.utils</span> <span class="k">import</span> <span class="n">get_children</span><span class="p">,</span> <span class="n">get_local_name</span><span class="p">,</span> \
+    <span class="n">get_type_xpath_expression</span><span class="p">,</span> <span class="n">resolve_id</span><span class="p">,</span> <span class="n">resolve_type</span><span class="p">,</span> <span class="n">find_element_for_role</span>
+
+<span class="n">LOG</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Votable"><a class="viewcode-back" href="../../../../api/rama.reader.votable.html#rama.reader.votable.parser.Votable">[docs]</a><span class="k">class</span> <span class="nc">Votable</span><span class="p">(</span><span class="n">Document</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xml</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">xml</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parser</span> <span class="o">=</span> <span class="n">Parser</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">document</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_open_document</span><span class="p">(</span><span class="n">xml</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_open_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xml_document</span><span class="p">):</span>
+        <span class="c1"># TBD Maybe I should remove TABLEDATA to reduce the size of the tree. TABLEDATA will be parsed by astropy.</span>
+        <span class="n">parser</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">XMLParser</span><span class="p">(</span><span class="n">ns_clean</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">tree</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">xml_document</span><span class="p">,</span> <span class="n">parser</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">document</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">getroot</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Votable.find_instances"><a class="viewcode-back" href="../../../../api/rama.reader.votable.html#rama.reader.votable.parser.Votable.find_instances">[docs]</a>    <span class="k">def</span> <span class="nf">find_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element_class</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">find_instances</span><span class="p">(</span><span class="n">element_class</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Parser"><a class="viewcode-back" href="../../../../api/rama.reader.votable.html#rama.reader.votable.parser.Parser">[docs]</a><span class="k">class</span> <span class="nc">Parser</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">votable_file</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">votable</span> <span class="o">=</span> <span class="n">votable_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">field_readers</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">Attribute</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_attributes</span><span class="p">,</span>
+            <span class="n">Reference</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_references</span><span class="p">,</span>
+            <span class="n">Composition</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_composed_instances</span>
+        <span class="p">}</span>
+
+<div class="viewcode-block" id="Parser.find_instances"><a class="viewcode-back" href="../../../../api/rama.reader.votable.html#rama.reader.votable.parser.Parser.find_instances">[docs]</a>    <span class="k">def</span> <span class="nf">find_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element_class</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span></div>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">read_instance</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element_class</span><span class="p">)]</span>
+
+<div class="viewcode-block" id="Parser.read_instance"><a class="viewcode-back" href="../../../../api/rama.reader.votable.html#rama.reader.votable.parser.Parser.read_instance">[docs]</a>    <span class="k">def</span> <span class="nf">read_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xml_element</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="n">type_id</span> <span class="o">=</span> <span class="n">resolve_type</span><span class="p">(</span><span class="n">xml_element</span><span class="p">)</span>
+        <span class="n">element_class</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">get_type_by_id</span><span class="p">(</span><span class="n">type_id</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">element_class</span><span class="p">,</span> <span class="n">xml_element</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Parser.parse_attributes"><a class="viewcode-back" href="../../../../api/rama.reader.votable.html#rama.reader.votable.parser.Parser.parse_attributes">[docs]</a>    <span class="k">def</span> <span class="nf">parse_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xml_element</span><span class="p">,</span> <span class="n">field_object</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span></div>
+        <span class="k">return</span> <span class="n">AttributeElement</span><span class="p">(</span><span class="n">xml_element</span><span class="p">,</span> <span class="n">field_object</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">all</span>
+
+<div class="viewcode-block" id="Parser.parse_composed_instances"><a class="viewcode-back" href="../../../../api/rama.reader.votable.html#rama.reader.votable.parser.Parser.parse_composed_instances">[docs]</a>    <span class="k">def</span> <span class="nf">parse_composed_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xml_element</span><span class="p">,</span> <span class="n">field_object</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span></div>
+        <span class="k">return</span> <span class="n">CompositionElement</span><span class="p">(</span><span class="n">xml_element</span><span class="p">,</span> <span class="n">field_object</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">all</span>
+
+<div class="viewcode-block" id="Parser.parse_references"><a class="viewcode-back" href="../../../../api/rama.reader.votable.html#rama.reader.votable.parser.Parser.parse_references">[docs]</a>    <span class="k">def</span> <span class="nf">parse_references</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xml_element</span><span class="p">,</span> <span class="n">field_object</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span></div>
+        <span class="k">return</span> <span class="n">ReferenceElement</span><span class="p">(</span><span class="n">xml_element</span><span class="p">,</span> <span class="n">field_object</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">all</span>
+
+<div class="viewcode-block" id="Parser.find"><a class="viewcode-back" href="../../../../api/rama.reader.votable.html#rama.reader.votable.parser.Parser.find">[docs]</a>    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element_class</span><span class="p">):</span>
+        <span class="n">type_id</span> <span class="o">=</span> <span class="n">element_class</span><span class="o">.</span><span class="n">vodml_id</span>
+        <span class="n">elements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">votable</span><span class="o">.</span><span class="n">document</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="n">get_type_xpath_expression</span><span class="p">(</span><span class="s1">&#39;INSTANCE&#39;</span><span class="p">,</span> <span class="n">type_id</span><span class="p">))</span></div>
+        <span class="k">return</span> <span class="n">elements</span>
+
+<div class="viewcode-block" id="Parser.make"><a class="viewcode-back" href="../../../../api/rama.reader.votable.html#rama.reader.votable.parser.Parser.make">[docs]</a>    <span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance_class</span><span class="p">,</span> <span class="n">xml_element</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="n">instance_id</span> <span class="o">=</span> <span class="n">resolve_id</span><span class="p">(</span><span class="n">xml_element</span><span class="p">)</span>
+
+        <span class="n">instance</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">get_instance_by_id</span><span class="p">(</span><span class="n">instance_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">instance</span>
+
+        <span class="n">instance</span> <span class="o">=</span> <span class="n">instance_class</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">is_field</span><span class="p">(</span><span class="n">attr</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isdatadescriptor</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">VodmlDescriptor</span><span class="p">)</span>
+
+        <span class="n">fields</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getmembers</span><span class="p">(</span><span class="n">instance_class</span><span class="p">,</span> <span class="n">is_field</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">field_name</span><span class="p">,</span> <span class="n">field_object</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+            <span class="n">field_reader</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_readers</span><span class="p">[</span><span class="n">field_object</span><span class="o">.</span><span class="vm">__class__</span><span class="p">]</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span> <span class="n">field_reader</span><span class="p">(</span><span class="n">xml_element</span><span class="p">,</span> <span class="n">field_object</span><span class="p">,</span> <span class="n">context</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">instance_class</span><span class="p">,</span> <span class="s1">&#39;__delegate__&#39;</span><span class="p">):</span>
+            <span class="n">instance</span> <span class="o">=</span> <span class="n">instance_class</span><span class="o">.</span><span class="n">__delegate__</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
+        <span class="n">instance</span><span class="o">.</span><span class="n">__vo_id__</span> <span class="o">=</span> <span class="n">instance_id</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">add_instance</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
+</div></div>
+        <span class="k">return</span> <span class="n">instance</span>
+
+
+<div class="viewcode-block" id="Element"><a class="viewcode-back" href="../../../../api/rama.reader.votable.html#rama.reader.votable.parser.Element">[docs]</a><span class="k">class</span> <span class="nc">Element</span><span class="p">:</span>
+    <span class="n">TAG_NAME</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xml_element</span><span class="p">,</span> <span class="n">field_object</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">field_object</span> <span class="o">=</span> <span class="n">field_object</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">role_id</span> <span class="o">=</span> <span class="n">role_id</span> <span class="o">=</span> <span class="n">field_object</span><span class="o">.</span><span class="n">vodml_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xml</span> <span class="o">=</span> <span class="n">find_element_for_role</span><span class="p">(</span><span class="n">xml_element</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">TAG_NAME</span><span class="p">,</span> <span class="n">role_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="n">context</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parser</span> <span class="o">=</span> <span class="n">parser</span>
+
+<div class="viewcode-block" id="Element.select_return_value"><a class="viewcode-back" href="../../../../api/rama.reader.votable.html#rama.reader.votable.parser.Element.select_return_value">[docs]</a>    <span class="k">def</span> <span class="nf">select_return_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="n">max_occurs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_object</span><span class="o">.</span><span class="n">max</span>
+        <span class="k">if</span> <span class="n">max_occurs</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">max_occurs</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">values</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+</div></div>
+        <span class="k">return</span> <span class="n">values</span>
+
+
+<div class="viewcode-block" id="ElementWithInstances"><a class="viewcode-back" href="../../../../api/rama.reader.votable.html#rama.reader.votable.parser.ElementWithInstances">[docs]</a><span class="k">class</span> <span class="nc">ElementWithInstances</span><span class="p">(</span><span class="n">Element</span><span class="p">):</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">structured_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">elements</span> <span class="o">=</span> <span class="n">get_children</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xml</span><span class="p">,</span> <span class="s2">&quot;INSTANCE&quot;</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">read_instance</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">)</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="ReferenceElement"><a class="viewcode-back" href="../../../../api/rama.reader.votable.html#rama.reader.votable.parser.ReferenceElement">[docs]</a><span class="k">class</span> <span class="nc">ReferenceElement</span><span class="p">(</span><span class="n">Element</span><span class="p">):</span>
+    <span class="n">TAG_NAME</span> <span class="o">=</span> <span class="s1">&#39;REFERENCE&#39;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">idref_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">elements</span> <span class="o">=</span> <span class="n">get_children</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xml</span><span class="p">,</span> <span class="s2">&quot;IDREF&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_parse_idref</span><span class="p">(</span><span class="n">element</span><span class="p">)</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">all</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">xml</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">select_return_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">idref_instances</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_parse_idref</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xml_element</span><span class="p">):</span>
+        <span class="n">ref</span> <span class="o">=</span> <span class="n">xml_element</span><span class="o">.</span><span class="n">text</span>
+
+        <span class="n">referred_instance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">get_instance_by_id</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">referred_instance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">referred_instance</span>
+
+        <span class="n">referred_elements</span> <span class="o">=</span> <span class="n">xml_element</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;//{get_local_name(&#39;INSTANCE&#39;)}[@ID=&#39;</span><span class="si">{ref}</span><span class="s2">&#39;]&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">referred_elements</span><span class="p">:</span>
+            <span class="c1"># TODO make a single call?</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;Dangling reference </span><span class="si">{ref}</span><span class="s2">&quot;</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="ne">SyntaxWarning</span><span class="p">)</span>
+            <span class="n">LOG</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">referred_element</span> <span class="o">=</span> <span class="n">referred_elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">read_instance</span><span class="p">(</span><span class="n">referred_element</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="CompositionElement"><a class="viewcode-back" href="../../../../api/rama.reader.votable.html#rama.reader.votable.parser.CompositionElement">[docs]</a><span class="k">class</span> <span class="nc">CompositionElement</span><span class="p">(</span><span class="n">ElementWithInstances</span><span class="p">):</span>
+    <span class="n">TAG_NAME</span> <span class="o">=</span> <span class="s1">&#39;COMPOSITION&#39;</span>
+
+    <span class="c1"># @property</span>
+    <span class="c1"># def external_instances(self):</span>
+    <span class="c1">#     elements = _get_children(self.xml, &quot;EXTINSTANCES&quot;)</span>
+    <span class="c1">#     return [self._parse_externals(element) for element in elements]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">all</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">xml</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">select_return_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">structured_instances</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="c1"># def _parse_externals(self, xml_element):</span>
+    <span class="c1">#     ref = xml_element.text</span>
+    <span class="c1">#</span>
+    <span class="c1">#     referred_instance = self.context.get_instance_by_id(ref)</span>
+    <span class="c1">#     if referred_instance is not None:</span>
+    <span class="c1">#         return referred_instance</span>
+    <span class="c1">#</span>
+    <span class="c1">#     referred_elements = xml_element.xpath(f&quot;//{get_local_name(&#39;INSTANCE&#39;)}[@ID=&#39;{ref}&#39;]&quot;)</span>
+    <span class="c1">#     if not len(referred_elements):</span>
+    <span class="c1">#         # TODO make a single call?</span>
+    <span class="c1">#         msg = f&quot;Dangling reference {ref}&quot;</span>
+    <span class="c1">#         warnings.warn(msg, SyntaxWarning)</span>
+    <span class="c1">#         LOG.warning(msg)</span>
+    <span class="c1">#     else:</span>
+    <span class="c1">#         referred_element = referred_elements[0]</span>
+    <span class="c1">#         return self.context.read_instance(referred_element)</span>
+
+
+<div class="viewcode-block" id="AttributeElement"><a class="viewcode-back" href="../../../../api/rama.reader.votable.html#rama.reader.votable.parser.AttributeElement">[docs]</a><span class="k">class</span> <span class="nc">AttributeElement</span><span class="p">(</span><span class="n">ElementWithInstances</span><span class="p">):</span>
+    <span class="n">TAG_NAME</span> <span class="o">=</span> <span class="s2">&quot;ATTRIBUTE&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">constants</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">elements</span> <span class="o">=</span> <span class="n">get_children</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xml</span><span class="p">,</span> <span class="s2">&quot;LITERAL&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_parse_literal</span><span class="p">(</span><span class="n">element</span><span class="p">)</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">columns</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">elements</span> <span class="o">=</span> <span class="n">get_children</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xml</span><span class="p">,</span> <span class="s2">&quot;COLUMN&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_parse_column</span><span class="p">(</span><span class="n">element</span><span class="p">)</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">all</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">xml</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">select_return_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">structured_instances</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">constants</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_parse_literal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xml_element</span><span class="p">):</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">xml_element</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="s2">&quot;@value&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">value_type</span> <span class="o">=</span> <span class="n">xml_element</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="s2">&quot;@dmtype&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">units</span> <span class="o">=</span> <span class="n">xml_element</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="s2">&quot;@unit&quot;</span><span class="p">)</span>
+        <span class="n">unit</span> <span class="o">=</span> <span class="n">units</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">units</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">get_type_by_id</span><span class="p">(</span><span class="n">value_type</span><span class="p">)(</span><span class="n">value</span><span class="p">,</span> <span class="n">unit</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_parse_column</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xml_element</span><span class="p">):</span>
+        <span class="n">column_ref</span> <span class="o">=</span> <span class="n">xml_element</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="s2">&quot;@ref&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">find_column_xpath</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;//{get_local_name(&#39;FIELD&#39;)}[@ID=&#39;</span><span class="si">{column_ref}</span><span class="s2">&#39;]&quot;</span>
+        <span class="n">column_elements</span> <span class="o">=</span> <span class="n">xml_element</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="n">find_column_xpath</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">column_elements</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;Can&#39;t find column with ID </span><span class="si">{column_ref}</span><span class="s2">. Setting values to NaN&quot;</span>
+            <span class="n">LOG</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="ne">SyntaxWarning</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">NaN</span>
+
+        <span class="n">column_element</span> <span class="o">=</span> <span class="n">column_elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_table</span><span class="p">(</span><span class="n">column_element</span><span class="p">)</span>
+
+        <span class="n">column</span> <span class="o">=</span> <span class="n">table</span><span class="p">[</span><span class="n">column_ref</span><span class="p">]</span>
+
+        <span class="n">name</span> <span class="o">=</span> <span class="n">column_element</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="s2">&quot;@name&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">column</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+        <span class="k">return</span> <span class="n">column</span>
+
+    <span class="k">def</span> <span class="nf">_parse_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column_element</span><span class="p">):</span>
+
+        <span class="n">table_elements</span> <span class="o">=</span> <span class="n">column_element</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;parent::{get_local_name(&#39;TABLE&#39;)}&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">table_elements</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;COLUMN points to FIELD that does not have a TABLE parent&quot;</span><span class="p">)</span>
+        <span class="n">table_element</span> <span class="o">=</span> <span class="n">table_elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">table_index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">table_element</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;count(preceding-sibling::{get_local_name(&#39;TABLE&#39;)})&quot;</span><span class="p">))</span>
+
+        <span class="n">table_ids</span> <span class="o">=</span> <span class="n">table_element</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="s1">&#39;@ID&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">table_ids</span><span class="p">:</span>
+            <span class="n">no_id</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">table_id</span> <span class="o">=</span> <span class="n">table_ids</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">get_table_by_id</span><span class="p">(</span><span class="n">table_id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">table</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">table</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">no_id</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">table_id</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;_GENERATED_ID_</span><span class="si">{table_index}</span><span class="s2">&quot;</span>
+
+        <span class="n">table</span> <span class="o">=</span> <span class="n">QTable</span><span class="p">(</span><span class="n">votable</span><span class="o">.</span><span class="n">parse_single_table</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">file</span><span class="p">,</span> <span class="n">table_number</span><span class="o">=</span><span class="n">table_index</span><span class="p">)</span><span class="o">.</span><span class="n">to_table</span><span class="p">())</span>
+
+        <span class="k">if</span> <span class="n">no_id</span><span class="p">:</span>
+            <span class="n">table_id</span> <span class="o">=</span> <span class="nb">id</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+            <span class="n">table_element</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s2">&quot;ID&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">table_id</span><span class="p">)</span>  <span class="c1"># We set the attribute so we have an handle if we parse it again</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">add_table</span><span class="p">(</span><span class="n">table_id</span><span class="p">,</span> <span class="n">table</span><span class="p">)</span>
+</div>
+        <span class="k">return</span> <span class="n">table</span>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Omar Laurino.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

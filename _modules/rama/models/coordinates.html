@@ -1,0 +1,585 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>rama.models.coordinates &mdash; Rama 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="Rama 0.1 documentation" href="../../../index.html"/>
+        <link rel="up" title="rama" href="../../rama.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Rama
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Rama</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../rama.html">rama</a> &raquo;</li>
+        
+      <li>rama.models.coordinates</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for rama.models.coordinates</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright 2018 Smithsonian Astrophysical Observatory</span>
+<span class="c1">#</span>
+<span class="c1"># Redistribution and use in source and binary forms, with or without modification, are permitted provided that the</span>
+<span class="c1"># following conditions are met:</span>
+<span class="c1">#</span>
+<span class="c1"># 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following</span>
+<span class="c1"># disclaimer.</span>
+<span class="c1">#</span>
+<span class="c1"># 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following</span>
+<span class="c1"># disclaimer in the documentation and/or other materials provided with the distribution.</span>
+<span class="c1">#</span>
+<span class="c1"># 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote</span>
+<span class="c1"># products derived from this software without specific prior written permission.</span>
+<span class="c1">#</span>
+<span class="c1"># THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES,</span>
+<span class="c1"># INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE</span>
+<span class="c1"># DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,</span>
+<span class="c1"># SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR</span>
+<span class="c1"># SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,</span>
+<span class="c1"># WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE</span>
+<span class="c1"># OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</span>
+<span class="kn">from</span> <span class="nn">rama.astropy</span> <span class="k">import</span> <span class="n">SkyCoordDecorator</span><span class="p">,</span> <span class="n">TimeDecorator</span>
+<span class="kn">from</span> <span class="nn">rama.framework</span> <span class="k">import</span> <span class="n">Attribute</span><span class="p">,</span> <span class="n">Reference</span><span class="p">,</span> <span class="n">Composition</span>
+<span class="kn">from</span> <span class="nn">rama.models.ivoa</span> <span class="k">import</span> <span class="n">StringQuantity</span>
+<span class="kn">from</span> <span class="nn">rama.registry</span> <span class="k">import</span> <span class="n">VO</span>
+<span class="kn">from</span> <span class="nn">rama.utils</span> <span class="k">import</span> <span class="n">Decorator</span>
+
+
+<div class="viewcode-block" id="Epoch"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.Epoch">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.Epoch&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Epoch</span><span class="p">(</span><span class="n">StringQuantity</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="Handedness"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.Handedness">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:Handedness&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Handedness</span><span class="p">(</span><span class="n">StringQuantity</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="Coordinate"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.Coordinate">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:Coordinate&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Coordinate</span><span class="p">:</span></div>
+    <span class="n">frame</span> <span class="o">=</span> <span class="n">Reference</span><span class="p">(</span><span class="s1">&#39;coords:Coordinate.frame&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="CoordValue"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.CoordValue">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:CoordValue&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">CoordValue</span><span class="p">(</span><span class="n">Coordinate</span><span class="p">):</span></div>
+    <span class="n">axis</span> <span class="o">=</span> <span class="n">Reference</span><span class="p">(</span><span class="s1">&#39;coords:CoordValue.axis&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="CompositeCoordinate"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.CompositeCoordinate">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:CompositeCoordinate&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">CompositeCoordinate</span><span class="p">(</span><span class="n">Coordinate</span><span class="p">):</span></div>
+    <span class="n">cmpt</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:CompositeCoordinate.cmpt&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="PhysicalCoordValue"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.PhysicalCoordValue">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:PhysicalCoordValue&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">PhysicalCoordValue</span><span class="p">(</span><span class="n">CoordValue</span><span class="p">):</span></div>
+    <span class="n">cval</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:PhysicalCoordValue.cval&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="BinnedCoordValue"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.BinnedCoordValue">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:BinnedCoordValue&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">BinnedCoordValue</span><span class="p">(</span><span class="n">CoordValue</span><span class="p">):</span></div>
+    <span class="n">cval</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:BinnedCoordValue.cval&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="GenericCoordValue"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.GenericCoordValue">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:GenericCoordValue&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">GenericCoordValue</span><span class="p">(</span><span class="n">PhysicalCoordValue</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="CoordFrame"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.CoordFrame">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:CoordFrame&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">CoordFrame</span><span class="p">:</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="CoordSys"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.CoordSys">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:CoordSys&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">CoordSys</span><span class="p">:</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="AstroCoordSystem"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.AstroCoordSystem">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:AstroCoordSystem&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">AstroCoordSystem</span><span class="p">(</span><span class="n">CoordSys</span><span class="p">):</span></div>
+    <span class="n">coord_frame</span> <span class="o">=</span> <span class="n">Reference</span><span class="p">(</span><span class="s1">&#39;coords:AstroCoordSystem.coordFrame&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="CoordSpace"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.CoordSpace">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:CoordSpace&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">CoordSpace</span><span class="p">:</span></div>
+    <span class="n">axis</span> <span class="o">=</span> <span class="n">Composition</span><span class="p">(</span><span class="s1">&#39;coords:CoordSpace.axis&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Axis"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.Axis">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:Axis&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Axis</span><span class="p">:</span></div>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:Axis.name&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="ContinuousAxis"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.ContinuousAxis">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:ContinuousAxis&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">ContinuousAxis</span><span class="p">(</span><span class="n">Axis</span><span class="p">):</span>
+    <span class="n">domain_min_occurs</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:ContinuousAxis.domainMin&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">domain_max_occurs</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:ContinuousAxis.domainMax&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+    <span class="n">cyclic</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:ContinuousAxis.cyclic&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="BinnedAxis"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.BinnedAxis">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:BinnedAxis&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">BinnedAxis</span><span class="p">(</span><span class="n">Axis</span><span class="p">):</span></div>
+    <span class="n">length</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:BinnedAxis.length&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="DiscreteSetAxis"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.DiscreteSetAxis">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:DiscreteSetAxis&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">DiscreteSetAxis</span><span class="p">(</span><span class="n">Axis</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="GenericCoordFrame"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.GenericCoordFrame">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:GenericCoordFrame&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">GenericCoordFrame</span><span class="p">(</span><span class="n">CoordFrame</span><span class="p">):</span>
+    <span class="n">ref_position</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:GenericCoordFrame.refPosition&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+    <span class="n">planetary_ephem</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:GenericCoordFrame.planetaryEphem&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="PixelIndex"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.PixelIndex">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.pixel.PixelIndex&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">PixelIndex</span><span class="p">(</span><span class="n">BinnedCoordValue</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="PixelCoordSystem"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.PixelCoordSystem">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.pixel.PixelCoordSystem&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">PixelCoordSystem</span><span class="p">(</span><span class="n">CoordSys</span><span class="p">):</span></div>
+    <span class="n">pixel_space</span> <span class="o">=</span> <span class="n">Composition</span><span class="p">(</span><span class="s1">&#39;coords:domain.pixel.PixelCoordSystem.pixelSpace&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="PixelSpace"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.PixelSpace">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.pixel.PixelSpace&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">PixelSpace</span><span class="p">(</span><span class="n">CoordSpace</span><span class="p">):</span></div>
+    <span class="n">handedness</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.pixel.PixelSpace.handedness&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="StdRefPosition"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.StdRefPosition">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.StdRefPosition&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">StdRefPosition</span><span class="p">(</span><span class="n">StringQuantity</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="StdRefFrame"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.StdRefFrame">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.StdRefFrame&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">StdRefFrame</span><span class="p">(</span><span class="n">StringQuantity</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="SpatialCoordValue"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.SpatialCoordValue">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.SpatialCoordValue&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">SpatialCoordValue</span><span class="p">(</span><span class="n">PhysicalCoordValue</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="RefLocation"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.RefLocation">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.RefLocation&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">RefLocation</span><span class="p">:</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="StdRefLocation"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.StdRefLocation">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.StdRefLocation&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">StdRefLocation</span><span class="p">(</span><span class="n">RefLocation</span><span class="p">):</span></div>
+    <span class="n">position</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.StdRefLocation.position&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="CustomRefLocation"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.CustomRefLocation">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.CustomRefLocation&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">CustomRefLocation</span><span class="p">(</span><span class="n">RefLocation</span><span class="p">):</span>
+    <span class="n">epoch</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.CustomRefLocation.epoch&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">position</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.CustomRefLocation.position&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+    <span class="n">velocity</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.CustomRefLocation.velocity&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="SpatialCoord"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.SpatialCoord">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.SpatialCoord&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">SpatialCoord</span><span class="p">(</span><span class="n">CompositeCoordinate</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="SpatialCoord1D"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.SpatialCoord1D">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.SpatialCoord1D&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">SpatialCoord1D</span><span class="p">(</span><span class="n">SpatialCoord</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="SpatialCoord2D"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.SpatialCoord2D">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.SpatialCoord2D&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">SpatialCoord2D</span><span class="p">(</span><span class="n">SpatialCoord</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="SpatialCoord3D"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.SpatialCoord3D">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.SpatialCoord3D&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">SpatialCoord3D</span><span class="p">(</span><span class="n">SpatialCoord</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="SkyCoord"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.SkyCoord">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.SkyCoord&#39;</span><span class="p">)</span>
+<span class="nd">@Decorator</span><span class="p">(</span><span class="n">SkyCoordDecorator</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">SkyCoord</span><span class="p">(</span><span class="n">Coordinate</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="EquatorialCoord"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.EquatorialCoord">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.EquatorialCoord&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">EquatorialCoord</span><span class="p">(</span><span class="n">SkyCoord</span><span class="p">):</span>
+    <span class="n">ra</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.EquatorialCoord.ra&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">dec</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.EquatorialCoord.dec&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.EquatorialCoord.r&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="GalacticCoord"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.GalacticCoord">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.GalacticCoord&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">GalacticCoord</span><span class="p">(</span><span class="n">SkyCoord</span><span class="p">):</span>
+    <span class="n">l</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.GalacticCoord.l&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.GalacticCoord.b&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.GalacticCoord.r&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="EclipticCoord"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.EclipticCoord">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.EclipticCoord&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">EclipticCoord</span><span class="p">(</span><span class="n">SkyCoord</span><span class="p">):</span>
+    <span class="n">elong</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.EclipticCoord.elong&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">elat</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.EclipticCoord.elat&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.EclipticCoord.r&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="CartesianCoord"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.CartesianCoord">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.CartesianCoord&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">CartesianCoord</span><span class="p">(</span><span class="n">SkyCoord</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.CartesianCoord.x&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.CartesianCoord.y&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.CartesianCoord.z&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="LongLatCoord"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.LongLatCoord">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.LongLatCoord&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">LongLatCoord</span><span class="p">(</span><span class="n">SkyCoord</span><span class="p">):</span>
+    <span class="n">long</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.LongLatCoord.long&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">lat</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.LongLatCoord.lat&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.LongLatCoord.r&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="UnitSphereCoord"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.UnitSphereCoord">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.UnitSphereCoord&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">UnitSphereCoord</span><span class="p">(</span><span class="n">SkyCoord</span><span class="p">):</span>
+    <span class="n">dircosx</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.UnitSphereCoord.dircosx&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">dircosy</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.UnitSphereCoord.dircosy&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+    <span class="n">dircosz</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.UnitSphereCoord.dircosz&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="SpaceFrame"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.SpaceFrame">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.SpaceFrame&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">SpaceFrame</span><span class="p">(</span><span class="n">CoordFrame</span><span class="p">):</span>
+    <span class="n">ref_position</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.SpaceFrame.refPosition&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">space_ref_frame</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.SpaceFrame.spaceRefFrame&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">equinox</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.SpaceFrame.equinox&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+    <span class="n">planetary_ephem</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.space.SpaceFrame.planetaryEphem&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="SpectralValue"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.SpectralValue">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.spectral.SpectralValue&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">SpectralValue</span><span class="p">(</span><span class="n">PhysicalCoordValue</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="Wavelength"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.Wavelength">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.spectral.Wavelength&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Wavelength</span><span class="p">(</span><span class="n">SpectralValue</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="Frequency"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.Frequency">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.spectral.Frequency&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Frequency</span><span class="p">(</span><span class="n">SpectralValue</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="Energy"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.Energy">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.spectral.Energy&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Energy</span><span class="p">(</span><span class="n">SpectralValue</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="TimeScale"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.TimeScale">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.time.TimeScale&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">TimeScale</span><span class="p">(</span><span class="n">StringQuantity</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="TimeOffset"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.TimeOffset">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.time.TimeOffset&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">TimeOffset</span><span class="p">(</span><span class="n">PhysicalCoordValue</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="TimeStamp"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.TimeStamp">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.time.TimeStamp&#39;</span><span class="p">)</span>
+<span class="nd">@Decorator</span><span class="p">(</span><span class="n">TimeDecorator</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">TimeStamp</span><span class="p">(</span><span class="n">Coordinate</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="ISOTime"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.ISOTime">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.time.ISOTime&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">ISOTime</span><span class="p">(</span><span class="n">TimeStamp</span><span class="p">):</span></div>
+    <span class="n">date</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.time.ISOTime.date&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="JD"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.JD">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.time.JD&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">JD</span><span class="p">(</span><span class="n">TimeStamp</span><span class="p">):</span></div>
+    <span class="n">date</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.time.JD.date&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="MJD"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.MJD">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.time.MJD&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">MJD</span><span class="p">(</span><span class="n">TimeStamp</span><span class="p">):</span></div>
+    <span class="n">date</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.time.MJD.date&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="MET"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.MET">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.time.MET&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">MET</span><span class="p">(</span><span class="n">TimeStamp</span><span class="p">):</span>
+    <span class="n">time</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.time.MET.time&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+    <span class="n">time0</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.time.MET.time0&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="TimeFrame"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.TimeFrame">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.time.TimeFrame&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">TimeFrame</span><span class="p">(</span><span class="n">CoordFrame</span><span class="p">):</span>
+    <span class="n">ref_position</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.time.TimeFrame.refPosition&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">timescale</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.time.TimeFrame.timescale&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">ref_direction</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.time.TimeFrame.refDirection&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+    <span class="n">time0</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.time.TimeFrame.time0&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="DopplerDefinition"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.DopplerDefinition">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.redshift.DopplerDefinition&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">DopplerDefinition</span><span class="p">(</span><span class="n">StringQuantity</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="RedshiftValue"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.RedshiftValue">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.redshift.RedshiftValue&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">RedshiftValue</span><span class="p">(</span><span class="n">PhysicalCoordValue</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="Redshift"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.Redshift">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.redshift.Redshift&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Redshift</span><span class="p">(</span><span class="n">RedshiftValue</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="DopplerVelocity"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.DopplerVelocity">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.redshift.DopplerVelocity&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">DopplerVelocity</span><span class="p">(</span><span class="n">RedshiftValue</span><span class="p">):</span></div>
+    <span class="n">doppler_definition</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.redshift.DopplerVelocity.dopplerDefinition&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="PolStokesEnum"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.PolStokesEnum">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.polarization.PolStokesEnum&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">PolStokesEnum</span><span class="p">(</span><span class="n">StringQuantity</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="PolCircularEnum"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.PolCircularEnum">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.polarization.PolCircularEnum&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">PolCircularEnum</span><span class="p">(</span><span class="n">StringQuantity</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="PolLinearEnum"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.PolLinearEnum">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.polarization.PolLinearEnum&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">PolLinearEnum</span><span class="p">(</span><span class="n">StringQuantity</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="PolVectorEnum"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.PolVectorEnum">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.polarization.PolVectorEnum&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">PolVectorEnum</span><span class="p">(</span><span class="n">StringQuantity</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="PolCoordValue"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.PolCoordValue">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.polarization.PolCoordValue&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">PolCoordValue</span><span class="p">(</span><span class="n">CoordValue</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="PolLinear"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.PolLinear">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.polarization.PolLinear&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">PolLinear</span><span class="p">(</span><span class="n">PolCoordValue</span><span class="p">):</span></div>
+    <span class="n">cval</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.polarization.PolLinear.cval&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="PolVector"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.PolVector">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.polarization.PolVector&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">PolVector</span><span class="p">(</span><span class="n">PolCoordValue</span><span class="p">):</span></div>
+    <span class="n">cval</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.polarization.PolVector.cval&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="PolStokes"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.PolStokes">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.polarization.PolStokes&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">PolStokes</span><span class="p">(</span><span class="n">PolCoordValue</span><span class="p">):</span></div>
+    <span class="n">cval</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.polarization.PolStokes.cval&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="PolCircular"><a class="viewcode-back" href="../../../api/rama.models.coordinates.html#rama.models.coordinates.PolCircular">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;coords:domain.polarization.PolCircular&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">PolCircular</span><span class="p">(</span><span class="n">PolCoordValue</span><span class="p">):</span></div>
+    <span class="n">cval</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;coords:domain.polarization.PolCircular.cval&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Omar Laurino.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

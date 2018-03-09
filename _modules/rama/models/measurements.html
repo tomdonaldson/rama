@@ -1,0 +1,457 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>rama.models.measurements &mdash; Rama 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="Rama 0.1 documentation" href="../../../index.html"/>
+        <link rel="up" title="rama" href="../../rama.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Rama
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Rama</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../rama.html">rama</a> &raquo;</li>
+        
+      <li>rama.models.measurements</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for rama.models.measurements</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright 2018 Smithsonian Astrophysical Observatory</span>
+<span class="c1">#</span>
+<span class="c1"># Redistribution and use in source and binary forms, with or without modification, are permitted provided that the</span>
+<span class="c1"># following conditions are met:</span>
+<span class="c1">#</span>
+<span class="c1"># 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following</span>
+<span class="c1"># disclaimer.</span>
+<span class="c1">#</span>
+<span class="c1"># 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following</span>
+<span class="c1"># disclaimer in the documentation and/or other materials provided with the distribution.</span>
+<span class="c1">#</span>
+<span class="c1"># 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote</span>
+<span class="c1"># products derived from this software without specific prior written permission.</span>
+<span class="c1">#</span>
+<span class="c1"># THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES,</span>
+<span class="c1"># INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE</span>
+<span class="c1"># DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,</span>
+<span class="c1"># SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR</span>
+<span class="c1"># SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,</span>
+<span class="c1"># WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE</span>
+<span class="c1"># OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</span>
+<span class="kn">from</span> <span class="nn">rama.framework</span> <span class="k">import</span> <span class="n">Attribute</span><span class="p">,</span> <span class="n">Composition</span>
+<span class="kn">from</span> <span class="nn">rama.registry</span> <span class="k">import</span> <span class="n">VO</span>
+
+
+<div class="viewcode-block" id="Uncertainty"><a class="viewcode-back" href="../../../api/rama.models.measurements.html#rama.cube.Uncertainty">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;meas:Uncertainty&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Uncertainty</span><span class="p">:</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="Uncertainty1D"><a class="viewcode-back" href="../../../api/rama.models.measurements.html#rama.cube.Uncertainty1D">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;meas:Uncertainty1D&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Uncertainty1D</span><span class="p">(</span><span class="n">Uncertainty</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="Uncertainty2D"><a class="viewcode-back" href="../../../api/rama.models.measurements.html#rama.cube.Uncertainty2D">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;meas:Uncertainty2D&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Uncertainty2D</span><span class="p">(</span><span class="n">Uncertainty</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="Uncertainty3D"><a class="viewcode-back" href="../../../api/rama.models.measurements.html#rama.cube.Uncertainty3D">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;meas:Uncertainty3D&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Uncertainty3D</span><span class="p">(</span><span class="n">Uncertainty</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="Symmetrical1D"><a class="viewcode-back" href="../../../api/rama.models.measurements.html#rama.cube.Symmetrical1D">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;meas:Symmetrical1D&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Symmetrical1D</span><span class="p">(</span><span class="n">Uncertainty1D</span><span class="p">):</span></div>
+    <span class="n">radius</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Symmetrical1D.radius&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Asymmetrical1D"><a class="viewcode-back" href="../../../api/rama.models.measurements.html#rama.cube.Asymmetrical1D">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;meas:Asymmetrical1D&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Asymmetrical1D</span><span class="p">(</span><span class="n">Uncertainty1D</span><span class="p">):</span>
+    <span class="n">plus</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Asymmetrical1D.plus&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+    <span class="n">minus</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Asymmetrical1D.minus&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Bounds1D"><a class="viewcode-back" href="../../../api/rama.models.measurements.html#rama.cube.Bounds1D">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;meas:Bounds1D&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Bounds1D</span><span class="p">(</span><span class="n">Uncertainty1D</span><span class="p">):</span>
+    <span class="n">lo_limit</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Bounds1D.loLimit&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+    <span class="n">hi_limit</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Bounds1D.hiLimit&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Symmetrical2D"><a class="viewcode-back" href="../../../api/rama.models.measurements.html#rama.cube.Symmetrical2D">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;meas:Symmetrical2D&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Symmetrical2D</span><span class="p">(</span><span class="n">Uncertainty2D</span><span class="p">):</span></div>
+    <span class="n">radius</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Symmetrical2D.radius&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Asymmetrical2D"><a class="viewcode-back" href="../../../api/rama.models.measurements.html#rama.cube.Asymmetrical2D">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;meas:Asymmetrical2D&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Asymmetrical2D</span><span class="p">(</span><span class="n">Uncertainty2D</span><span class="p">):</span>
+    <span class="n">plus</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Asymmetrical2D.plus&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span></div>
+    <span class="n">minus</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Asymmetrical2D.minus&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Bounds2D"><a class="viewcode-back" href="../../../api/rama.models.measurements.html#rama.cube.Bounds2D">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;meas:Bounds2D&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Bounds2D</span><span class="p">(</span><span class="n">Uncertainty2D</span><span class="p">):</span>
+    <span class="n">lo_limit</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Bounds2D.loLimit&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span></div>
+    <span class="n">hi_limit</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Bounds2D.hiLimit&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Symmetrical3D"><a class="viewcode-back" href="../../../api/rama.models.measurements.html#rama.cube.Symmetrical3D">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;meas:Symmetrical3D&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Symmetrical3D</span><span class="p">(</span><span class="n">Uncertainty3D</span><span class="p">):</span></div>
+    <span class="n">radius</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Symmetrical3D.radius&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Asymmetrical3D"><a class="viewcode-back" href="../../../api/rama.models.measurements.html#rama.cube.Asymmetrical3D">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;meas:Asymmetrical3D&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Asymmetrical3D</span><span class="p">(</span><span class="n">Uncertainty3D</span><span class="p">):</span>
+    <span class="n">plus</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Asymmetrical3D.plus&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span></div>
+    <span class="n">minus</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Asymmetrical3D.minus&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Bounds3D"><a class="viewcode-back" href="../../../api/rama.models.measurements.html#rama.cube.Bounds3D">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;meas:Bounds3D&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Bounds3D</span><span class="p">(</span><span class="n">Uncertainty3D</span><span class="p">):</span>
+    <span class="n">lo_limit</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Bounds3D.loLimit&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span></div>
+    <span class="n">hi_limit</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Bounds3D.hiLimit&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Ellipse"><a class="viewcode-back" href="../../../api/rama.models.measurements.html#rama.cube.Ellipse">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;meas:Ellipse&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Ellipse</span><span class="p">(</span><span class="n">Uncertainty2D</span><span class="p">):</span>
+    <span class="n">semi_axis</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Ellipse.semiAxis&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span></div>
+    <span class="n">pos_angle</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Ellipse.posAngle&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Ellipsoid"><a class="viewcode-back" href="../../../api/rama.models.measurements.html#rama.cube.Ellipsoid">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;meas:Ellipsoid&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Ellipsoid</span><span class="p">(</span><span class="n">Uncertainty3D</span><span class="p">):</span>
+    <span class="n">semi_axis</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Ellipsoid.semiAxis&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span></div>
+    <span class="n">pos_angle</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Ellipsoid.posAngle&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Matrix"><a class="viewcode-back" href="../../../api/rama.models.measurements.html#rama.cube.Matrix">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;meas:Matrix&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Matrix</span><span class="p">:</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="Matrix2x2"><a class="viewcode-back" href="../../../api/rama.models.measurements.html#rama.cube.Matrix2x2">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;meas:Matrix2x2&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Matrix2x2</span><span class="p">(</span><span class="n">Matrix</span><span class="p">):</span>
+    <span class="n">m11</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Matrix2x2.m11&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">m12</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Matrix2x2.m12&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">m21</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Matrix2x2.m21&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+    <span class="n">m22</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Matrix2x2.m22&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Matrix3x3"><a class="viewcode-back" href="../../../api/rama.models.measurements.html#rama.cube.Matrix3x3">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;meas:Matrix3x3&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Matrix3x3</span><span class="p">(</span><span class="n">Matrix</span><span class="p">):</span>
+    <span class="n">m11</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Matrix3x3.m11&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">m12</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Matrix3x3.m12&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">m13</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Matrix3x3.m13&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">m21</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Matrix3x3.m21&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">m22</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Matrix3x3.m22&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">m23</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Matrix3x3.m23&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">m31</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Matrix3x3.m31&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">m32</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Matrix3x3.m32&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+    <span class="n">m33</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Matrix3x3.m33&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="CovarianceMatrix2D"><a class="viewcode-back" href="../../../api/rama.models.measurements.html#rama.cube.CovarianceMatrix2D">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;meas:CovarianceMatrix2D&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">CovarianceMatrix2D</span><span class="p">(</span><span class="n">Uncertainty2D</span><span class="p">):</span></div>
+    <span class="n">matrix</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:CovarianceMatrix2D.matrix&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="CovarianceMatrix3D"><a class="viewcode-back" href="../../../api/rama.models.measurements.html#rama.cube.CovarianceMatrix3D">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;meas:CovarianceMatrix3D&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">CovarianceMatrix3D</span><span class="p">(</span><span class="n">Uncertainty3D</span><span class="p">):</span></div>
+    <span class="n">matrix</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:CovarianceMatrix3D.matrix&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Error"><a class="viewcode-back" href="../../../api/rama.models.measurements.html#rama.cube.Error">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;meas:Error&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Error</span><span class="p">:</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="Error1D"><a class="viewcode-back" href="../../../api/rama.models.measurements.html#rama.cube.Error1D">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;meas:Error1D&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Error1D</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
+    <span class="n">stat_error</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Error1D.statError&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">sys_error</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Error1D.sysError&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+    <span class="n">ran_error</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Error1D.ranError&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Error2D"><a class="viewcode-back" href="../../../api/rama.models.measurements.html#rama.cube.Error2D">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;meas:Error2D&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Error2D</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
+    <span class="n">stat_error</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Error2D.statError&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">sys_error</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Error2D.sysError&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+    <span class="n">ran_error</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Error2D.ranError&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Error3D"><a class="viewcode-back" href="../../../api/rama.models.measurements.html#rama.cube.Error3D">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;meas:Error3D&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Error3D</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
+    <span class="n">stat_error</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Error3D.statError&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">sys_error</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Error3D.sysError&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+    <span class="n">ran_error</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Error3D.ranError&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Measure"><a class="viewcode-back" href="../../../api/rama.models.measurements.html#rama.cube.Measure">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;meas:Measure&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Measure</span><span class="p">:</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="CoordMeasure"><a class="viewcode-back" href="../../../api/rama.models.measurements.html#rama.cube.CoordMeasure">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;meas:CoordMeasure&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">CoordMeasure</span><span class="p">(</span><span class="n">Measure</span><span class="p">):</span>
+    <span class="n">coord</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:CoordMeasure.coord&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+    <span class="n">error</span> <span class="o">=</span> <span class="n">Composition</span><span class="p">(</span><span class="s1">&#39;meas:CoordMeasure.error&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="GenericCoordMeasure"><a class="viewcode-back" href="../../../api/rama.models.measurements.html#rama.cube.GenericCoordMeasure">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;meas:GenericCoordMeasure&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">GenericCoordMeasure</span><span class="p">(</span><span class="n">CoordMeasure</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="Position"><a class="viewcode-back" href="../../../api/rama.models.measurements.html#rama.cube.Position">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;meas:Position&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Position</span><span class="p">(</span><span class="n">CoordMeasure</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="Position1D"><a class="viewcode-back" href="../../../api/rama.models.measurements.html#rama.cube.Position1D">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;meas:Position1D&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Position1D</span><span class="p">(</span><span class="n">Position</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="Position2D"><a class="viewcode-back" href="../../../api/rama.models.measurements.html#rama.cube.Position2D">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;meas:Position2D&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Position2D</span><span class="p">(</span><span class="n">Position</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="Position3D"><a class="viewcode-back" href="../../../api/rama.models.measurements.html#rama.cube.Position3D">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;meas:Position3D&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Position3D</span><span class="p">(</span><span class="n">Position</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="SpectralCoordMeasure"><a class="viewcode-back" href="../../../api/rama.models.measurements.html#rama.cube.SpectralCoordMeasure">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;meas:SpectralCoordMeasure&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">SpectralCoordMeasure</span><span class="p">(</span><span class="n">CoordMeasure</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="TimeMeasure"><a class="viewcode-back" href="../../../api/rama.models.measurements.html#rama.cube.TimeMeasure">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;meas:TimeMeasure&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">TimeMeasure</span><span class="p">(</span><span class="n">CoordMeasure</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="Polarization"><a class="viewcode-back" href="../../../api/rama.models.measurements.html#rama.cube.Polarization">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;meas:Polarization&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Polarization</span><span class="p">(</span><span class="n">Measure</span><span class="p">):</span></div>
+    <span class="n">coord</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;meas:Polarization.coord&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="RedshiftCoordMeasure"><a class="viewcode-back" href="../../../api/rama.models.measurements.html#rama.cube.RedshiftCoordMeasure">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;meas:RedshiftCoordMeasure&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">RedshiftCoordMeasure</span><span class="p">(</span><span class="n">CoordMeasure</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="SkyPosition"><a class="viewcode-back" href="../../../api/rama.models.measurements.html#rama.cube.SkyPosition">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;meas:SkyPosition&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">SkyPosition</span><span class="p">(</span><span class="n">Position</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="GenTimeMeasure"><a class="viewcode-back" href="../../../api/rama.models.measurements.html#rama.cube.GenTimeMeasure">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;meas:GenTimeMeasure&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">GenTimeMeasure</span><span class="p">(</span><span class="n">TimeMeasure</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="StdTimeMeasure"><a class="viewcode-back" href="../../../api/rama.models.measurements.html#rama.cube.StdTimeMeasure">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;meas:StdTimeMeasure&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">StdTimeMeasure</span><span class="p">(</span><span class="n">TimeMeasure</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Omar Laurino.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

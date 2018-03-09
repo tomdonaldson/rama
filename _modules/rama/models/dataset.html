@@ -1,0 +1,433 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>rama.models.dataset &mdash; Rama 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="Rama 0.1 documentation" href="../../../index.html"/>
+        <link rel="up" title="rama" href="../../rama.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Rama
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Rama</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../rama.html">rama</a> &raquo;</li>
+        
+      <li>rama.models.dataset</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for rama.models.dataset</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright 2018 Smithsonian Astrophysical Observatory</span>
+<span class="c1">#</span>
+<span class="c1"># Redistribution and use in source and binary forms, with or without modification, are permitted provided that the</span>
+<span class="c1"># following conditions are met:</span>
+<span class="c1">#</span>
+<span class="c1"># 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following</span>
+<span class="c1"># disclaimer.</span>
+<span class="c1">#</span>
+<span class="c1"># 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following</span>
+<span class="c1"># disclaimer in the documentation and/or other materials provided with the distribution.</span>
+<span class="c1">#</span>
+<span class="c1"># 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote</span>
+<span class="c1"># products derived from this software without specific prior written permission.</span>
+<span class="c1">#</span>
+<span class="c1"># THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES,</span>
+<span class="c1"># INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE</span>
+<span class="c1"># DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,</span>
+<span class="c1"># SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR</span>
+<span class="c1"># SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,</span>
+<span class="c1"># WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE</span>
+<span class="c1"># OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</span>
+<span class="kn">from</span> <span class="nn">rama.framework</span> <span class="k">import</span> <span class="n">Attribute</span><span class="p">,</span> <span class="n">Reference</span><span class="p">,</span> <span class="n">Composition</span>
+<span class="kn">from</span> <span class="nn">rama.models.ivoa</span> <span class="k">import</span> <span class="n">StringQuantity</span>
+<span class="kn">from</span> <span class="nn">rama.registry</span> <span class="k">import</span> <span class="n">VO</span>
+
+
+<div class="viewcode-block" id="Observation"><a class="viewcode-back" href="../../../api/rama.models.dataset.html#rama.models.dataset.Observation">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;ds:experiment.Observation&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Observation</span><span class="p">:</span>
+    <span class="n">observation_i_d</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:experiment.Observation.observationID&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">obs_config</span> <span class="o">=</span> <span class="n">Composition</span><span class="p">(</span><span class="s1">&#39;ds:experiment.Observation.obsConfig&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">Composition</span><span class="p">(</span><span class="s1">&#39;ds:experiment.Observation.result&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="n">Composition</span><span class="p">(</span><span class="s1">&#39;ds:experiment.Observation.target&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+    <span class="n">proposal</span> <span class="o">=</span> <span class="n">Composition</span><span class="p">(</span><span class="s1">&#39;ds:experiment.Observation.proposal&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="ObsConfig"><a class="viewcode-back" href="../../../api/rama.models.dataset.html#rama.models.dataset.ObsConfig">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;ds:experiment.ObsConfig&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">ObsConfig</span><span class="p">:</span>
+    <span class="n">bandpass</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:experiment.ObsConfig.bandpass&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">datasource</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:experiment.ObsConfig.datasource&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">facility</span> <span class="o">=</span> <span class="n">Composition</span><span class="p">(</span><span class="s1">&#39;ds:experiment.ObsConfig.facility&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+    <span class="n">instrument</span> <span class="o">=</span> <span class="n">Composition</span><span class="p">(</span><span class="s1">&#39;ds:experiment.ObsConfig.instrument&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="BaseTarget"><a class="viewcode-back" href="../../../api/rama.models.dataset.html#rama.models.dataset.BaseTarget">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;ds:experiment.BaseTarget&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">BaseTarget</span><span class="p">:</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:experiment.BaseTarget.name&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:experiment.BaseTarget.description&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+    <span class="n">position</span> <span class="o">=</span> <span class="n">Reference</span><span class="p">(</span><span class="s1">&#39;ds:experiment.BaseTarget.position&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Target"><a class="viewcode-back" href="../../../api/rama.models.dataset.html#rama.models.dataset.Target">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;ds:experiment.Target&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Target</span><span class="p">(</span><span class="n">BaseTarget</span><span class="p">):</span></div>
+    <span class="n">object_class</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:experiment.Target.objectClass&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="AstroTarget"><a class="viewcode-back" href="../../../api/rama.models.dataset.html#rama.models.dataset.AstroTarget">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;ds:experiment.AstroTarget&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">AstroTarget</span><span class="p">(</span><span class="n">BaseTarget</span><span class="p">):</span>
+    <span class="n">object_class</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:experiment.AstroTarget.objectClass&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">spectral_class</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:experiment.AstroTarget.spectralClass&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">redshift</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:experiment.AstroTarget.redshift&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+    <span class="n">var_ampl</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:experiment.AstroTarget.varAmpl&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Instrument"><a class="viewcode-back" href="../../../api/rama.models.dataset.html#rama.models.dataset.Instrument">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;ds:experiment.Instrument&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Instrument</span><span class="p">:</span></div>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:experiment.Instrument.name&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Proposal"><a class="viewcode-back" href="../../../api/rama.models.dataset.html#rama.models.dataset.Proposal">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;ds:experiment.Proposal&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Proposal</span><span class="p">:</span></div>
+    <span class="n">identifier</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:experiment.Proposal.identifier&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Derived"><a class="viewcode-back" href="../../../api/rama.models.dataset.html#rama.models.dataset.Derived">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;ds:experiment.Derived&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Derived</span><span class="p">:</span></div>
+    <span class="n">derived_element</span> <span class="o">=</span> <span class="n">Composition</span><span class="p">(</span><span class="s1">&#39;ds:experiment.Derived.derivedElement&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Dataset"><a class="viewcode-back" href="../../../api/rama.models.dataset.html#rama.models.dataset.Dataset">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;ds:dataset.Dataset&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Dataset</span><span class="p">:</span>
+    <span class="n">data_product_type</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:dataset.Dataset.dataProductType&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">data_product_subtype</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:dataset.Dataset.dataProductSubtype&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">curation</span> <span class="o">=</span> <span class="n">Composition</span><span class="p">(</span><span class="s1">&#39;ds:dataset.Dataset.curation&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+    <span class="n">data_id</span> <span class="o">=</span> <span class="n">Composition</span><span class="p">(</span><span class="s1">&#39;ds:dataset.Dataset.dataID&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="ObsDataset"><a class="viewcode-back" href="../../../api/rama.models.dataset.html#rama.models.dataset.ObsDataset">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;ds:experiment.ObsDataset&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">ObsDataset</span><span class="p">(</span><span class="n">Dataset</span><span class="p">):</span>
+    <span class="n">calib_level</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:experiment.ObsDataset.calibLevel&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">derived</span> <span class="o">=</span> <span class="n">Composition</span><span class="p">(</span><span class="s1">&#39;ds:experiment.ObsDataset.derived&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="n">Reference</span><span class="p">(</span><span class="s1">&#39;ds:experiment.ObsDataset.target&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">proposal</span> <span class="o">=</span> <span class="n">Reference</span><span class="p">(</span><span class="s1">&#39;ds:experiment.ObsDataset.proposal&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+    <span class="n">obs_config</span> <span class="o">=</span> <span class="n">Reference</span><span class="p">(</span><span class="s1">&#39;ds:experiment.ObsDataset.obsConfig&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="DerivedElement"><a class="viewcode-back" href="../../../api/rama.models.dataset.html#rama.models.dataset.DerivedElement">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;ds:experiment.DerivedElement&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">DerivedElement</span><span class="p">:</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="DerivedScalar"><a class="viewcode-back" href="../../../api/rama.models.dataset.html#rama.models.dataset.DerivedScalar">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;ds:experiment.DerivedScalar&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">DerivedScalar</span><span class="p">(</span><span class="n">DerivedElement</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:experiment.DerivedScalar.name&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:experiment.DerivedScalar.value&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="DataProductType"><a class="viewcode-back" href="../../../api/rama.models.dataset.html#rama.models.dataset.DataProductType">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;ds:dataset.DataProductType&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">DataProductType</span><span class="p">(</span><span class="n">StringQuantity</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="CreationType"><a class="viewcode-back" href="../../../api/rama.models.dataset.html#rama.models.dataset.CreationType">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;ds:dataset.CreationType&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">CreationType</span><span class="p">(</span><span class="n">StringQuantity</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="RightsType"><a class="viewcode-back" href="../../../api/rama.models.dataset.html#rama.models.dataset.RightsType">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;ds:dataset.RightsType&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">RightsType</span><span class="p">(</span><span class="n">StringQuantity</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="SpectralBandType"><a class="viewcode-back" href="../../../api/rama.models.dataset.html#rama.models.dataset.SpectralBandType">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;ds:dataset.SpectralBandType&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">SpectralBandType</span><span class="p">(</span><span class="n">StringQuantity</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="DataModel"><a class="viewcode-back" href="../../../api/rama.models.dataset.html#rama.models.dataset.DataModel">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;ds:dataset.DataModel&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">DataModel</span><span class="p">:</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:dataset.DataModel.name&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">prefix</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:dataset.DataModel.prefix&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+    <span class="n">u_r_l</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:dataset.DataModel.URL&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="DataID"><a class="viewcode-back" href="../../../api/rama.models.dataset.html#rama.models.dataset.DataID">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;ds:dataset.DataID&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">DataID</span><span class="p">:</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:dataset.DataID.title&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">dataset_i_d</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:dataset.DataID.datasetID&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">creator_d_i_d</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:dataset.DataID.creatorDID&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:dataset.DataID.version&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">date</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:dataset.DataID.date&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">creation_type</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:dataset.DataID.creationType&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">creator</span> <span class="o">=</span> <span class="n">Composition</span><span class="p">(</span><span class="s1">&#39;ds:dataset.DataID.creator&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">contributor</span> <span class="o">=</span> <span class="n">Composition</span><span class="p">(</span><span class="s1">&#39;ds:dataset.DataID.contributor&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span></div>
+    <span class="n">collection</span> <span class="o">=</span> <span class="n">Composition</span><span class="p">(</span><span class="s1">&#39;ds:dataset.DataID.collection&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Curation"><a class="viewcode-back" href="../../../api/rama.models.dataset.html#rama.models.dataset.Curation">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;ds:dataset.Curation&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Curation</span><span class="p">:</span>
+    <span class="n">publisher_d_i_d</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:dataset.Curation.publisherDID&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:dataset.Curation.version&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">release_date</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:dataset.Curation.releaseDate&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">rights</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:dataset.Curation.rights&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">publisher</span> <span class="o">=</span> <span class="n">Composition</span><span class="p">(</span><span class="s1">&#39;ds:dataset.Curation.publisher&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">contact</span> <span class="o">=</span> <span class="n">Composition</span><span class="p">(</span><span class="s1">&#39;ds:dataset.Curation.contact&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+    <span class="n">reference</span> <span class="o">=</span> <span class="n">Composition</span><span class="p">(</span><span class="s1">&#39;ds:dataset.Curation.reference&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Role"><a class="viewcode-back" href="../../../api/rama.models.dataset.html#rama.models.dataset.Role">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;ds:party.Role&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Role</span><span class="p">:</span></div>
+    <span class="n">party</span> <span class="o">=</span> <span class="n">Reference</span><span class="p">(</span><span class="s1">&#39;ds:party.Role.party&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Facility"><a class="viewcode-back" href="../../../api/rama.models.dataset.html#rama.models.dataset.Facility">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;ds:experiment.Facility&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Facility</span><span class="p">(</span><span class="n">Role</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="Publisher"><a class="viewcode-back" href="../../../api/rama.models.dataset.html#rama.models.dataset.Publisher">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;ds:dataset.Publisher&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Publisher</span><span class="p">(</span><span class="n">Role</span><span class="p">):</span></div>
+    <span class="n">publisher_i_d</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:dataset.Publisher.publisherID&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Contact"><a class="viewcode-back" href="../../../api/rama.models.dataset.html#rama.models.dataset.Contact">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;ds:dataset.Contact&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Contact</span><span class="p">(</span><span class="n">Role</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="Creator"><a class="viewcode-back" href="../../../api/rama.models.dataset.html#rama.models.dataset.Creator">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;ds:dataset.Creator&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Creator</span><span class="p">(</span><span class="n">Role</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="Contributor"><a class="viewcode-back" href="../../../api/rama.models.dataset.html#rama.models.dataset.Contributor">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;ds:dataset.Contributor&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Contributor</span><span class="p">(</span><span class="n">Role</span><span class="p">):</span></div>
+    <span class="n">acknowledgment</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:dataset.Contributor.acknowledgment&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Publication"><a class="viewcode-back" href="../../../api/rama.models.dataset.html#rama.models.dataset.Publication">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;ds:dataset.Publication&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Publication</span><span class="p">:</span></div>
+    <span class="n">ref_code</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:dataset.Publication.refCode&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Collection"><a class="viewcode-back" href="../../../api/rama.models.dataset.html#rama.models.dataset.Collection">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;ds:dataset.Collection&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Collection</span><span class="p">:</span></div>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:dataset.Collection.name&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Party"><a class="viewcode-back" href="../../../api/rama.models.dataset.html#rama.models.dataset.Party">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;ds:party.Party&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Party</span><span class="p">:</span></div>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:party.Party.name&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Individual"><a class="viewcode-back" href="../../../api/rama.models.dataset.html#rama.models.dataset.Individual">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;ds:party.Individual&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Individual</span><span class="p">(</span><span class="n">Party</span><span class="p">):</span>
+    <span class="n">address</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:party.Individual.address&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">phone</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:party.Individual.phone&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:party.Individual.email&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Organization"><a class="viewcode-back" href="../../../api/rama.models.dataset.html#rama.models.dataset.Organization">[docs]</a><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;ds:party.Organization&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Organization</span><span class="p">(</span><span class="n">Party</span><span class="p">):</span>
+    <span class="n">address</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:party.Organization.address&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">phone</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:party.Organization.phone&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:party.Organization.email&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+    <span class="n">logo</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s1">&#39;ds:party.Organization.logo&#39;</span><span class="p">,</span> <span class="n">min_occurs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_occurs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Omar Laurino.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

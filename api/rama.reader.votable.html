@@ -1,0 +1,420 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>rama.reader.votable package &mdash; Rama 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Rama 0.1 documentation" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Rama
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">rama.reader.votable package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-rama.reader.votable.parser">rama.reader.votable.parser module</a></li>
+<li><a class="reference internal" href="#module-rama.reader.votable.utils">rama.reader.votable.utils module</a></li>
+<li><a class="reference internal" href="#module-rama.reader.votable">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Rama</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>rama.reader.votable package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/rama.reader.votable.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rama-reader-votable-package">
+<h1>rama.reader.votable package<a class="headerlink" href="#rama-reader-votable-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-rama.reader.votable.parser">
+<span id="rama-reader-votable-parser-module"></span><h2>rama.reader.votable.parser module<a class="headerlink" href="#module-rama.reader.votable.parser" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="rama.reader.votable.parser.AttributeElement">
+<em class="property">class </em><code class="descclassname">rama.reader.votable.parser.</code><code class="descname">AttributeElement</code><span class="sig-paren">(</span><em>xml_element</em>, <em>field_object</em>, <em>context</em>, <em>parser</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rama/reader/votable/parser.html#AttributeElement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rama.reader.votable.parser.AttributeElement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rama.reader.votable.parser.ElementWithInstances" title="rama.reader.votable.parser.ElementWithInstances"><code class="xref py py-class docutils literal notranslate"><span class="pre">rama.reader.votable.parser.ElementWithInstances</span></code></a></p>
+<dl class="attribute">
+<dt id="rama.reader.votable.parser.AttributeElement.TAG_NAME">
+<code class="descname">TAG_NAME</code><em class="property"> = 'ATTRIBUTE'</em><a class="headerlink" href="#rama.reader.votable.parser.AttributeElement.TAG_NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rama.reader.votable.parser.AttributeElement.all">
+<code class="descname">all</code><a class="headerlink" href="#rama.reader.votable.parser.AttributeElement.all" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rama.reader.votable.parser.AttributeElement.columns">
+<code class="descname">columns</code><a class="headerlink" href="#rama.reader.votable.parser.AttributeElement.columns" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rama.reader.votable.parser.AttributeElement.constants">
+<code class="descname">constants</code><a class="headerlink" href="#rama.reader.votable.parser.AttributeElement.constants" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rama.reader.votable.parser.CompositionElement">
+<em class="property">class </em><code class="descclassname">rama.reader.votable.parser.</code><code class="descname">CompositionElement</code><span class="sig-paren">(</span><em>xml_element</em>, <em>field_object</em>, <em>context</em>, <em>parser</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rama/reader/votable/parser.html#CompositionElement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rama.reader.votable.parser.CompositionElement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rama.reader.votable.parser.ElementWithInstances" title="rama.reader.votable.parser.ElementWithInstances"><code class="xref py py-class docutils literal notranslate"><span class="pre">rama.reader.votable.parser.ElementWithInstances</span></code></a></p>
+<dl class="attribute">
+<dt id="rama.reader.votable.parser.CompositionElement.TAG_NAME">
+<code class="descname">TAG_NAME</code><em class="property"> = 'COMPOSITION'</em><a class="headerlink" href="#rama.reader.votable.parser.CompositionElement.TAG_NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rama.reader.votable.parser.CompositionElement.all">
+<code class="descname">all</code><a class="headerlink" href="#rama.reader.votable.parser.CompositionElement.all" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rama.reader.votable.parser.Element">
+<em class="property">class </em><code class="descclassname">rama.reader.votable.parser.</code><code class="descname">Element</code><span class="sig-paren">(</span><em>xml_element</em>, <em>field_object</em>, <em>context</em>, <em>parser</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rama/reader/votable/parser.html#Element"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rama.reader.votable.parser.Element" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="rama.reader.votable.parser.Element.TAG_NAME">
+<code class="descname">TAG_NAME</code><em class="property"> = None</em><a class="headerlink" href="#rama.reader.votable.parser.Element.TAG_NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rama.reader.votable.parser.Element.select_return_value">
+<code class="descname">select_return_value</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rama/reader/votable/parser.html#Element.select_return_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rama.reader.votable.parser.Element.select_return_value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rama.reader.votable.parser.ElementWithInstances">
+<em class="property">class </em><code class="descclassname">rama.reader.votable.parser.</code><code class="descname">ElementWithInstances</code><span class="sig-paren">(</span><em>xml_element</em>, <em>field_object</em>, <em>context</em>, <em>parser</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rama/reader/votable/parser.html#ElementWithInstances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rama.reader.votable.parser.ElementWithInstances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rama.reader.votable.parser.Element" title="rama.reader.votable.parser.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">rama.reader.votable.parser.Element</span></code></a></p>
+<dl class="attribute">
+<dt id="rama.reader.votable.parser.ElementWithInstances.structured_instances">
+<code class="descname">structured_instances</code><a class="headerlink" href="#rama.reader.votable.parser.ElementWithInstances.structured_instances" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rama.reader.votable.parser.Parser">
+<em class="property">class </em><code class="descclassname">rama.reader.votable.parser.</code><code class="descname">Parser</code><span class="sig-paren">(</span><em>votable_file</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rama/reader/votable/parser.html#Parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rama.reader.votable.parser.Parser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="rama.reader.votable.parser.Parser.find">
+<code class="descname">find</code><span class="sig-paren">(</span><em>element_class</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rama/reader/votable/parser.html#Parser.find"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rama.reader.votable.parser.Parser.find" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rama.reader.votable.parser.Parser.find_instances">
+<code class="descname">find_instances</code><span class="sig-paren">(</span><em>element_class</em>, <em>context</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rama/reader/votable/parser.html#Parser.find_instances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rama.reader.votable.parser.Parser.find_instances" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rama.reader.votable.parser.Parser.make">
+<code class="descname">make</code><span class="sig-paren">(</span><em>instance_class</em>, <em>xml_element</em>, <em>context</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rama/reader/votable/parser.html#Parser.make"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rama.reader.votable.parser.Parser.make" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rama.reader.votable.parser.Parser.parse_attributes">
+<code class="descname">parse_attributes</code><span class="sig-paren">(</span><em>xml_element</em>, <em>field_object</em>, <em>context</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rama/reader/votable/parser.html#Parser.parse_attributes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rama.reader.votable.parser.Parser.parse_attributes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rama.reader.votable.parser.Parser.parse_composed_instances">
+<code class="descname">parse_composed_instances</code><span class="sig-paren">(</span><em>xml_element</em>, <em>field_object</em>, <em>context</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rama/reader/votable/parser.html#Parser.parse_composed_instances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rama.reader.votable.parser.Parser.parse_composed_instances" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rama.reader.votable.parser.Parser.parse_references">
+<code class="descname">parse_references</code><span class="sig-paren">(</span><em>xml_element</em>, <em>field_object</em>, <em>context</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rama/reader/votable/parser.html#Parser.parse_references"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rama.reader.votable.parser.Parser.parse_references" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rama.reader.votable.parser.Parser.read_instance">
+<code class="descname">read_instance</code><span class="sig-paren">(</span><em>xml_element</em>, <em>context</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rama/reader/votable/parser.html#Parser.read_instance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rama.reader.votable.parser.Parser.read_instance" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rama.reader.votable.parser.ReferenceElement">
+<em class="property">class </em><code class="descclassname">rama.reader.votable.parser.</code><code class="descname">ReferenceElement</code><span class="sig-paren">(</span><em>xml_element</em>, <em>field_object</em>, <em>context</em>, <em>parser</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rama/reader/votable/parser.html#ReferenceElement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rama.reader.votable.parser.ReferenceElement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rama.reader.votable.parser.Element" title="rama.reader.votable.parser.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">rama.reader.votable.parser.Element</span></code></a></p>
+<dl class="attribute">
+<dt id="rama.reader.votable.parser.ReferenceElement.TAG_NAME">
+<code class="descname">TAG_NAME</code><em class="property"> = 'REFERENCE'</em><a class="headerlink" href="#rama.reader.votable.parser.ReferenceElement.TAG_NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rama.reader.votable.parser.ReferenceElement.all">
+<code class="descname">all</code><a class="headerlink" href="#rama.reader.votable.parser.ReferenceElement.all" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rama.reader.votable.parser.ReferenceElement.idref_instances">
+<code class="descname">idref_instances</code><a class="headerlink" href="#rama.reader.votable.parser.ReferenceElement.idref_instances" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rama.reader.votable.parser.Votable">
+<em class="property">class </em><code class="descclassname">rama.reader.votable.parser.</code><code class="descname">Votable</code><span class="sig-paren">(</span><em>xml</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rama/reader/votable/parser.html#Votable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rama.reader.votable.parser.Votable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="rama.reader.html#rama.reader.Document" title="rama.reader.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">rama.reader.Document</span></code></a></p>
+<dl class="method">
+<dt id="rama.reader.votable.parser.Votable.find_instances">
+<code class="descname">find_instances</code><span class="sig-paren">(</span><em>element_class</em>, <em>context</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rama/reader/votable/parser.html#Votable.find_instances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rama.reader.votable.parser.Votable.find_instances" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-rama.reader.votable.utils">
+<span id="rama-reader-votable-utils-module"></span><h2>rama.reader.votable.utils module<a class="headerlink" href="#module-rama.reader.votable.utils" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="rama.reader.votable.utils.find_element_for_role">
+<code class="descclassname">rama.reader.votable.utils.</code><code class="descname">find_element_for_role</code><span class="sig-paren">(</span><em>xml_element</em>, <em>tag_name</em>, <em>role_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rama/reader/votable/utils.html#find_element_for_role"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rama.reader.votable.utils.find_element_for_role" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="rama.reader.votable.utils.get_child_selector">
+<code class="descclassname">rama.reader.votable.utils.</code><code class="descname">get_child_selector</code><span class="sig-paren">(</span><em>tag_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rama/reader/votable/utils.html#get_child_selector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rama.reader.votable.utils.get_child_selector" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="rama.reader.votable.utils.get_children">
+<code class="descclassname">rama.reader.votable.utils.</code><code class="descname">get_children</code><span class="sig-paren">(</span><em>element</em>, <em>child_tag_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rama/reader/votable/utils.html#get_children"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rama.reader.votable.utils.get_children" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="rama.reader.votable.utils.get_local_name">
+<code class="descclassname">rama.reader.votable.utils.</code><code class="descname">get_local_name</code><span class="sig-paren">(</span><em>tag_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rama/reader/votable/utils.html#get_local_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rama.reader.votable.utils.get_local_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="rama.reader.votable.utils.get_role_xpath_expression">
+<code class="descclassname">rama.reader.votable.utils.</code><code class="descname">get_role_xpath_expression</code><span class="sig-paren">(</span><em>tag_name</em>, <em>role_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rama/reader/votable/utils.html#get_role_xpath_expression"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rama.reader.votable.utils.get_role_xpath_expression" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="rama.reader.votable.utils.get_type_xpath_expression">
+<code class="descclassname">rama.reader.votable.utils.</code><code class="descname">get_type_xpath_expression</code><span class="sig-paren">(</span><em>tag_name</em>, <em>type_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rama/reader/votable/utils.html#get_type_xpath_expression"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rama.reader.votable.utils.get_type_xpath_expression" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="rama.reader.votable.utils.resolve_id">
+<code class="descclassname">rama.reader.votable.utils.</code><code class="descname">resolve_id</code><span class="sig-paren">(</span><em>xml_element</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rama/reader/votable/utils.html#resolve_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rama.reader.votable.utils.resolve_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="rama.reader.votable.utils.resolve_type">
+<code class="descclassname">rama.reader.votable.utils.</code><code class="descname">resolve_type</code><span class="sig-paren">(</span><em>xml_element</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rama/reader/votable/utils.html#resolve_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rama.reader.votable.utils.resolve_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-rama.reader.votable">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-rama.reader.votable" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Omar Laurino.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

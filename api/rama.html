@@ -1,0 +1,468 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>rama package &mdash; Rama 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Rama 0.1 documentation" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Rama
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">rama package</a><ul>
+<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-rama.astropy">rama.astropy module</a></li>
+<li><a class="reference internal" href="#rama-conftest-module">rama.conftest module</a></li>
+<li><a class="reference internal" href="#module-rama.cube">rama.cube module</a></li>
+<li><a class="reference internal" href="#module-rama.registry">rama.registry module</a></li>
+<li><a class="reference internal" href="#module-rama">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Rama</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>rama package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/rama.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rama-package">
+<h1>rama package<a class="headerlink" href="#rama-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rama.framework.html">rama.framework package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rama.framework.html#module-rama.framework">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rama.models.html">rama.models package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rama.models.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rama.models.coordinates.html">rama.models.coordinates package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rama.models.coordinates.html#module-rama.models.coordinates">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rama.models.cube.html">rama.models.cube package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rama.models.cube.html#module-rama.models.cube">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rama.models.dataset.html">rama.models.dataset package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rama.models.dataset.html#module-rama.models.dataset">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rama.models.ivoa.html">rama.models.ivoa package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rama.models.ivoa.html#module-rama.models.ivoa">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rama.models.measurements.html">rama.models.measurements package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rama.models.measurements.html#module-rama.models.measurements">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rama.models.test.html">rama.models.test package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rama.models.test.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="rama.models.test.filter.html">rama.models.test.filter package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="rama.models.test.filter.html#module-rama.models.test.filter">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="rama.models.test.sample.html">rama.models.test.sample package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="rama.models.test.sample.html#module-rama.models.test.sample">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="rama.models.test.html#module-rama.models.test">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rama.models.html#module-rama.models">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rama.reader.html">rama.reader package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rama.reader.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rama.reader.votable.html">rama.reader.votable package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rama.reader.votable.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rama.reader.votable.html#module-rama.reader.votable.parser">rama.reader.votable.parser module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rama.reader.votable.html#module-rama.reader.votable.utils">rama.reader.votable.utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rama.reader.votable.html#module-rama.reader.votable">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rama.reader.html#module-rama.reader">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rama.utils.html">rama.utils package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rama.utils.html#module-rama.utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-rama.astropy">
+<span id="rama-astropy-module"></span><h2>rama.astropy module<a class="headerlink" href="#module-rama.astropy" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="rama.astropy.SkyCoordDecorator">
+<em class="property">class </em><code class="descclassname">rama.astropy.</code><code class="descname">SkyCoordDecorator</code><a class="reference internal" href="../_modules/rama/astropy.html#SkyCoordDecorator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rama.astropy.SkyCoordDecorator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A drop-in replacement for astropy’s SkyCoord. The initializer takes a basic SkyPosition
+instance and builds an astropy.coordinates.SkyCoord object that it then uses as a delegate for all calls
+and assignments.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="rama.astropy.TimeDecorator">
+<em class="property">class </em><code class="descclassname">rama.astropy.</code><code class="descname">TimeDecorator</code><a class="reference internal" href="../_modules/rama/astropy.html#TimeDecorator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rama.astropy.TimeDecorator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+</div>
+<div class="section" id="rama-conftest-module">
+<h2>rama.conftest module<a class="headerlink" href="#rama-conftest-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-rama.cube">
+<span id="rama-cube-module"></span><h2>rama.cube module<a class="headerlink" href="#module-rama.cube" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="rama.cube.CubePoint">
+<em class="property">class </em><code class="descclassname">rama.cube.</code><code class="descname">CubePoint</code><span class="sig-paren">(</span><em>ndpoint</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rama/cube.html#CubePoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rama.cube.CubePoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="rama.cube.GenericCoordMeasureAxis">
+<em class="property">class </em><code class="descclassname">rama.cube.</code><code class="descname">GenericCoordMeasureAxis</code><span class="sig-paren">(</span><em>axis</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rama/cube.html#GenericCoordMeasureAxis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rama.cube.GenericCoordMeasureAxis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rama.cube.VoAxis" title="rama.cube.VoAxis"><code class="xref py py-class docutils literal notranslate"><span class="pre">rama.cube.VoAxis</span></code></a></p>
+<dl class="attribute">
+<dt id="rama.cube.GenericCoordMeasureAxis.model_class">
+<code class="descname">model_class</code><a class="headerlink" href="#rama.cube.GenericCoordMeasureAxis.model_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="rama.models.measurements.html#rama.models.measurements.GenericCoordMeasure" title="rama.models.measurements.GenericCoordMeasure"><code class="xref py py-class docutils literal notranslate"><span class="pre">rama.models.measurements.GenericCoordMeasure</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="rama.cube.GenericCoordMeasureAxis.name">
+<code class="descname">name</code><em class="property"> = 'generic'</em><a class="headerlink" href="#rama.cube.GenericCoordMeasureAxis.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rama.cube.SkyPositionAxis">
+<em class="property">class </em><code class="descclassname">rama.cube.</code><code class="descname">SkyPositionAxis</code><span class="sig-paren">(</span><em>axis</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rama/cube.html#SkyPositionAxis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rama.cube.SkyPositionAxis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rama.cube.VoAxis" title="rama.cube.VoAxis"><code class="xref py py-class docutils literal notranslate"><span class="pre">rama.cube.VoAxis</span></code></a></p>
+<dl class="attribute">
+<dt id="rama.cube.SkyPositionAxis.model_class">
+<code class="descname">model_class</code><a class="headerlink" href="#rama.cube.SkyPositionAxis.model_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="rama.models.measurements.html#rama.models.measurements.SkyPosition" title="rama.models.measurements.SkyPosition"><code class="xref py py-class docutils literal notranslate"><span class="pre">rama.models.measurements.SkyPosition</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="rama.cube.SkyPositionAxis.name">
+<code class="descname">name</code><em class="property"> = 'position'</em><a class="headerlink" href="#rama.cube.SkyPositionAxis.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rama.cube.TimeAxis">
+<em class="property">class </em><code class="descclassname">rama.cube.</code><code class="descname">TimeAxis</code><span class="sig-paren">(</span><em>axis</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rama/cube.html#TimeAxis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rama.cube.TimeAxis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rama.cube.VoAxis" title="rama.cube.VoAxis"><code class="xref py py-class docutils literal notranslate"><span class="pre">rama.cube.VoAxis</span></code></a></p>
+<dl class="attribute">
+<dt id="rama.cube.TimeAxis.model_class">
+<code class="descname">model_class</code><a class="headerlink" href="#rama.cube.TimeAxis.model_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="rama.models.measurements.html#rama.models.measurements.StdTimeMeasure" title="rama.models.measurements.StdTimeMeasure"><code class="xref py py-class docutils literal notranslate"><span class="pre">rama.models.measurements.StdTimeMeasure</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rama.cube.VoAxis">
+<em class="property">class </em><code class="descclassname">rama.cube.</code><code class="descname">VoAxis</code><span class="sig-paren">(</span><em>axis</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rama/cube.html#VoAxis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rama.cube.VoAxis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="classmethod">
+<dt id="rama.cube.VoAxis.is_vo_axis_for">
+<em class="property">classmethod </em><code class="descname">is_vo_axis_for</code><span class="sig-paren">(</span><em>axis</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rama/cube.html#VoAxis.is_vo_axis_for"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rama.cube.VoAxis.is_vo_axis_for" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rama.cube.VoAxis.measurement">
+<code class="descname">measurement</code><a class="headerlink" href="#rama.cube.VoAxis.measurement" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rama.cube.VoAxis.model_class">
+<code class="descname">model_class</code><em class="property"> = None</em><a class="headerlink" href="#rama.cube.VoAxis.model_class" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rama.cube.VoAxis.name">
+<code class="descname">name</code><em class="property"> = None</em><a class="headerlink" href="#rama.cube.VoAxis.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rama.cube.VoAxis.stat_error">
+<code class="descname">stat_error</code><a class="headerlink" href="#rama.cube.VoAxis.stat_error" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="rama.cube.vo_axis_factory">
+<code class="descclassname">rama.cube.</code><code class="descname">vo_axis_factory</code><span class="sig-paren">(</span><em>axis</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rama/cube.html#vo_axis_factory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rama.cube.vo_axis_factory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-rama.registry">
+<span id="rama-registry-module"></span><h2>rama.registry module<a class="headerlink" href="#module-rama.registry" title="Permalink to this headline">¶</a></h2>
+<p>Data model concepts, i.e. types and roles, are represented by portable strings that are globally
+unique. Such identifiers can be used in different serialization formats to map data and metadata
+to the data model elements they represent.</p>
+<p>VO-DML types are mapped to Python classes.</p>
+<p>This module contains a <a class="reference internal" href="#rama.registry.TypeRegistry" title="rama.registry.TypeRegistry"><code class="xref py py-class docutils literal notranslate"><span class="pre">TypeRegistry</span></code></a> class that can be used to map VO-DML
+type identifiers to the corresponding Python class. This class is a singleton, which ensures that
+types are registered for the entire process life cycle.</p>
+<p>The module also defines a <a class="reference internal" href="#rama.registry.VO" title="rama.registry.VO"><code class="xref py py-class docutils literal notranslate"><span class="pre">VO</span></code></a> class decorator that can be used to map
+Python classes to the VO-DML type they represent. When classes with the decorator are imported
+they are registered by the ID passed to the decorator.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">rama.registry</span> <span class="k">import</span> <span class="n">VO</span><span class="p">,</span> <span class="n">TypeRegistry</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nd">@VO</span><span class="p">(</span><span class="s1">&#39;foo:bar&#39;</span><span class="p">)</span>
+<span class="gp">... </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">:</span>
+<span class="gp">... </span>  <span class="k">pass</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">TypeRegistry</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">get_by_id</span><span class="p">(</span><span class="s1">&#39;foo:bar&#39;</span><span class="p">)</span>
+<span class="go">&lt;class &#39;....MyClass&#39;&gt;</span>
+</pre></div>
+</div>
+<p>Note that trying to instantiate the registry results in an exception:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">rama.registry</span> <span class="k">import</span> <span class="n">TypeRegistry</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">TypeRegistry</span><span class="p">()</span>
+<span class="gt">Traceback (most recent call last):</span>
+  <span class="c">...</span>
+<span class="gr">TypeError</span>: <span class="n">Singletons must be accessed through `instance`.</span>
+</pre></div>
+</div>
+<dl class="class">
+<dt id="rama.registry.TypeRegistry">
+<em class="property">class </em><code class="descclassname">rama.registry.</code><code class="descname">TypeRegistry</code><a class="reference internal" href="../_modules/rama/registry.html#TypeRegistry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rama.registry.TypeRegistry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A registry for VO-DML types</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="rama.registry.VO">
+<em class="property">class </em><code class="descclassname">rama.registry.</code><code class="descname">VO</code><span class="sig-paren">(</span><em>vodml_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rama/registry.html#VO"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rama.registry.VO" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class decorator to register Python classes</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-rama">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-rama" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="rama.read">
+<code class="descclassname">rama.</code><code class="descname">read</code><span class="sig-paren">(</span><em>filename</em>, <em>fmt='votable'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rama.html#read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rama.read" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Omar Laurino.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
