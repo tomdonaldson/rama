@@ -43,51 +43,51 @@ class SkyError:
 
 @VO('sample:catalog.AlignedEllipse')
 class AlignedEllipse(SkyError):
-    long_error = Attribute('sample:catalog.AlignedEllipse.longError', min=1, max=1)
-    lat_error = Attribute('sample:catalog.AlignedEllipse.latError', min=1, max=1)
+    long_error = Attribute('sample:catalog.AlignedEllipse.longError', min_occurs=1, max_occurs=1)
+    lat_error = Attribute('sample:catalog.AlignedEllipse.latError', min_occurs=1, max_occurs=1)
 
 
 @VO('sample:catalog.CircleError')
 class CircleError(SkyError):
-    radius = Attribute('sample:catalog.CircleError.radius', min=1, max=1)
+    radius = Attribute('sample:catalog.CircleError.radius', min_occurs=1, max_occurs=1)
 
 
 @VO('sample:catalog.GenericEllipse')
 class GenericEllipse(SkyError):
-    major = Attribute('sample:catalog.GenericEllipse.major', min=1, max=1)
-    minor = Attribute('sample:catalog.GenericEllipse.minor', min=1, max=1)
-    pa = Attribute('sample:catalog.GenericEllipse.pa', min=0, max=-1)
+    major = Attribute('sample:catalog.GenericEllipse.major', min_occurs=1, max_occurs=1)
+    min_occursor = Attribute('sample:catalog.GenericEllipse.min_occursor', min_occurs=1, max_occurs=1)
+    pa = Attribute('sample:catalog.GenericEllipse.pa', min_occurs=0, max_occurs=-1)
 
 
 @VO('sample:catalog.SkyCoordinate')
 class SkyCoordinate:
-    longitude = Attribute('sample:catalog.SkyCoordinate.longitude', min=1, max=1)
-    latitude = Attribute('sample:catalog.SkyCoordinate.latitude', min=1, max=1)
-    frame = Reference('sample:catalog.SkyCoordinate.frame', min=1, max=1)
+    longitude = Attribute('sample:catalog.SkyCoordinate.longitude', min_occurs=1, max_occurs=1)
+    latitude = Attribute('sample:catalog.SkyCoordinate.latitude', min_occurs=1, max_occurs=1)
+    frame = Reference('sample:catalog.SkyCoordinate.frame', min_occurs=1, max_occurs=1)
 
 
 @VO('sample:catalog.AstroObject')
 class AstroObject:
-    label = Attribute('sample:catalog.AstroObject.label', min=0, max=1)
+    label = Attribute('sample:catalog.AstroObject.label', min_occurs=0, max_occurs=1)
 
 
 @VO('sample:catalog.AbstractSource')
 class AbstractSource(AstroObject):
-    name = Attribute('sample:catalog.AbstractSource.name', min=1, max=1)
-    description = Attribute('sample:catalog.AbstractSource.description', min=0, max=1)
-    position = Attribute('sample:catalog.AbstractSource.position', min=1, max=1)
-    position_error = Attribute('sample:catalog.AbstractSource.positionError', min=0, max=1)
-    classification = Attribute('sample:catalog.AbstractSource.classification', min=1, max=1)
-    luminosity = Composition('sample:catalog.AbstractSource.luminosity', min=0, max=-1)
+    name = Attribute('sample:catalog.AbstractSource.name', min_occurs=1, max_occurs=1)
+    description = Attribute('sample:catalog.AbstractSource.description', min_occurs=0, max_occurs=1)
+    position = Attribute('sample:catalog.AbstractSource.position', min_occurs=1, max_occurs=1)
+    position_error = Attribute('sample:catalog.AbstractSource.positionError', min_occurs=0, max_occurs=1)
+    classification = Attribute('sample:catalog.AbstractSource.classification', min_occurs=1, max_occurs=1)
+    luminosity = Composition('sample:catalog.AbstractSource.luminosity', min_occurs=0, max_occurs=-1)
 
 
 @VO('sample:catalog.LuminosityMeasurement')
 class LuminosityMeasurement:
-    value = Attribute('sample:catalog.LuminosityMeasurement.value', min=1, max=1)
-    error = Attribute('sample:catalog.LuminosityMeasurement.error', min=0, max=1)
-    description = Attribute('sample:catalog.LuminosityMeasurement.description', min=0, max=1)
-    type = Attribute('sample:catalog.LuminosityMeasurement.type', min=1, max=1)
-    filter = Reference('sample:catalog.LuminosityMeasurement.filter', min=1, max=1)
+    value = Attribute('sample:catalog.LuminosityMeasurement.value', min_occurs=1, max_occurs=1)
+    error = Attribute('sample:catalog.LuminosityMeasurement.error', min_occurs=0, max_occurs=1)
+    description = Attribute('sample:catalog.LuminosityMeasurement.description', min_occurs=0, max_occurs=1)
+    type = Attribute('sample:catalog.LuminosityMeasurement.type', min_occurs=1, max_occurs=1)
+    filter = Reference('sample:catalog.LuminosityMeasurement.filter', min_occurs=1, max_occurs=1)
 
 
 @VO('sample:catalog.SDSSSource')
@@ -97,10 +97,10 @@ class SDSSSource(AbstractSource):
 
 @VO('sample:catalog.SkyCoordinateFrame')
 class SkyCoordinateFrame:
-    name = Attribute('sample:catalog.SkyCoordinateFrame.name', min=1, max=1)
-    document_u_r_i = Attribute('sample:catalog.SkyCoordinateFrame.documentURI', min=1, max=1)
-    equinox = Attribute('sample:catalog.SkyCoordinateFrame.equinox', min=0, max=1)
-    system = Attribute('sample:catalog.SkyCoordinateFrame.system', min=0, max=1)
+    name = Attribute('sample:catalog.SkyCoordinateFrame.name', min_occurs=1, max_occurs=1)
+    document_u_r_i = Attribute('sample:catalog.SkyCoordinateFrame.documentURI', min_occurs=1, max_occurs=1)
+    equinox = Attribute('sample:catalog.SkyCoordinateFrame.equinox', min_occurs=0, max_occurs=1)
+    system = Attribute('sample:catalog.SkyCoordinateFrame.system', min_occurs=0, max_occurs=1)
 
 
 @VO('sample:catalog.Source')

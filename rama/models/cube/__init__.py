@@ -19,7 +19,7 @@
 # SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-from rama.utils import Delegate
+from rama.utils import Decorator
 
 from rama.cube import CubePoint
 from rama.framework import Composition, Attribute
@@ -28,13 +28,13 @@ from rama.registry import VO
 
 @VO('cube:DataProduct')
 class DataProduct:
-    coord_sys = Composition('cube:DataProduct.coordSys', min=1, max=-1)
-    mappings = Composition('cube:DataProduct.mappings', min=0, max=1)
+    coord_sys = Composition('cube:DataProduct.coordSys', min_occurs=1, max_occurs=-1)
+    mappings = Composition('cube:DataProduct.mappings', min_occurs=0, max_occurs=1)
 
 
 @VO('cube:PixelatedDataProduct')
 class PixelatedDataProduct(DataProduct):
-    pixel_coord_sys = Composition('cube:PixelatedDataProduct.pixelCoordSys', min=1, max=1)
+    pixel_coord_sys = Composition('cube:PixelatedDataProduct.pixelCoordSys', min_occurs=1, max_occurs=1)
 
 
 @VO('cube:PointDataProduct')
@@ -44,36 +44,36 @@ class PointDataProduct(DataProduct):
 
 @VO('cube:NDImage')
 class NDImage(PixelatedDataProduct):
-    data = Composition('cube:NDImage.data', min=0, max=-1)
+    data = Composition('cube:NDImage.data', min_occurs=0, max_occurs=-1)
 
 
 @VO('cube:SparseCube')
 class SparseCube(PointDataProduct):
-    data = Composition('cube:SparseCube.data', min=0, max=-1)
+    data = Composition('cube:SparseCube.data', min_occurs=0, max_occurs=-1)
 
 
 @VO('cube:DataElement')
 class DataElement:
-    axis = Composition('cube:DataElement.axis', min=0, max=-1)
+    axis = Composition('cube:DataElement.axis', min_occurs=0, max_occurs=-1)
 
 
 @VO('cube:Voxel')
 class Voxel(DataElement):
-    pixel_axis = Composition('cube:Voxel.pixelAxis', min=1, max=-1)
+    pixel_axis = Composition('cube:Voxel.pixelAxis', min_occurs=1, max_occurs=-1)
 
 
 @VO('cube:NDPoint')
-@Delegate(CubePoint)
+@Decorator(CubePoint)
 class NDPoint(DataElement):
     pass
 
 
 @VO('cube:DataAxis')
 class DataAxis:
-    dependent = Attribute('cube:DataAxis.dependent', min=1, max=1)
-    measurement = Composition('cube:DataAxis.measurement', min=1, max=1)
+    dependent = Attribute('cube:DataAxis.dependent', min_occurs=1, max_occurs=1)
+    measurement = Composition('cube:DataAxis.measurement', min_occurs=1, max_occurs=1)
 
 
 @VO('cube:PixelAxis')
 class PixelAxis:
-    coord = Attribute('cube:PixelAxis.coord', min=1, max=1)
+    coord = Attribute('cube:PixelAxis.coord', min_occurs=1, max_occurs=1)

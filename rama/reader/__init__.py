@@ -40,7 +40,7 @@ class Document(metaclass=ABCMeta):
 
 
 class Reader:
-    def __init__(self, document:Document):
+    def __init__(self, document: Document):
         self.standalone_instances = WeakValueDictionary()
         self.tables = {}
         self.registry = TypeRegistry.instance

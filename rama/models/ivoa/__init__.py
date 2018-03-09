@@ -19,14 +19,14 @@
 # SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-from rama.registry import VO
 from astropy import units as u
 from dateutil import parser
+from rama.registry import VO
 
 
 @VO("ivoa:RealQuantity")
 class RealQuantity:
-    def __new__(self, value, unit):
+    def __new__(cls, value, unit):
         value = float(value)
         try:
             quantity = value * u.Unit(unit)
@@ -37,24 +37,23 @@ class RealQuantity:
 
 @VO("ivoa:string")
 class StringQuantity:
-
-    def __new__(self, value, unit):
+    def __new__(cls, value, _):
         return str(value)
 
 
 @VO("ivoa:boolean")
 class VOBool:
-    def __new__(cls, value, *args, **kwargs):
+    def __new__(cls, value, _):
         return value.lower() == 'true'
 
 
 @VO("ivoa:integer")
 class VOInteger:
-    def __new__(cls, value, *args, **kwargs):
+    def __new__(cls, value, _):
         return int(value)
 
 
 @VO("ivoa:datetime")
 class VODateTime:
-    def __new__(cls, value, *args, **kwargs):
+    def __new__(cls, value, _):
         return parser.parse(value)

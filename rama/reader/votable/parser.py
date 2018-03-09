@@ -23,17 +23,17 @@ import inspect
 import logging
 import warnings
 
-from astropy.table import QTable
 from lxml import etree
 
+from astropy.table import QTable
 from astropy.io import votable
 
 import numpy
 
 from rama.framework import Attribute, Reference, Composition, VodmlDescriptor
 from rama.reader import Document
-from rama.reader.votable.utils import get_role_xpath_expression, get_children, get_local_name,\
-    get_type_xpath_expression, resolve_id
+from rama.reader.votable.utils import get_children, get_local_name, \
+    get_type_xpath_expression, resolve_id, resolve_type, find_element_for_role
 
 LOG = logging.getLogger(__name__)
 
@@ -56,8 +56,8 @@ class Votable(Document):
 
 
 class Parser:
-    def __init__(self, votable):
-        self.votable = votable
+    def __init__(self, votable_file):
+        self.votable = votable_file
         self.field_readers = {
             Attribute: self.parse_attributes,
             Reference: self.parse_references,
@@ -68,7 +68,7 @@ class Parser:
         return [self.read_instance(element, context) for element in self.find(element_class)]
 
     def read_instance(self, xml_element, context):
-        type_id = self.resolve_type(xml_element)
+        type_id = resolve_type(xml_element)
         element_class = context.get_type_by_id(type_id)
         return self.make(element_class, xml_element, context)
 
@@ -80,10 +80,6 @@ class Parser:
 
     def parse_references(self, xml_element, field_object, context):
         return ReferenceElement(xml_element, field_object, context, self).all
-
-    def resolve_type(self, xml_element):
-        element_type = xml_element.xpath("@dmtype")[0]
-        return element_type
 
     def find(self, element_class):
         type_id = element_class.vodml_id
@@ -99,8 +95,8 @@ class Parser:
 
         instance = instance_class()
 
-        def is_field(x):
-            return inspect.isdatadescriptor(x) and isinstance(x, VodmlDescriptor)
+        def is_field(attr):
+            return inspect.isdatadescriptor(attr) and isinstance(attr, VodmlDescriptor)
 
         fields = inspect.getmembers(instance_class, is_field)
         for field_name, field_object in fields:
@@ -114,18 +110,6 @@ class Parser:
 
         return instance
 
-    def find_element_for_role(self, xml_element, tag_name, role_id):
-        elements = xml_element.xpath(get_role_xpath_expression(tag_name, role_id))
-        n_elements = len(elements)
-
-        if n_elements > 1:
-            warnings.warn(SyntaxWarning, f"Too many elements with dmrole = {role_id}")
-
-        if n_elements:
-            return elements[0]
-        else:
-            return None
-
 
 class Element:
     TAG_NAME = None
@@ -133,7 +117,7 @@ class Element:
     def __init__(self, xml_element, field_object, context, parser):
         self.field_object = field_object
         self.role_id = role_id = field_object.vodml_id
-        self.xml = parser.find_element_for_role(xml_element, self.TAG_NAME, role_id)
+        self.xml = find_element_for_role(xml_element, self.TAG_NAME, role_id)
         self.context = context
         self.parser = parser
 
@@ -142,7 +126,7 @@ class Element:
         if max_occurs == 1 and len(values) == 1:
             return values[0]
 
-        if max_occurs == 1 and len(values) == 0:
+        if max_occurs == 1 and not values:
             return None
 
         return values
@@ -167,6 +151,7 @@ class ReferenceElement(Element):
     def all(self):
         if self.xml is not None:
             return self.select_return_value(self.idref_instances)
+        return None
 
     def _parse_idref(self, xml_element):
         ref = xml_element.text
@@ -177,14 +162,15 @@ class ReferenceElement(Element):
 
         referred_elements = xml_element.xpath(f"//{get_local_name('INSTANCE')}[@ID='{ref}']")
 
-        if not len(referred_elements):
+        if not referred_elements:
             # TODO make a single call?
             msg = f"Dangling reference {ref}"
             warnings.warn(msg, SyntaxWarning)
             LOG.warning(msg)
-        else:
-            referred_element = referred_elements[0]
-            return self.parser.read_instance(referred_element, self.context)
+            return None
+
+        referred_element = referred_elements[0]
+        return self.parser.read_instance(referred_element, self.context)
 
 
 class CompositionElement(ElementWithInstances):
@@ -199,6 +185,7 @@ class CompositionElement(ElementWithInstances):
     def all(self):
         if self.xml is not None:
             return self.select_return_value(self.structured_instances)
+        return None
 
     # def _parse_externals(self, xml_element):
     #     ref = xml_element.text
@@ -235,19 +222,20 @@ class AttributeElement(ElementWithInstances):
     def all(self):
         if self.xml is not None:
             return self.select_return_value(self.structured_instances + self.constants + self.columns)
+        return None
 
     def _parse_literal(self, xml_element):
         value = xml_element.xpath("@value")[0]
         value_type = xml_element.xpath("@dmtype")[0]
         units = xml_element.xpath("@unit")
-        unit = units[0] if len(units) else None
+        unit = units[0] if units else None
         return self.context.get_type_by_id(value_type)(value, unit)
 
     def _parse_column(self, xml_element):
         column_ref = xml_element.xpath("@ref")[0]
         find_column_xpath = f"//{get_local_name('FIELD')}[@ID='{column_ref}']"
         column_elements = xml_element.xpath(find_column_xpath)
-        if not len(column_elements):
+        if not column_elements:
             msg = f"Can't find column with ID {column_ref}. Setting values to NaN"
             LOG.warning(msg)
             warnings.warn(msg, SyntaxWarning)
@@ -266,13 +254,13 @@ class AttributeElement(ElementWithInstances):
     def _parse_table(self, column_element):
 
         table_elements = column_element.xpath(f"parent::{get_local_name('TABLE')}")
-        if not len(table_elements):
+        if not table_elements:
             raise RuntimeError("COLUMN points to FIELD that does not have a TABLE parent")
         table_element = table_elements[0]
         table_index = int(table_element.xpath(f"count(preceding-sibling::{get_local_name('TABLE')})"))
 
         table_ids = table_element.xpath('@ID')
-        if len(table_ids):
+        if table_ids:
             no_id = False
             table_id = table_ids[0]
             table = self.context.get_table_by_id(table_id)

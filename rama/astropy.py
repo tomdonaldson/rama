@@ -19,11 +19,14 @@
 # SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-import numpy
+from astropy.coordinates import SkyCoord
 from astropy.time import Time
-from astropy.units import Quantity
+from astropy.units import Quantity, UnitTypeError
+
+import numpy
 from numpy import nan_to_num
 
+from .models import coordinates
 
 class SkyCoordDecorator:
     """
@@ -32,12 +35,11 @@ class SkyCoordDecorator:
     and assignments.
     """
 
-    def __new__(self, stc_position_coord):
-        from astropy.coordinates import SkyCoord
+    def __new__(cls, stc_position_coord):
         try:
             frame = stc_position_coord.frame.space_ref_frame.lower()
             equinox = stc_position_coord.frame.equinox
-        except AttributeError:
+        except (AttributeError, ValueError):
             frame = "ICRS"
             equinox = None
 
@@ -46,16 +48,15 @@ class SkyCoordDecorator:
             dec = stc_position_coord.dec
             sky_coord = SkyCoord(frame=frame, equinox=equinox, ra=ra, dec=dec)
             return sky_coord
-        except:
+        except (AttributeError, UnitTypeError, ValueError):
             return stc_position_coord
 
 
 # FIXME this is full of hacks and shortcuts
 class TimeDecorator:
-    def __new__(self, stc_time_coord):
+    def __new__(cls, stc_time_coord):
         # FIXME I can't figure out how to make astropy parse iso times as time columns, so I have to break
         # them down and extract times
-        from rama.models.coordinates import ISOTime
         date = stc_time_coord.date
         if not isinstance(date, Quantity):
             quantity = False
@@ -66,7 +67,7 @@ class TimeDecorator:
 
         try:
             scale = 'tt' if stc_time_coord.frame is None else stc_time_coord.frame.timescale.lower()
-            t_format = "isot" if isinstance(stc_time_coord, ISOTime) else "jd"
+            t_format = "isot" if isinstance(stc_time_coord, coordinates.ISOTime) else "jd"
         except AttributeError:
             scale = None
             t_format = None
@@ -80,5 +81,5 @@ class TimeDecorator:
             time = Time(time, scale=scale, format=t_format)
             time.name = stc_time_coord.date.name
             return time
-        except:
+        except AttributeError:
             return stc_time_coord

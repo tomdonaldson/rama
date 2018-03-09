@@ -19,11 +19,12 @@
 # SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+import warnings
 
 
 def resolve_id(xml_element):
     ids = xml_element.xpath('@ID')
-    if len(ids):
+    if ids:
         return ids[0]
     return None
 
@@ -49,3 +50,21 @@ def get_child_selector(tag_name):
 
 def get_children(element, child_tag_name):
     return element.xpath(get_child_selector(child_tag_name))
+
+
+def resolve_type(xml_element):
+    element_type = xml_element.xpath("@dmtype")[0]
+    return element_type
+
+
+def find_element_for_role(xml_element, tag_name, role_id):
+    elements = xml_element.xpath(get_role_xpath_expression(tag_name, role_id))
+    n_elements = len(elements)
+
+    if n_elements > 1:
+        warnings.warn(SyntaxWarning, f"Too many elements with dmrole = {role_id}")
+
+    if n_elements:
+        return elements[0]
+
+    return None

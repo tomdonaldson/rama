@@ -30,7 +30,7 @@ from rama.models.measurements import StdTimeMeasure
 
 @pytest.fixture
 def time_file(make_data_path):
-    return read(make_data_path('time.vot.xml'), format='votable')
+    return read(make_data_path('time.vot.xml'), fmt='votable')
 
 
 def test_time(time_file, recwarn):

@@ -33,15 +33,15 @@ for entry_point in iter_entry_points(group='vo.dm.models', name=None):
         __import__(entry_point.module_name, globals(), locals())
         LOG.info(f"Successfully imported vodml model package {entry_point.name}")
     except ImportError:
-        LOG.warn(f"Cannot import vodml model package {entry_point.name}")
+        LOG.warning(f"Cannot import vodml model package {entry_point.name}")
 
 
-def read(filename, format='votable'):
+def read(filename, fmt='votable'):
     formats = {
         'votable': Votable,
     }
 
-    if format not in formats:
-        raise AttributeError(f"No such format: {format}. Available formats: {formats.keys()}")
+    if fmt not in formats:
+        raise AttributeError(f"No such format: {fmt}. Available formats: {fmt.keys()}")
 
-    return Reader(formats[format](filename))
+    return Reader(formats[fmt](filename))

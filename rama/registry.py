@@ -27,6 +27,8 @@ from rama.utils import Singleton
 # TODO type hints
 @Singleton
 class TypeRegistry:
+    instance = None
+
     def __init__(self):
         self._type_map = {}
 

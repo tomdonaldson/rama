@@ -22,11 +22,12 @@
 
 
 class VodmlDescriptor:
-    def __init__(self, vodml_id, min=0, max=1):
+    def __init__(self, vodml_id, min_occurs=0, max_occurs=1):
         self.vodml_id = vodml_id
         self.default = None
-        self.min = min
-        self.max = max
+        self.min = min_occurs
+        self.max = max_occurs
+        self.name = None
 
     def __get__(self, instance, owner):
         if instance is None:
