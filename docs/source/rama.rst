@@ -6,6 +6,7 @@ Subpackages
 
 .. toctree::
 
+    rama.adapters
     rama.framework
     rama.models
     rama.reader
@@ -13,14 +14,6 @@ Subpackages
 
 Submodules
 ----------
-
-rama.astropy module
--------------------
-
-.. automodule:: rama.astropy
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 rama.conftest module
 --------------------

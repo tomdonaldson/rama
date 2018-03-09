@@ -59,7 +59,7 @@ class Singleton:
         raise TypeError('Singletons must be accessed through `instance`.')
 
 
-class Decorator:
+class Adapter:
     def __init__(self, delegate):
         self.delegate = delegate
 

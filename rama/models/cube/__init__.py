@@ -19,7 +19,7 @@
 # SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-from rama.utils import Decorator
+from rama.utils import Adapter
 
 from rama.cube import CubePoint
 from rama.framework import Composition, Attribute
@@ -63,7 +63,7 @@ class Voxel(DataElement):
 
 
 @VO('cube:NDPoint')
-@Decorator(CubePoint)
+@Adapter(CubePoint)
 class NDPoint(DataElement):
     pass
 

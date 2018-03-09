@@ -176,7 +176,7 @@ todo_include_todos = True
 from rama.utils import Singleton
 from sphinx.ext.autodoc import ClassDocumenter
 
-class MyClassDocumenter(ClassDocumenter):
+class SingletonDocumenter(ClassDocumenter):
     objtype = 'Singleton'
     directivetype = 'class'
 
@@ -185,4 +185,4 @@ class MyClassDocumenter(ClassDocumenter):
         return isinstance(member, Singleton)
 
 def setup(app):
-    app.add_autodocumenter(MyClassDocumenter)
+    app.add_autodocumenter(SingletonDocumenter)
