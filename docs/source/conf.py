@@ -15,6 +15,9 @@
 # import os
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
+from rama.utils import Singleton
+from sphinx.ext.autodoc import ClassDocumenter
+import sphinx_rtd_theme
 
 
 # -- Project information -----------------------------------------------------
@@ -82,7 +85,6 @@ pygments_style = 'sphinx'
 #
 # html_theme = 'alabaster'
 
-import sphinx_rtd_theme
 html_theme = 'sphinx_rtd_theme'
 # html_theme_options = {}
 html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
@@ -173,8 +175,6 @@ texinfo_documents = [
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
 
-from rama.utils import Singleton
-from sphinx.ext.autodoc import ClassDocumenter
 
 class SingletonDocumenter(ClassDocumenter):
     objtype = 'Singleton'
@@ -183,6 +183,7 @@ class SingletonDocumenter(ClassDocumenter):
     @classmethod
     def can_document_member(cls, member, membername, isattr, parent):
         return isinstance(member, Singleton)
+
 
 def setup(app):
     app.add_autodocumenter(SingletonDocumenter)

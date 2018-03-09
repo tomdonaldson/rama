@@ -51,6 +51,7 @@ def invalid_file(make_data_path):
 def references_file(make_data_path):
     return read(make_data_path('references.vot.xml'))
 
+
 @pytest.fixture
 def asymmetric_data_file(make_data_path):
     return read(make_data_path('asymmetric-2d-position.vot.xml'))
@@ -66,7 +67,7 @@ def test_parsing_coordinates(simple_position_file):
     assert pos.coord.dec == 41.13232112 * u.Unit('deg')
     assert isinstance(pos.coord.frame, FK5)
     assert pos.coord.equinox == Time("J1975")
-    #FIXME How to set the reference position in astropy?
+    # FIXME How to set the reference position in astropy?
     # assert "TOPOCENTER" == pos.coord.frame.ref_position.position
 
 

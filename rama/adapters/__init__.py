@@ -32,7 +32,7 @@ is decorated with the :py:class:`~rama.utils.Adapter` decorator, which accepts t
 For example::
 
     >>> from rama.utils import Adapter
-    >>> from rama.registry import VO
+    >>> from rama.utils.registry import VO
     >>> from rama.framework import Attribute
     >>> class MyAdapter:
     ...     def __init__(self, standard_obj):

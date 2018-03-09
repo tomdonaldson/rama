@@ -40,7 +40,7 @@ def test_time(time_file, recwarn):
     assert len(times) == 1
 
     assert isinstance(time.coord, Time)
-    expected_time =  Time([2453486.5, 0.0] * u.Unit('d'), format='jd', scale='tt')
+    expected_time = Time([2453486.5, 0.0] * u.Unit('d'), format='jd', scale='tt')
 
     assert_array_equal(time.coord, expected_time)
 

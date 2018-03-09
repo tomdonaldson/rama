@@ -21,7 +21,8 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 from astropy import units as u
 from dateutil import parser
-from rama.registry import VO
+
+from rama.utils.registry import VO
 
 
 @VO("ivoa:RealQuantity")

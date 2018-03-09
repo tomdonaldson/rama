@@ -23,9 +23,7 @@ import logging
 from abc import abstractmethod, ABCMeta
 from weakref import WeakValueDictionary
 
-
-from rama.registry import TypeRegistry
-
+from rama.utils.registry import TypeRegistry
 
 LOG = logging.getLogger(__name__)
 

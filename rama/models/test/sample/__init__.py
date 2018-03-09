@@ -21,9 +21,8 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 from rama.framework import Attribute, Reference, Composition
 from rama.models.ivoa import StringQuantity
-from rama.models.test import filter
 
-from rama.registry import VO
+from rama.utils.registry import VO
 
 
 @VO('sample:catalog.LuminosityType')

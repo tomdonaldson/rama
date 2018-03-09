@@ -22,8 +22,8 @@
 from rama.adapters.astropy import SkyCoordAdapter, TimeAdapter
 from rama.framework import Attribute, Reference, Composition
 from rama.models.ivoa import StringQuantity
-from rama.registry import VO
 from rama.utils import Adapter
+from rama.utils.registry import VO
 
 
 @VO('coords:domain.space.Epoch')
@@ -319,7 +319,8 @@ class Redshift(RedshiftValue):
 
 @VO('coords:domain.redshift.DopplerVelocity')
 class DopplerVelocity(RedshiftValue):
-    doppler_definition = Attribute('coords:domain.redshift.DopplerVelocity.dopplerDefinition', min_occurs=1, max_occurs=1)
+    doppler_definition = Attribute('coords:domain.redshift.DopplerVelocity.dopplerDefinition', min_occurs=1,
+                                   max_occurs=1)
 
 
 @VO('coords:domain.polarization.PolStokesEnum')

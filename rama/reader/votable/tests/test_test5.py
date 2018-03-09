@@ -77,21 +77,21 @@ def test_source(context_test5, recwarn):
     assert h_mag.type == 'magnitude'
     assert h_mag.filter is h_filter
     assert_array_equal(h_mag.value, MaskedColumn([13.681, 15.103, 15.718],
-                                                               dtype='float32', unit='mag'))
+                                                 dtype='float32', unit='mag'))
     assert_array_equal(h_mag.error, MaskedColumn([0.027, 0.077, 0.112],
                                                  dtype='float32', unit='mag'))
     j_mag = source.luminosity[1]
     assert j_mag.type == 'magnitude'
     assert j_mag.filter is j_filter
-    assert_array_equal(j_mag.value, MaskedColumn([14.161, 15.86 , 16.273],
+    assert_array_equal(j_mag.value, MaskedColumn([14.161, 15.86, 16.273],
                                                  dtype='float32', unit='mag'))
-    assert_array_equal(j_mag.error, MaskedColumn([0.025, 0.06 , 0.096],
+    assert_array_equal(j_mag.error, MaskedColumn([0.025, 0.06, 0.096],
                                                  dtype='float32', unit='mag'))
 
     k_mag = source.luminosity[2]
     assert k_mag.type == 'magnitude'
     assert k_mag.filter is k_filter
-    assert_array_equal(k_mag.value, MaskedColumn([13.675, 14.847, 15.46 ],
+    assert_array_equal(k_mag.value, MaskedColumn([13.675, 14.847, 15.46],
                                                  dtype='float32', unit='mag'))
     assert_array_equal(k_mag.error, MaskedColumn([0.048, 0.127, 0.212],
                                                  dtype='float32', unit='mag'))
@@ -102,7 +102,3 @@ def test_source(context_test5, recwarn):
         assert "W10" in str(recwarn[i].message)
 
     # TODO MISSING multi-table relationship
-
-
-
-
