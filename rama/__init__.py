@@ -19,10 +19,13 @@
 # SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+import inspect
 import logging
 
+from astropy.table import MaskedColumn
 from pkg_resources import iter_entry_points
 
+from rama.framework import VodmlDescriptor
 from rama.reader import Reader
 from rama.reader.votable import Votable
 
@@ -45,3 +48,20 @@ def read(filename, fmt='votable'):
         raise AttributeError(f"No such format: {fmt}. Available formats: {fmt.keys()}")
 
     return Reader(formats[fmt](filename))
+
+
+def is_template(instance):
+    if isinstance(instance, MaskedColumn):
+        return True
+
+    def is_field(attr):
+        return inspect.isdatadescriptor(attr) and isinstance(attr, VodmlDescriptor)
+
+    fields = inspect.getmembers(instance.__class__, is_field)
+
+    for field_name, _ in fields:
+        value = getattr(instance, field_name)
+        if is_template(value):
+            return True
+
+    return False
