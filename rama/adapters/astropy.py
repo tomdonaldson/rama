@@ -48,7 +48,7 @@ class SkyCoordAdapter:
             frame = stc_position_coord.frame.space_ref_frame.lower()
             equinox = stc_position_coord.frame.equinox
         except (AttributeError, ValueError):
-            frame = "ICRS"
+            frame = "icrs"
             equinox = None
 
         try:
