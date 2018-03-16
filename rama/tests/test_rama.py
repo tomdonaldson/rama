@@ -19,40 +19,27 @@
 # SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-import logging
-
-from pkg_resources import iter_entry_points
-
-from rama.framework import VodmlDescriptor, Composition
-from rama.reader import Reader
-from rama.reader.votable import Votable
-
-LOG = logging.getLogger(__name__)
-
-for entry_point in iter_entry_points(group='vo.dm.models', name=None):
-    try:
-        __import__(entry_point.module_name, globals(), locals())
-        LOG.info(f"Successfully imported vodml model package {entry_point.name}")
-    except ImportError:
-        LOG.warning(f"Cannot import vodml model package {entry_point.name}")
+from rama import read, is_template
+from rama.models.cube import NDPoint, DataAxis
+from rama.models.measurements import SkyPosition
 
 
-def read(filename, fmt='votable'):
-    formats = {
-        'votable': Votable,
-    }
+def test_is_template(make_data_path, recwarn):
+    gavo = read(make_data_path('time-series.vot.xml'))
+    positions = gavo.find_instances(SkyPosition)
+    cube_points = gavo.find_instances(NDPoint)
+    axes = gavo.find_instances(DataAxis)
 
-    if fmt not in formats:
-        raise AttributeError(f"No such format: {fmt}. Available formats: {fmt.keys()}")
+    assert not is_template(positions[0])  # positions are direct
+    assert is_template(cube_points[0])  # ndpoint is a template
+    assert is_template(axes[0])  # time
+    assert not is_template(axes[1])  # position
+    assert is_template(axes[2])  # magnitude
+    assert is_template(axes[3])  # flux
 
-    return Reader(formats[fmt](filename))
+    assert not is_template(gavo)  # an unrelated instance is never a template
 
-
-def is_template(instance):
-    if hasattr(instance, "__vo_object__"):
-        return is_template(instance.__vo_object__)
-
-    if hasattr(instance, "is_template"):
-        return instance.is_template
-
-    return False
+    assert "W20" in str(recwarn[0].message)
+    assert "W41" in str(recwarn[1].message)
+    for i in range(2, 12):
+        assert "W10" in str(recwarn[i].message)

@@ -94,6 +94,7 @@ class Parser:
             return instance
 
         instance = instance_class()
+        instance.is_template = self.is_template(xml_element)
 
         def is_field(attr):
             return inspect.isdatadescriptor(attr) and isinstance(attr, VodmlDescriptor)
@@ -104,11 +105,16 @@ class Parser:
             setattr(instance, field_name, field_reader(xml_element, field_object, context))
 
         if hasattr(instance_class, '__delegate__'):
-            instance = instance_class.__delegate__(instance)
+            vo_instance = instance
+            instance = instance_class.__delegate__(vo_instance)
+            instance.__vo_object__ = vo_instance
         instance.__vo_id__ = instance_id
         context.add_instance(instance)
 
         return instance
+
+    def is_template(self, xml_element):
+        return len(xml_element.xpath(f'.//{get_local_name("COLUMN")}')) > 0
 
 
 class Element:

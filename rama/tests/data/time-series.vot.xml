@@ -1,0 +1,724 @@
+<?xml version="1.0" encoding="UTF-8"?><VOTABLE xmlns="http://www.ivoa.net/xml/VOTable/v1.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <VODML>
+    <MODEL>
+      <NAME>coords</NAME>
+      <URL>file:../../../stc2/shortcuts/models/STC_coords-v2.0.vo-dml.xml</URL>
+    </MODEL>
+    <MODEL>
+      <NAME>meas</NAME>
+      <URL>file:../../../stc2/shortcuts/models/STC_meas-v2.0.vo-dml.xml</URL>
+    </MODEL>
+    <MODEL>
+      <NAME>ivoa</NAME>
+      <URL>https://volute.g-vo.org/svn/trunk/projects/dm/vo-dml/models//ivoa/vo-dml/IVOA-v1.0.vo-dml.xml</URL>
+    </MODEL>
+    <MODEL>
+      <NAME>cube</NAME>
+      <URL>file:../models/Cube-1.0.vo-dml.xml</URL>
+    </MODEL>
+    <MODEL>
+      <NAME>ds</NAME>
+      <URL>file:../models/DatasetMetadata-1.0.vo-dml.xml</URL>
+    </MODEL>
+    <GLOBALS>
+      <INSTANCE dmtype="coords:domain.time.TimeFrame" ID="_TIME_FRAME">
+        <ATTRIBUTE dmrole="coords:domain.time.TimeFrame.refPosition">
+          <INSTANCE dmtype="coords:domain.space.StdRefLocation">
+            <ATTRIBUTE dmrole="coords:domain.space.StdRefLocation.position">
+              <LITERAL value="HELIOCENTER" dmtype="coords:domain.space.StdRefPosition"/>
+            </ATTRIBUTE>
+          </INSTANCE>
+        </ATTRIBUTE>
+        <ATTRIBUTE dmrole="coords:domain.time.TimeFrame.timescale">
+          <LITERAL value="TT" dmtype="coords:domain.time.TimeScale"/>
+        </ATTRIBUTE>
+      </INSTANCE>
+      <INSTANCE dmtype="coords:domain.space.SpaceFrame" ID="_SPACE_FRAME">
+        <ATTRIBUTE dmrole="coords:domain.space.SpaceFrame.spaceRefFrame">
+          <LITERAL value="FK4" dmtype="coords:domain.space.StdRefFrame"/>
+        </ATTRIBUTE>
+        <ATTRIBUTE dmrole="coords:domain.space.SpaceFrame.equinox">
+          <LITERAL value="J2000" dmtype="coords:domain.space.Epoch"/>
+        </ATTRIBUTE>
+        <ATTRIBUTE dmrole="coords:domain.space.SpaceFrame.refPosition">
+          <INSTANCE dmtype="coords:domain.space.StdRefLocation">
+            <ATTRIBUTE dmrole="coords:domain.space.StdRefLocation.position">
+              <LITERAL value="TOPOCENTER" dmtype="coords:domain.space.StdRefPosition"/>
+            </ATTRIBUTE>
+          </INSTANCE>
+        </ATTRIBUTE>
+      </INSTANCE>
+      <INSTANCE dmtype="cube:SparseCube">
+        <COMPOSITION dmrole="cube:SparseCube.data">
+          <EXTINSTANCES>_DATA_INSTANCE</EXTINSTANCES>
+        </COMPOSITION>
+      </INSTANCE>
+    </GLOBALS>
+    <TEMPLATES tableref="_DATA_TABLE">
+      <INSTANCE dmtype="ds:experiment.ObsDataset">
+        <ATTRIBUTE dmrole="ds:dataset.Dataset.dataProductType">
+          <LITERAL value="TIMESERIES" dmtype="ds:dataset.DataProductType"/>
+        </ATTRIBUTE>
+        <COMPOSITION dmrole="ds:dataset.Dataset.curation">
+          <INSTANCE dmtype="ds:dataset.Curation">
+            <ATTRIBUTE dmrole="ds:dataset.Curation.publisherDID">
+              <LITERAL value="ivo://org.gavo.dc/~?k2c9vst/data/?MOA-2016-BLG-0254_VST_r_SDS..." dmtype="ivoa:anyURI"/>
+            </ATTRIBUTE>
+            <COMPOSITION dmrole="ds:dataset.Curation.reference">
+              <INSTANCE dmtype="ds:dataset.Publication">
+                <ATTRIBUTE dmrole="ds:dataset.Publication.refCode">
+                  <LITERAL value="http://archive.eso.org/wdb/wdb/eso/sched_rep_arc/query?progid..." dmtype="ivoa:string"/>
+                </ATTRIBUTE>
+              </INSTANCE>
+            </COMPOSITION>
+          </INSTANCE>
+        </COMPOSITION>
+        <COMPOSITION dmrole="ds:dataset.Dataset.dataID">
+          <INSTANCE dmtype="ds:dataset.DataID">
+            <ATTRIBUTE dmrole="ds:dataset.DataID.title">
+              <LITERAL value="K2C9 VST MOA-2016-BLG-0254_VST_r_SDSS78.t" dmtype="ivoa:string"/>
+            </ATTRIBUTE>
+          </INSTANCE>
+        </COMPOSITION>
+      </INSTANCE>
+      <INSTANCE dmtype="cube:NDPoint" ID="_DATA_INSTANCE">
+        <COMPOSITION dmrole="cube:DataElement.axis">
+          <INSTANCE dmtype="cube:DataAxis">
+            <ATTRIBUTE dmrole="cube:DataAxis.dependent">
+              <LITERAL value="False" dmtype="ivoa:boolean"/>
+            </ATTRIBUTE>
+            <COMPOSITION dmrole="cube:DataAxis.measurement">
+              <INSTANCE dmtype="meas:StdTimeMeasure">
+                <ATTRIBUTE dmrole="meas:CoordMeasure.coord">
+                  <INSTANCE dmtype="coords:domain.time.JD">
+                    <ATTRIBUTE dmrole="coords:domain.time.JD.date">
+                      <COLUMN dmtype="ivoa:real" ref="_col_TIME"/>
+                    </ATTRIBUTE>
+                    <REFERENCE dmrole="coords:Coordinate.frame">
+                      <IDREF>_TIME_FRAME</IDREF>
+                    </REFERENCE>
+                  </INSTANCE>
+                </ATTRIBUTE>
+              </INSTANCE>
+            </COMPOSITION>
+          </INSTANCE>
+          <INSTANCE dmtype="cube:DataAxis">
+            <ATTRIBUTE dmrole="cube:DataAxis.dependent">
+              <LITERAL value="False" dmtype="ivoa:boolean"/>
+            </ATTRIBUTE>
+            <COMPOSITION dmrole="cube:DataAxis.measurement">
+              <INSTANCE dmtype="meas:SkyPosition">
+                <ATTRIBUTE dmrole="meas:CoordMeasure.coord">
+                  <INSTANCE dmtype="coords:domain.space.EquatorialCoord">
+                    <ATTRIBUTE dmrole="coords:domain.space.EquatorialCoord.ra">
+                      <LITERAL value="269.82846" dmtype="ivoa:RealQuantity" unit="deg"/>
+                    </ATTRIBUTE>
+                    <ATTRIBUTE dmrole="coords:domain.space.EquatorialCoord.dec">
+                      <LITERAL value="-27.99478" dmtype="ivoa:RealQuantity" unit="deg"/>
+                    </ATTRIBUTE>
+                    <REFERENCE dmrole="coords:Coordinate.frame">
+                      <IDREF>_SPACE_FRAME</IDREF>
+                    </REFERENCE>
+                  </INSTANCE>
+                </ATTRIBUTE>
+              </INSTANCE>
+            </COMPOSITION>
+          </INSTANCE>
+          <INSTANCE dmtype="cube:DataAxis">
+            <ATTRIBUTE dmrole="cube:DataAxis.dependent">
+              <LITERAL value="True" dmtype="ivoa:boolean"/>
+            </ATTRIBUTE>
+            <COMPOSITION dmrole="cube:DataAxis.measurement">
+              <INSTANCE dmtype="meas:GenericCoordMeasure">
+                <ATTRIBUTE dmrole="meas:CoordMeasure.coord">
+                  <INSTANCE dmtype="coords:GenericCoordValue">
+                    <ATTRIBUTE dmrole="coords:PhysicalCoordValue.cval">
+                      <COLUMN dmtype="ivoa:RealQuantity" ref="_col_FLUX"/>
+                    </ATTRIBUTE>
+                  </INSTANCE>
+                </ATTRIBUTE>
+                <COMPOSITION dmrole="meas:CoordMeasure.error">
+                  <INSTANCE dmtype="meas:Error1D">
+                    <ATTRIBUTE dmrole="meas:Error1D.statError">
+                      <INSTANCE dmtype="meas:Symmetrical1D">
+                        <ATTRIBUTE dmrole="meas:Symmetrical1D.radius">
+                          <COLUMN dmtype="ivoa:RealQuantity" ref="_col_FLUX_ERROR"/>
+                        </ATTRIBUTE>
+                      </INSTANCE>
+                    </ATTRIBUTE>
+                  </INSTANCE>
+                </COMPOSITION>
+              </INSTANCE>
+            </COMPOSITION>
+          </INSTANCE>
+          <INSTANCE dmtype="cube:DataAxis">
+            <ATTRIBUTE dmrole="cube:DataAxis.dependent">
+              <LITERAL value="True" dmtype="ivoa:boolean"/>
+            </ATTRIBUTE>
+            <COMPOSITION dmrole="cube:DataAxis.measurement">
+              <INSTANCE dmtype="meas:GenericCoordMeasure">
+                <ATTRIBUTE dmrole="meas:CoordMeasure.coord">
+                  <INSTANCE dmtype="coords:GenericCoordValue">
+                    <ATTRIBUTE dmrole="coords:PhysicalCoordValue.cval">
+                      <COLUMN dmtype="ivoa:RealQuantity" ref="_col_MAG"/>
+                    </ATTRIBUTE>
+                  </INSTANCE>
+                </ATTRIBUTE>
+                <COMPOSITION dmrole="meas:CoordMeasure.error">
+                  <INSTANCE dmtype="meas:Error1D">
+                    <ATTRIBUTE dmrole="meas:Error1D.statError">
+                      <INSTANCE dmtype="meas:Symmetrical1D">
+                        <ATTRIBUTE dmrole="meas:Symmetrical1D.radius">
+                          <COLUMN dmtype="ivoa:RealQuantity" ref="_col_MAG_ERROR"/>
+                        </ATTRIBUTE>
+                      </INSTANCE>
+                    </ATTRIBUTE>
+                  </INSTANCE>
+                </COMPOSITION>
+              </INSTANCE>
+            </COMPOSITION>
+          </INSTANCE>
+        </COMPOSITION>
+      </INSTANCE>
+    </TEMPLATES>
+  </VODML>
+  <RESOURCE>
+    <TABLE ID="_DATA_TABLE">
+      <FIELD datatype="float" arraysize="1" ID="_col_TIME" unit="d" name="hjd" />
+      <FIELD datatype="float" arraysize="1" ID="_col_FLUX" unit="adu" name="flux" />
+      <FIELD datatype="float" arraysize="1" ID="_col_FLUX_ERROR" unit="adu" name="flux_error" />
+      <FIELD datatype="float" arraysize="1" ID="_col_MAG" unit="mag" name="magnitude"/>
+      <FIELD datatype="float" arraysize="1" ID="_col_MAG_ERROR" unit="mag" name="magnitude_error" />
+      <DATA>
+        <TABLEDATA>
+          <TR>
+            <TD>2457557.6532016</TD>
+            <TD>0.00184983155</TD>
+            <TD>354.3810119628906</TD>
+            <TD>16.29476</TD>
+            <TD>0.002113240072503686</TD>
+          </TR>
+          <TR>
+            <TD>2457555.84195968</TD>
+            <TD>-14776.0666</TD>
+            <TD>357.7959899902344</TD>
+            <TD>16.3992</TD>
+            <TD>0.0026544600259512663</TD>
+          </TR>
+          <TR>
+            <TD>2457555.75619346</TD>
+            <TD>-17950.4548</TD>
+            <TD>361.70001220703125</TD>
+            <TD>16.40898</TD>
+            <TD>0.0024269300047308207</TD>
+          </TR>
+          <TR>
+            <TD>2457555.73796274</TD>
+            <TD>-19092.7038</TD>
+            <TD>371.0379943847656</TD>
+            <TD>16.41678</TD>
+            <TD>0.002509509911760688</TD>
+          </TR>
+          <TR>
+            <TD>2457555.68328411</TD>
+            <TD>-16952.3002</TD>
+            <TD>346.62799072265625</TD>
+            <TD>16.41489</TD>
+            <TD>0.00259727006778121</TD>
+          </TR>
+          <TR>
+            <TD>2457555.55813209</TD>
+            <TD>-15357.8152</TD>
+            <TD>422.14300537109375</TD>
+            <TD>16.41602</TD>
+            <TD>0.0035263400059193373</TD>
+          </TR>
+          <TR>
+            <TD>2457554.82839876</TD>
+            <TD>-27003.2134</TD>
+            <TD>354.8710021972656</TD>
+            <TD>16.47346</TD>
+            <TD>0.002552639925852418</TD>
+          </TR>
+          <TR>
+            <TD>2457554.78696447</TD>
+            <TD>-27572.6709</TD>
+            <TD>340.3160095214844</TD>
+            <TD>16.47578</TD>
+            <TD>0.0024312399327754974</TD>
+          </TR>
+          <TR>
+            <TD>2457554.70660866</TD>
+            <TD>-27915.2638</TD>
+            <TD>357.89898681640625</TD>
+            <TD>16.47427</TD>
+            <TD>0.002502530114725232</TD>
+          </TR>
+          <TR>
+            <TD>2457553.67997956</TD>
+            <TD>-34149.9483</TD>
+            <TD>372.4429931640625</TD>
+            <TD>16.52488</TD>
+            <TD>0.0027954198885709047</TD>
+          </TR>
+          <TR>
+            <TD>2457553.6230499</TD>
+            <TD>-35997.8349</TD>
+            <TD>347.9779968261719</TD>
+            <TD>16.54116</TD>
+            <TD>0.002673790091648698</TD>
+          </TR>
+          <TR>
+            <TD>2457551.85623227</TD>
+            <TD>-38074.6028</TD>
+            <TD>329.2030029296875</TD>
+            <TD>16.62223</TD>
+            <TD>0.0033046600874513388</TD>
+          </TR>
+          <TR>
+            <TD>2457551.81596944</TD>
+            <TD>-48181.8395</TD>
+            <TD>322.9739990234375</TD>
+            <TD>16.64022</TD>
+            <TD>0.002726469887420535</TD>
+          </TR>
+          <TR>
+            <TD>2457550.76578097</TD>
+            <TD>-51636.0575</TD>
+            <TD>278.6029968261719</TD>
+            <TD>16.70374</TD>
+            <TD>0.002679690020158887</TD>
+          </TR>
+          <TR>
+            <TD>2457550.55171751</TD>
+            <TD>-44083.2656</TD>
+            <TD>300.2489929199219</TD>
+            <TD>16.69882</TD>
+            <TD>0.0033339799847453833</TD>
+          </TR>
+          <TR>
+            <TD>2457548.80808433</TD>
+            <TD>-41206.6338</TD>
+            <TD>266.2760009765625</TD>
+            <TD>16.76978</TD>
+            <TD>0.0038506900891661644</TD>
+          </TR>
+          <TR>
+            <TD>2457547.82192983</TD>
+            <TD>-63487.2541</TD>
+            <TD>331.7619934082031</TD>
+            <TD>16.78487</TD>
+            <TD>0.003236959921196103</TD>
+          </TR>
+          <TR>
+            <TD>2457547.80256464</TD>
+            <TD>-67452.5227</TD>
+            <TD>310.0530090332031</TD>
+            <TD>16.80112</TD>
+            <TD>0.002965480089187622</TD>
+          </TR>
+          <TR>
+            <TD>2457547.71979227</TD>
+            <TD>-68016.2628</TD>
+            <TD>312.61700439453125</TD>
+            <TD>16.80806</TD>
+            <TD>0.003016209928318858</TD>
+          </TR>
+          <TR>
+            <TD>2457543.7360583</TD>
+            <TD>-74586.1795</TD>
+            <TD>334.625</TD>
+            <TD>16.89265</TD>
+            <TD>0.0035774100106209517</TD>
+          </TR>
+          <TR>
+            <TD>2457543.71127944</TD>
+            <TD>-78145.5676</TD>
+            <TD>299.9590148925781</TD>
+            <TD>16.93189</TD>
+            <TD>0.003326740115880966</TD>
+          </TR>
+          <TR>
+            <TD>2457543.5822023</TD>
+            <TD>-74104.0807</TD>
+            <TD>318.0849914550781</TD>
+            <TD>16.9048</TD>
+            <TD>0.003513690084218979</TD>
+          </TR>
+          <TR>
+            <TD>2457542.7018652</TD>
+            <TD>-64868.0716</TD>
+            <TD>245.8719940185547</TD>
+            <TD>16.98632</TD>
+            <TD>0.003665529889985919</TD>
+          </TR>
+          <TR>
+            <TD>2457542.68239218</TD>
+            <TD>-57006.0833</TD>
+            <TD>245.74200439453125</TD>
+            <TD>16.97709</TD>
+            <TD>0.0040939198806881905</TD>
+          </TR>
+          <TR>
+            <TD>2457542.63738694</TD>
+            <TD>-55169.3917</TD>
+            <TD>269.4079895019531</TD>
+            <TD>16.94253</TD>
+            <TD>0.004326189868152142</TD>
+          </TR>
+          <TR>
+            <TD>2457539.89438799</TD>
+            <TD>-69510.8252</TD>
+            <TD>296.15301513671875</TD>
+            <TD>16.99191</TD>
+            <TD>0.004165320191532373</TD>
+          </TR>
+          <TR>
+            <TD>2457537.91706277</TD>
+            <TD>-63309.2215</TD>
+            <TD>282.6659851074219</TD>
+            <TD>17.04547</TD>
+            <TD>0.004831000231206417</TD>
+          </TR>
+          <TR>
+            <TD>2457537.89738106</TD>
+            <TD>-69577.733</TD>
+            <TD>299.64300537109375</TD>
+            <TD>17.04042</TD>
+            <TD>0.004616380203515291</TD>
+          </TR>
+          <TR>
+            <TD>2457537.87890093</TD>
+            <TD>-66236.3877</TD>
+            <TD>268.9209899902344</TD>
+            <TD>17.06775</TD>
+            <TD>0.004575400147587061</TD>
+          </TR>
+          <TR>
+            <TD>2457537.86066168</TD>
+            <TD>-66427.1675</TD>
+            <TD>270.14599609375</TD>
+            <TD>17.08259</TD>
+            <TD>0.004706860054284334</TD>
+          </TR>
+          <TR>
+            <TD>2457537.84254542</TD>
+            <TD>-88057.3559</TD>
+            <TD>272.9020080566406</TD>
+            <TD>17.08668</TD>
+            <TD>0.0036131299566477537</TD>
+          </TR>
+          <TR>
+            <TD>2457536.68990873</TD>
+            <TD>-89475.6073</TD>
+            <TD>312.5159912109375</TD>
+            <TD>17.04519</TD>
+            <TD>0.0037772199138998985</TD>
+          </TR>
+          <TR>
+            <TD>2457536.64828539</TD>
+            <TD>-88065.9886</TD>
+            <TD>310.1029968261719</TD>
+            <TD>17.04755</TD>
+            <TD>0.003824650077149272</TD>
+          </TR>
+          <TR>
+            <TD>2457526.86876065</TD>
+            <TD>-99332.4022</TD>
+            <TD>265.9020080566406</TD>
+            <TD>17.18106</TD>
+            <TD>0.0036682600621134043</TD>
+          </TR>
+          <TR>
+            <TD>2457526.83845739</TD>
+            <TD>-98083.8046</TD>
+            <TD>288.33599853515625</TD>
+            <TD>17.14993</TD>
+            <TD>0.0038243199232965708</TD>
+          </TR>
+          <TR>
+            <TD>2457526.81405699</TD>
+            <TD>-97845.3995</TD>
+            <TD>305.7080078125</TD>
+            <TD>17.14216</TD>
+            <TD>0.004011400043964386</TD>
+          </TR>
+          <TR>
+            <TD>2457526.79431819</TD>
+            <TD>-97621.3432</TD>
+            <TD>294.53399658203125</TD>
+            <TD>17.14721</TD>
+            <TD>0.0039070299826562405</TD>
+          </TR>
+          <TR>
+            <TD>2457526.77021569</TD>
+            <TD>-102242.846</TD>
+            <TD>248.2989959716797</TD>
+            <TD>17.19812</TD>
+            <TD>0.003422379959374666</TD>
+          </TR>
+          <TR>
+            <TD>2457526.73248853</TD>
+            <TD>-100946.844</TD>
+            <TD>259.32501220703125</TD>
+            <TD>17.19226</TD>
+            <TD>0.003585719969123602</TD>
+          </TR>
+          <TR>
+            <TD>2457526.66962968</TD>
+            <TD>-97826.8232</TD>
+            <TD>287.8330078125</TD>
+            <TD>17.17932</TD>
+            <TD>0.00402033980935812</TD>
+          </TR>
+          <TR>
+            <TD>2457526.65064901</TD>
+            <TD>-97371.352</TD>
+            <TD>275.5690002441406</TD>
+            <TD>17.18627</TD>
+            <TD>0.0039116498082876205</TD>
+          </TR>
+          <TR>
+            <TD>2457526.61667757</TD>
+            <TD>-94820.5794</TD>
+            <TD>279.697998046875</TD>
+            <TD>17.18611</TD>
+            <TD>0.004075950011610985</TD>
+          </TR>
+          <TR>
+            <TD>2457524.77615324</TD>
+            <TD>-101303.278</TD>
+            <TD>256.6029968261719</TD>
+            <TD>17.20222</TD>
+            <TD>0.0035935700871050358</TD>
+          </TR>
+          <TR>
+            <TD>2457524.75779992</TD>
+            <TD>-102217.551</TD>
+            <TD>250.53799438476562</TD>
+            <TD>17.2065</TD>
+            <TD>0.003501500003039837</TD>
+          </TR>
+          <TR>
+            <TD>2457524.73782575</TD>
+            <TD>-98098.9851</TD>
+            <TD>284.27899169921875</TD>
+            <TD>17.15139</TD>
+            <TD>0.0037792199291288853</TD>
+          </TR>
+          <TR>
+            <TD>2457524.71297541</TD>
+            <TD>-52306.3626</TD>
+            <TD>282.3219909667969</TD>
+            <TD>17.1555</TD>
+            <TD>0.007087979931384325</TD>
+          </TR>
+          <TR>
+            <TD>2457524.69093999</TD>
+            <TD>-35641.5639</TD>
+            <TD>262.50201416015625</TD>
+            <TD>17.15773</TD>
+            <TD>0.009708180092275143</TD>
+          </TR>
+          <TR>
+            <TD>2457523.76988023</TD>
+            <TD>-95872.0049</TD>
+            <TD>282.0379943847656</TD>
+            <TD>17.13744</TD>
+            <TD>0.0037467998918145895</TD>
+          </TR>
+          <TR>
+            <TD>2457523.73120486</TD>
+            <TD>-83566.8947</TD>
+            <TD>255.91400146484375</TD>
+            <TD>17.18309</TD>
+            <TD>0.004210589919239283</TD>
+          </TR>
+          <TR>
+            <TD>2457523.69856821</TD>
+            <TD>-85456.1047</TD>
+            <TD>278.4880065917969</TD>
+            <TD>17.16108</TD>
+            <TD>0.004319800063967705</TD>
+          </TR>
+          <TR>
+            <TD>2457523.68055817</TD>
+            <TD>-92265.2948</TD>
+            <TD>272.18798828125</TD>
+            <TD>17.16896</TD>
+            <TD>0.003962330054491758</TD>
+          </TR>
+          <TR>
+            <TD>2457523.66180485</TD>
+            <TD>-74022.4184</TD>
+            <TD>311.614013671875</TD>
+            <TD>17.11248</TD>
+            <TD>0.005135919898748398</TD>
+          </TR>
+          <TR>
+            <TD>2457522.89840543</TD>
+            <TD>-97743.6519</TD>
+            <TD>289.156005859375</TD>
+            <TD>17.15168</TD>
+            <TD>0.0038599399849772453</TD>
+          </TR>
+          <TR>
+            <TD>2457522.85360583</TD>
+            <TD>-100079.816</TD>
+            <TD>281.70599365234375</TD>
+            <TD>17.17029</TD>
+            <TD>0.0037890200037509203</TD>
+          </TR>
+          <TR>
+            <TD>2457522.82948476</TD>
+            <TD>-97789.409</TD>
+            <TD>298.239990234375</TD>
+            <TD>17.14242</TD>
+            <TD>0.0039173997938632965</TD>
+          </TR>
+          <TR>
+            <TD>2457522.78302193</TD>
+            <TD>-93510.1956</TD>
+            <TD>282.3160095214844</TD>
+            <TD>17.16263</TD>
+            <TD>0.0040123797953128815</TD>
+          </TR>
+          <TR>
+            <TD>2457522.76252354</TD>
+            <TD>-89552.3803</TD>
+            <TD>299.8489990234375</TD>
+            <TD>17.11938</TD>
+            <TD>0.004134200047701597</TD>
+          </TR>
+          <TR>
+            <TD>2457521.88493746</TD>
+            <TD>-102694.647</TD>
+            <TD>256.5509948730469</TD>
+            <TD>17.21701</TD>
+            <TD>0.003629969898611307</TD>
+          </TR>
+          <TR>
+            <TD>2457521.86311594</TD>
+            <TD>-100763.341</TD>
+            <TD>272.8999938964844</TD>
+            <TD>17.1943</TD>
+            <TD>0.003792969975620508</TD>
+          </TR>
+          <TR>
+            <TD>2457520.83766705</TD>
+            <TD>-96643.443</TD>
+            <TD>281.2699890136719</TD>
+            <TD>17.1653</TD>
+            <TD>0.0038852200377732515</TD>
+          </TR>
+          <TR>
+            <TD>2457520.68471531</TD>
+            <TD>-89714.7729</TD>
+            <TD>284.0010070800781</TD>
+            <TD>17.14382</TD>
+            <TD>0.00407584011554718</TD>
+          </TR>
+          <TR>
+            <TD>2457520.66606303</TD>
+            <TD>-95442.0242</TD>
+            <TD>281.3739929199219</TD>
+            <TD>17.15992</TD>
+            <TD>0.0039002900011837482</TD>
+          </TR>
+          <TR>
+            <TD>2457510.90999491</TD>
+            <TD>-104722.583</TD>
+            <TD>239.75</TD>
+            <TD>17.24975</TD>
+            <TD>0.0035044499672949314</TD>
+          </TR>
+          <TR>
+            <TD>2457509.88571955</TD>
+            <TD>-102477.002</TD>
+            <TD>260.17498779296875</TD>
+            <TD>17.23297</TD>
+            <TD>0.0037844800390303135</TD>
+          </TR>
+          <TR>
+            <TD>2457509.867847</TD>
+            <TD>-105650.624</TD>
+            <TD>241.85499572753906</TD>
+            <TD>17.24941</TD>
+            <TD>0.0035023100208491087</TD>
+          </TR>
+          <TR>
+            <TD>2457504.89666384</TD>
+            <TD>-103135.304</TD>
+            <TD>345.8900146484375</TD>
+            <TD>17.20495</TD>
+            <TD>0.004779019858688116</TD>
+          </TR>
+          <TR>
+            <TD>2457500.78761566</TD>
+            <TD>-103833.133</TD>
+            <TD>313.489013671875</TD>
+            <TD>17.23962</TD>
+            <TD>0.004548230208456516</TD>
+          </TR>
+          <TR>
+            <TD>2457500.75925176</TD>
+            <TD>-101746.152</TD>
+            <TD>332.7659912109375</TD>
+            <TD>17.21093</TD>
+            <TD>0.0047058300115168095</TD>
+          </TR>
+          <TR>
+            <TD>2457500.73991127</TD>
+            <TD>-102851.041</TD>
+            <TD>317.06298828125</TD>
+            <TD>17.24268</TD>
+            <TD>0.004666570108383894</TD>
+          </TR>
+          <TR>
+            <TD>2457500.72042184</TD>
+            <TD>-101760.605</TD>
+            <TD>321.35198974609375</TD>
+            <TD>17.24617</TD>
+            <TD>0.00480677979066968</TD>
+          </TR>
+          <TR>
+            <TD>2457499.88759797</TD>
+            <TD>-102063.711</TD>
+            <TD>310.80999755859375</TD>
+            <TD>17.19896</TD>
+            <TD>0.004297339823096991</TD>
+          </TR>
+          <TR>
+            <TD>2457491.8701606</TD>
+            <TD>-100514.511</TD>
+            <TD>292.64300537109375</TD>
+            <TD>17.17511</TD>
+            <TD>0.00395060982555151</TD>
+          </TR>
+          <TR>
+            <TD>2457490.83462545</TD>
+            <TD>-97895.3312</TD>
+            <TD>283.5039978027344</TD>
+            <TD>17.17154</TD>
+            <TD>0.003906410187482834</TD>
+          </TR>
+          <TR>
+            <TD>2457490.81710397</TD>
+            <TD>-101692.261</TD>
+            <TD>274.10699462890625</TD>
+            <TD>17.20527</TD>
+            <TD>0.003842960111796856</TD>
+          </TR>
+          <TR>
+            <TD>2457490.79657217</TD>
+            <TD>-103693.299</TD>
+            <TD>261.0369873046875</TD>
+            <TD>17.24732</TD>
+            <TD>0.003838780103251338</TD>
+          </TR>
+        </TABLEDATA>
+      </DATA>
+    </TABLE>
+  </RESOURCE>
+</VOTABLE>
+
