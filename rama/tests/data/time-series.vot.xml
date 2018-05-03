@@ -184,11 +184,11 @@
   </VODML>
   <RESOURCE>
     <TABLE ID="_DATA_TABLE">
-      <FIELD datatype="float" arraysize="1" ID="_col_TIME" unit="d" name="hjd" />
-      <FIELD datatype="float" arraysize="1" ID="_col_FLUX" unit="adu" name="flux" />
-      <FIELD datatype="float" arraysize="1" ID="_col_FLUX_ERROR" unit="adu" name="flux_error" />
-      <FIELD datatype="float" arraysize="1" ID="_col_MAG" unit="mag" name="magnitude"/>
-      <FIELD datatype="float" arraysize="1" ID="_col_MAG_ERROR" unit="mag" name="magnitude_error" />
+      <FIELD datatype="float" ID="_col_TIME" unit="d" name="hjd" />
+      <FIELD datatype="float" ID="_col_FLUX" unit="adu" name="flux" />
+      <FIELD datatype="float" ID="_col_FLUX_ERROR" unit="adu" name="flux_error" />
+      <FIELD datatype="float" ID="_col_MAG" unit="mag" name="magnitude"/>
+      <FIELD datatype="float" ID="_col_MAG_ERROR" unit="mag" name="magnitude_error" />
       <DATA>
         <TABLEDATA>
           <TR>

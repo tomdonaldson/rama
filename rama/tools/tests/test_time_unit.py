@@ -19,53 +19,43 @@
 # SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-import numpy as np
-import pytest
-
 from astropy import units as u
+from unittest import mock
+
+import numpy as np
 from numpy.testing import assert_array_equal
 
-from rama import read, is_template
-from rama.models.cube import NDPoint, DataAxis
-from rama.models.measurements import SkyPosition
+from rama.adapters.cube import CubePoint
+from rama.models.measurements import StdTimeMeasure, GenericCoordMeasure
 from rama.tools.time import TimeSeries
 
 
-@pytest.fixture
-def time_series(make_data_path):
-    return read(make_data_path('time-series.vot.xml'))
-
-def test_is_template(time_series, recwarn):
-    gavo = time_series
-    positions = gavo.find_instances(SkyPosition)
-    cube_points = gavo.find_instances(NDPoint)
-    axes = gavo.find_instances(DataAxis)
-
-    assert not is_template(positions[0])  # positions are direct
-    assert is_template(cube_points[0])  # ndpoint is a template
-    assert is_template(axes[0])  # time
-    assert not is_template(axes[1])  # position
-    assert is_template(axes[2])  # magnitude
-    assert is_template(axes[3])  # flux
-
-    assert not is_template(gavo)  # an unrelated instance is never a template
-
-    assert "W20" in str(recwarn[0].message)
-    assert "W41" in str(recwarn[1].message)
-    for i in range(2, 12):
-        assert "W10" in str(recwarn[i].message)
+class TimeAxisStub:
+    def __init__(self):
+        self.dependent = False
+        coord = np.array([1, 2, 3]) * u.Unit('d')
+        coord.name = "foo"
+        self.measurement = mock.MagicMock(StdTimeMeasure, coord=coord)
 
 
-def test_time_series(time_series, recwarn):
-    cube_point = time_series.find_instances(NDPoint)[0]
-    time_series = TimeSeries(cube_point)
+class FluxAxisStub:
+    def __init__(self):
+        self.dependent = True
+        cval = np.array([10, 20, 30]) * u.Unit('mag')
+        cval.name = 'flux'
+        coord = mock.MagicMock(cval=cval)
+        self.measurement = mock.MagicMock(GenericCoordMeasure, coord=coord)
 
-    assert_array_equal(time_series.time, cube_point['hjd'])
-    assert_array_equal(time_series['time'], cube_point['hjd'])
-    assert_array_equal(time_series.dependent[0], cube_point['flux'])
-    assert_array_equal(time_series['flux'], cube_point['flux'])
 
-    assert "W20" in str(recwarn[0].message)
-    assert "W41" in str(recwarn[1].message)
-    for i in range(2, 12):
-        assert "W10" in str(recwarn[i].message)
+class NdPointStub:
+    axis = [TimeAxisStub(), FluxAxisStub()]
+
+
+def test_time_series():
+    cube = CubePoint(NdPointStub())
+    time_series = TimeSeries(cube)
+
+    assert_array_equal(time_series.time.measurement, np.array([1, 2, 3]) * u.Unit('d'))
+    assert_array_equal(time_series['time'].measurement, np.array([1, 2, 3]) * u.Unit('d'))
+    assert_array_equal(time_series.dependent[0].measurement, np.array([10, 20, 30]) * u.Unit('mag'))
+    assert_array_equal(time_series['flux'].measurement, np.array([10, 20, 30]) * u.Unit('mag'))

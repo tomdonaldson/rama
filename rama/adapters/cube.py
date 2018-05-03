@@ -30,12 +30,24 @@ class VoAxis:
         self._axis = axis
 
     @property
+    def dependent(self):
+        return self._axis.dependent
+
+    @property
     def measurement(self):
-        return self._axis.measurement
+        return self._axis.measurement.coord
 
     @property
     def stat_error(self):
         return self._axis.measurement.error.stat_error
+
+    @property
+    def is_scalar(self):
+        return self.measurement.isscalar
+
+    @property
+    def unit(self):
+        return self.measurement.unit
 
     @classmethod
     def is_vo_axis_for(cls, axis):
@@ -49,6 +61,9 @@ class TimeAxis(VoAxis):
         super().__init__(axis)
         self.name = axis.measurement.coord.name
 
+    @property
+    def measurement(self):
+        return self._axis.measurement.coord
 
 class SkyPositionAxis(VoAxis):
     name = 'position'
@@ -63,13 +78,17 @@ class GenericCoordMeasureAxis(VoAxis):
         super().__init__(axis)
         self.name = axis.measurement.coord.cval.name
 
+    @property
+    def measurement(self):
+        return self._axis.measurement.coord.cval
+
 
 def vo_axis_factory(axis):
     for cls in VoAxis.__subclasses__():
         if cls.is_vo_axis_for(axis):
             return cls(axis)
 
-    raise ValueError(f"No VoAxis subclasses found for instance axis: {axis.instance[0]}")
+    raise ValueError(f"No VoAxis subclasses found for instance axis: {axis.measurement}")
 
 
 class CubePoint:
@@ -86,6 +105,10 @@ class CubePoint:
                 self.dependent.append(vo_axis.name)
             else:
                 self.independent.append(vo_axis.name)
+
+    @property
+    def axes(self):
+        return self._index.values()
 
     def __getitem__(self, item):
         return self._index[item]
