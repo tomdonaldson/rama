@@ -35,6 +35,8 @@ setup(
             'meas = rama.models.measurements',
             'cube = rama.models.cube',
             'ds = rama.models.dataset',
+            'photdm-alt = rama.models.photometry',
+            'source = rama.models.source',
         ]
     }
 )
