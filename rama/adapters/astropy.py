@@ -23,6 +23,7 @@
 """
 This module provides astropy-specific adapters. See `~rama.adapters` for more information on adapters.
 """
+import logging
 
 from astropy.coordinates import SkyCoord
 from astropy.time import Time
@@ -33,6 +34,7 @@ from numpy import nan_to_num
 
 from rama.models import coordinates
 
+LOG = logging.getLogger(__name__)
 
 class SkyCoordAdapter:
     """
@@ -46,7 +48,7 @@ class SkyCoordAdapter:
             frame = stc_position_coord.frame.space_ref_frame.lower()
             equinox = stc_position_coord.frame.equinox
         except (AttributeError, ValueError):
-            frame = "ICRS"
+            frame = "icrs"
             equinox = None
 
         try:
@@ -54,7 +56,8 @@ class SkyCoordAdapter:
             dec = stc_position_coord.dec
             sky_coord = SkyCoord(frame=frame, equinox=equinox, ra=ra, dec=dec)
             return sky_coord
-        except (AttributeError, UnitTypeError, ValueError):
+        except (AttributeError, UnitTypeError, ValueError) as exc:
+            LOG.warning(f"Can't apply adapter: {exc}")
             return stc_position_coord
 
 

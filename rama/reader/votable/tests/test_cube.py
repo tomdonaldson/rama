@@ -21,6 +21,7 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import pytest
 from astropy.coordinates import SkyCoord
+from astropy.table import MaskedColumn
 from astropy.time import Time
 from dateutil.parser import parse
 from numpy.testing import assert_array_equal
@@ -45,10 +46,10 @@ def test_ndpoint(context_cube, recwarn):
 
     assert_array_equal(ndpoint.dependent, ['flux', 'mag'])
     assert_array_equal(ndpoint.independent, ['time', 'position'])
-    assert isinstance(ndpoint['position'].measurement.coord, SkyCoord)
-    assert isinstance(ndpoint['time'].measurement.coord, Time)
-    assert isinstance(ndpoint['mag'].measurement.coord, GenericCoordValue)
-    assert isinstance(ndpoint['flux'].measurement.coord, GenericCoordValue)
+    assert isinstance(ndpoint['position'].measurement, SkyCoord)
+    assert isinstance(ndpoint['time'].measurement, Time)
+    assert isinstance(ndpoint['mag'].measurement, MaskedColumn)
+    assert isinstance(ndpoint['flux'].measurement, MaskedColumn)
 
     assert "W20" in str(recwarn[0].message)
     assert "W41" in str(recwarn[1].message)

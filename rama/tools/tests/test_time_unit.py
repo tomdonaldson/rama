@@ -19,40 +19,43 @@
 # SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-import logging
+from astropy import units as u
+from unittest import mock
 
-from pkg_resources import iter_entry_points
+import numpy as np
+from numpy.testing import assert_array_equal
 
-from rama.framework import VodmlDescriptor, Composition
-from rama.reader import Reader
-from rama.reader.votable import Votable
-
-LOG = logging.getLogger(__name__)
-
-for entry_point in iter_entry_points(group='vo.dm.models', name=None):
-    try:
-        __import__(entry_point.module_name, globals(), locals())
-        LOG.info(f"Successfully imported vodml model package {entry_point.name}")
-    except ImportError:
-        LOG.warning(f"Cannot import vodml model package {entry_point.name}")
+from rama.adapters.cube import CubePoint
+from rama.models.measurements import StdTimeMeasure, GenericCoordMeasure
+from rama.tools.time import TimeSeries
 
 
-def read(filename, fmt='votable'):
-    formats = {
-        'votable': Votable,
-    }
-
-    if fmt not in formats:
-        raise AttributeError(f"No such format: {fmt}. Available formats: {fmt.keys()}")
-
-    return Reader(formats[fmt](filename))
+class TimeAxisStub:
+    def __init__(self):
+        self.dependent = False
+        coord = np.array([1, 2, 3]) * u.Unit('d')
+        coord.name = "foo"
+        self.measurement = mock.MagicMock(StdTimeMeasure, coord=coord)
 
 
-def is_template(instance):
-    if hasattr(instance, "__vo_object__"):
-        return is_template(instance.__vo_object__)
+class FluxAxisStub:
+    def __init__(self):
+        self.dependent = True
+        cval = np.array([10, 20, 30]) * u.Unit('mag')
+        cval.name = 'flux'
+        coord = mock.MagicMock(cval=cval)
+        self.measurement = mock.MagicMock(GenericCoordMeasure, coord=coord)
 
-    if hasattr(instance, "is_template"):
-        return instance.is_template
 
-    return False
+class NdPointStub:
+    axis = [TimeAxisStub(), FluxAxisStub()]
+
+
+def test_time_series():
+    cube = CubePoint(NdPointStub())
+    time_series = TimeSeries(cube)
+
+    assert_array_equal(time_series.time.measurement, np.array([1, 2, 3]) * u.Unit('d'))
+    assert_array_equal(time_series['time'].measurement, np.array([1, 2, 3]) * u.Unit('d'))
+    assert_array_equal(time_series.dependent[0].measurement, np.array([10, 20, 30]) * u.Unit('mag'))
+    assert_array_equal(time_series['flux'].measurement, np.array([10, 20, 30]) * u.Unit('mag'))
